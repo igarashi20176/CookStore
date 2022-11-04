@@ -38,40 +38,6 @@ const reviewRepository = index_1.AppDataSource.getRepository(Review_1.Review);
 app.get('/', (req, res) => {
     res.send('Hello from GCE EXPRESS!');
 });
-// postに変えろ！！！！！！
-// app.get('/api/v1/insert', async (req: express.Request, res: express.Response) => {  
-//   // insert data
-//   const user = new User()
-//   user.name = "須藤充"
-//   user.age = 34
-//   user.gender = 1
-//   user.image = "aaa.jpg"
-//   const movie = new Movie()
-//   movie.title = "NO MAN"
-//   movie.genre = "コメディ"
-//   movie.director = "やまだごろー"
-//   movie.actor_1 = "酒井俊"
-//   movie.actor_2 = "山沢絵里"
-//   movie.image = "bbb.jpg"
-//   movie.release = "2022-01-03"
-//   // 一意の値に変更する　***
-//   const review = new Review()
-//   review.user_id = 2
-//   review.movie_id = 2
-//   review.content = "『俺なんか』、ですか。あなたがご自分を誰と比べてそう言っているのか分かりませんが、あなたにとっては唯一の、大切な自分自身ですよ。そのように言ったら、あなた自身が可哀想です"
-//   review.category = "感想"
-//   review.rewatch = true
-//   review.rating = 4
-//   review.publish = "2022-07-11"
-//   try {
-//     await userRepository.save(user)
-//     await movieRepository.save(movie)
-//     await reviewRepository.save(review)    
-//   } catch (error) {
-//     res.send("データの保存に失敗")
-//   }
-//   res.send("insert success!")
-// });
 app.get('/api/v1/find/:pattern', async (req, res) => {
     if (parseInt(req.params.pattern) === 0) {
         const savedPhotos = await movieRepository.find().catch(() => "");
@@ -84,7 +50,18 @@ app.get('/api/v1/find/:pattern', async (req, res) => {
     }
     else if (parseInt(req.params.pattern) === 1) {
         const savedPhotos = await reviewRepository.createQueryBuilder("r")
-            .select(['r.movieId, count(*) as movieCount']).where("u.age > 30").andWhere("u.age < 39").innerJoin(User_1.User, "u", "r.userId = u.id").groupBy("movieId").getRawMany()
+            .select(['r.movie_id, count(*) as movieCount']).where("u.age > 30").andWhere("u.age < 39").innerJoin(User_1.User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
+            .catch(() => "");
+        if (!savedPhotos) {
+            res.json({ msg: "error find" });
+        }
+        else {
+            res.json(savedPhotos);
+        }
+    }
+    else if (parseInt(req.params.pattern) === 2) {
+        const savedPhotos = await reviewRepository.createQueryBuilder("r")
+            .select(['r.movie_id, count(*) as movieCount']).innerJoin(User_1.User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
             .catch(() => "");
         if (!savedPhotos) {
             res.json({ msg: "error find" });
