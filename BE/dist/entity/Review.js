@@ -16,26 +16,24 @@ const User_1 = require("./User");
 let Review = class Review {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({
-        type: "int",
-    }),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Review.prototype, "user_id", void 0);
+], Review.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.id),
     (0, typeorm_1.JoinColumn)([{
             name: "user_id"
         }]),
-    (0, typeorm_1.PrimaryColumn)({
-        type: "int",
-    }),
     __metadata("design:type", Number)
-], Review.prototype, "movie_id", void 0);
+], Review.prototype, "user_id", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Movie_1.Movie, (movie) => movie.id),
     (0, typeorm_1.JoinColumn)([{
             name: "movie_id"
         }]),
+    __metadata("design:type", Number)
+], Review.prototype, "movie_id", void 0);
+__decorate([
     (0, typeorm_1.Column)({
         type: "text",
         name: "content",
@@ -73,3 +71,54 @@ Review = __decorate([
     (0, typeorm_1.Entity)()
 ], Review);
 exports.Review = Review;
+/*  外部キー = 主キー
+@Entity()
+export class Review {
+    @PrimaryColumn({
+        type: "int",
+    })
+    user_id?: number
+    @ManyToOne(() => User, (user) => user.id)
+    @JoinColumn([{
+        name: "user_id"
+    }])
+
+    @PrimaryColumn({
+        type: "int",
+    })
+    movie_id?: number
+    @ManyToOne(() => Movie, (movie) => movie.id)
+    @JoinColumn([{
+        name: "movie_id"
+    }])
+
+    @Column({
+        type: "text",
+        name: "content",
+    })
+    content!: string
+
+    @Column({
+        name: "category",
+    })
+    category!: string
+
+    @Column({
+        name: "rewatch",
+        type: "boolean",
+    })
+    rewatch!: boolean
+
+    @Column({
+        name: "rating",
+        type: "int",
+    })
+    rating!: number
+    
+    @Column({
+        name: "publish",
+        type: "date",
+    })
+    publish!: string
+}
+*/ 

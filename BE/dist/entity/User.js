@@ -16,7 +16,7 @@ let User = class User {
 };
 __decorate([
     (0, typeorm_1.OneToMany)(() => Review_1.Review, (review) => review.user_id),
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryColumn)(),
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([

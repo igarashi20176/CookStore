@@ -49,10 +49,4 @@ export class Movie {
         nullable: true
     })
     image!: string
-
-    // @Column({
-    //     name: "release",
-    //     type: "date"
-    // })
-    // release!: string
 }

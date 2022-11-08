@@ -39,36 +39,27 @@ app.get('/', (req, res) => {
     res.send('Hello from GCE EXPRESS!');
 });
 app.get('/api/v1/find/:pattern', async (req, res) => {
+    let savedPhotos;
     if (parseInt(req.params.pattern) === 0) {
-        const savedPhotos = await movieRepository.find().catch(() => "");
-        if (!savedPhotos) {
-            res.json({ msg: "error find" });
-        }
-        else {
-            res.json(savedPhotos);
-        }
+        savedPhotos = await movieRepository.find().catch(() => "");
+        // 年代別レビュー数
     }
     else if (parseInt(req.params.pattern) === 1) {
-        const savedPhotos = await reviewRepository.createQueryBuilder("r")
+        savedPhotos = await reviewRepository.createQueryBuilder("r")
             .select(['r.movie_id, count(*) as movieCount']).where("u.age > 30").andWhere("u.age < 39").innerJoin(User_1.User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
             .catch(() => "");
-        if (!savedPhotos) {
-            res.json({ msg: "error find" });
-        }
-        else {
-            res.json(savedPhotos);
-        }
+        // 総レビュー数
     }
     else if (parseInt(req.params.pattern) === 2) {
-        const savedPhotos = await reviewRepository.createQueryBuilder("r")
+        savedPhotos = await reviewRepository.createQueryBuilder("r")
             .select(['r.movie_id, count(*) as movieCount']).innerJoin(User_1.User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
             .catch(() => "");
-        if (!savedPhotos) {
-            res.json({ msg: "error find" });
-        }
-        else {
-            res.json(savedPhotos);
-        }
+    }
+    if (!savedPhotos) {
+        res.json({ msg: "error find" });
+    }
+    else {
+        res.json(savedPhotos);
     }
 });
 // Listen to the App Engine-specified port, or 8080 otherwise

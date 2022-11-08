@@ -1,8 +1,8 @@
 import {
     Entity,
     Column,
-    PrimaryGeneratedColumn,
-    OneToMany
+    OneToMany,
+    PrimaryColumn
 } from "typeorm"
 import { Review } from "./Review";
 
@@ -10,7 +10,7 @@ import { Review } from "./Review";
 export class User {
     // @OneToMany(() => Review, (review) => review.user_id)
     @OneToMany(() => Review, (review) => review.user_id)
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id!: number
 
     @Column({
