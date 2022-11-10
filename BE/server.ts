@@ -1,12 +1,18 @@
 import "dotenv/config";
 import express from "express";
-import { AppDataSource } from "./index";
-import { Movie } from "./entity/Movie";
-import { User } from "./entity/User";
-import { Review } from "./entity/Review";
-// const cors = require("cors")
 import bodyParser from 'body-parser';
 const app = express();
+
+/**
+ * Tables
+ */
+ import { AppDataSource } from "./index";
+ import { Movies } from "./entity/Movie";
+ import { Users } from "./entity/User";
+ import { Reviews } from "./entity/Review";
+ import { Comments } from "./entity/Comments";
+ import { Likes } from "./entity/Likes";
+
 
 // DB接続
 AppDataSource.initialize().catch((e) => {
@@ -30,9 +36,9 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 /**
  * リポジトリ
  */
-const userRepository = AppDataSource.getRepository(User);
-const movieRepository = AppDataSource.getRepository(Movie);
-const reviewRepository = AppDataSource.getRepository(Review);
+const userRepository = AppDataSource.getRepository(Users);
+const movieRepository = AppDataSource.getRepository(Movies);
+const reviewRepository = AppDataSource.getRepository(Reviews);
 
 
 /**
@@ -40,6 +46,15 @@ const reviewRepository = AppDataSource.getRepository(Review);
  */
 app.get('/', (req: express.Request, res: express.Response) => {
   res.send('Hello from GCE EXPRESS!');
+});
+
+app.get('/api/v1/movie', async (req: express.Request, res: express.Response) => {
+  const savedMovie = await movieRepository.find().catch(() => "")
+  if (!savedMovie) {
+    res.json({ msg: "error find" })
+  } else {
+    res.json(savedMovie)
+  }
 });
 
 app.get('/api/v1/find/:pattern', async (req: express.Request, res: express.Response) => {
@@ -51,13 +66,13 @@ app.get('/api/v1/find/:pattern', async (req: express.Request, res: express.Respo
       // 年代別レビュー数
     } else if(parseInt(req.params.pattern) === 1) {
       savedPhotos = await reviewRepository.createQueryBuilder("r")
-      .select(['r.movie_id, count(*) as movieCount']).where("u.age > 30").andWhere("u.age < 39").innerJoin(User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
+      .select(['r.movie_id, count(*) as movieCount']).where("u.age > 30").andWhere("u.age < 39").innerJoin(Users, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
       .catch(() => "")
 
       // 総レビュー数
     } else if(parseInt(req.params.pattern) === 2) {
       savedPhotos = await reviewRepository.createQueryBuilder("r")
-      .select(['r.movie_id, count(*) as movieCount']).innerJoin(User, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
+      .select(['r.movie_id, count(*) as movieCount']).innerJoin(Users, "u", "r.user_Id = u.id").groupBy("movie_id").getRawMany()
       .catch(() => "")
     }
     if (!savedPhotos) {
@@ -66,6 +81,16 @@ app.get('/api/v1/find/:pattern', async (req: express.Request, res: express.Respo
       res.json(savedPhotos)
     }
 });
+
+app.get('/api/v1/user', async (req: express.Request, res: express.Response) => {
+  const savedUsers = await userRepository.find().catch(() => "")
+
+  if (!savedUsers) {
+    res.json({ msg: "error find" })
+  } else {
+    res.json(savedUsers)
+  }
+})
 
 
 // Listen to the App Engine-specified port, or 8080 otherwise

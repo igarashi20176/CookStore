@@ -9,68 +9,76 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Review = void 0;
+exports.Reviews = void 0;
 const typeorm_1 = require("typeorm");
 const Movie_1 = require("./Movie");
 const User_1 = require("./User");
-let Review = class Review {
+let Reviews = class Reviews {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Review.prototype, "id", void 0);
+], Reviews.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.id),
+    (0, typeorm_1.ManyToOne)(() => User_1.Users, (user) => user.id),
     (0, typeorm_1.JoinColumn)([{
             name: "user_id"
         }]),
     __metadata("design:type", Number)
-], Review.prototype, "user_id", void 0);
+], Reviews.prototype, "user_id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Movie_1.Movie, (movie) => movie.id),
+    (0, typeorm_1.ManyToOne)(() => Movie_1.Movies, (movie) => movie.id),
     (0, typeorm_1.JoinColumn)([{
             name: "movie_id"
         }]),
     __metadata("design:type", Number)
-], Review.prototype, "movie_id", void 0);
+], Reviews.prototype, "movie_id", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: "text",
         name: "content",
     }),
     __metadata("design:type", String)
-], Review.prototype, "content", void 0);
+], Reviews.prototype, "content", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "category",
     }),
     __metadata("design:type", String)
-], Review.prototype, "category", void 0);
+], Reviews.prototype, "category", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "rewatch",
         type: "boolean",
     }),
     __metadata("design:type", Boolean)
-], Review.prototype, "rewatch", void 0);
+], Reviews.prototype, "rewatch", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "rating",
         type: "int",
     }),
     __metadata("design:type", Number)
-], Review.prototype, "rating", void 0);
+], Reviews.prototype, "rating", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "publish",
         type: "date",
     }),
     __metadata("design:type", String)
-], Review.prototype, "publish", void 0);
-Review = __decorate([
+], Reviews.prototype, "publish", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" }),
+    __metadata("design:type", Date)
+], Reviews.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" }),
+    __metadata("design:type", Date)
+], Reviews.prototype, "updated_at", void 0);
+Reviews = __decorate([
     (0, typeorm_1.Entity)()
-], Review);
-exports.Review = Review;
+], Reviews);
+exports.Reviews = Reviews;
 /*  外部キー = 主キー
 @Entity()
 export class Review {

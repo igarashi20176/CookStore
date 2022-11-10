@@ -3,23 +3,25 @@ import {
     Column,
     ManyToOne,
     JoinColumn,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn
 } from "typeorm"
-import { Movie } from "./Movie";
-import { User } from "./User";
+import { Movies } from "./Movie";
+import { Users } from "./User";
 
 @Entity()
-export class Review {
+export class Reviews {
     @PrimaryGeneratedColumn()
     id?: number
 
-    @ManyToOne(() => User, (user) => user.id)
+    @ManyToOne(() => Users, (user) => user.id)
     @JoinColumn([{
         name: "user_id"
     }])
     user_id?: number
 
-    @ManyToOne(() => Movie, (movie) => movie.id)
+    @ManyToOne(() => Movies, (movie) => movie.id)
     @JoinColumn([{
         name: "movie_id"
     }])
@@ -53,6 +55,12 @@ export class Review {
         type: "date",
     })
     publish!: string
+
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public created_at!: Date;
+    
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    public updated_at!: Date;
 }
  
 /*  外部キー = 主キー

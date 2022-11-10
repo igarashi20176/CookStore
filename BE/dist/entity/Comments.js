@@ -9,45 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Users = void 0;
+exports.Comments = void 0;
 const typeorm_1 = require("typeorm");
 const Review_1 = require("./Review");
-let Users = class Users {
+const User_1 = require("./User");
+let Comments = class Comments {
 };
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Review_1.Reviews, (review) => review.user_id),
-    (0, typeorm_1.PrimaryColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Users.prototype, "id", void 0);
+], Comments.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.Users, (user) => user.id),
+    (0, typeorm_1.JoinColumn)([{
+            name: "user_id"
+        }]),
+    __metadata("design:type", Number)
+], Comments.prototype, "user_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Review_1.Reviews, (review) => review.id),
+    (0, typeorm_1.JoinColumn)([{
+            name: "review_id"
+        }]),
+    __metadata("design:type", Number)
+], Comments.prototype, "review_id", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        length: 15,
-        name: "name"
+        type: "text",
+        name: "content"
     }),
     __metadata("design:type", String)
-], Users.prototype, "name", void 0);
+], Comments.prototype, "content", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        name: "age",
-        type: "int"
-    }),
-    __metadata("design:type", Number)
-], Users.prototype, "age", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        name: "gender",
-        type: "int"
-    }),
-    __metadata("design:type", Number)
-], Users.prototype, "gender", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        name: "image",
-        nullable: true,
-    }),
-    __metadata("design:type", String)
-], Users.prototype, "image", void 0);
-Users = __decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" }),
+    __metadata("design:type", Date)
+], Comments.prototype, "created_at", void 0);
+Comments = __decorate([
     (0, typeorm_1.Entity)()
-], Users);
-exports.Users = Users;
+], Comments);
+exports.Comments = Comments;

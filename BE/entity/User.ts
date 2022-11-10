@@ -4,12 +4,12 @@ import {
     OneToMany,
     PrimaryColumn
 } from "typeorm"
-import { Review } from "./Review";
+import { Reviews } from "./Review";
 
 @Entity()
-export class User {
+export class Users {
     // @OneToMany(() => Review, (review) => review.user_id)
-    @OneToMany(() => Review, (review) => review.user_id)
+    @OneToMany(() => Reviews, (review) => review.user_id)
     @PrimaryColumn()
     id!: number
 

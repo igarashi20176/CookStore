@@ -4,12 +4,12 @@ import {
     PrimaryGeneratedColumn,
     OneToMany,
 } from "typeorm"
-import { Review } from "./Review";
+import { Reviews } from "./Review";
 
 @Entity()
-export class Movie {
+export class Movies {
     // @OneToMany(() => Review, (review) => review.movie_id)
-    @OneToMany(() => Review, (review) => review.movie_id)
+    @OneToMany(() => Reviews, (review) => review.movie_id)
     @PrimaryGeneratedColumn()
     id!: number
 
