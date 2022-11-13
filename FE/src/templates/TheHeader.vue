@@ -1,17 +1,14 @@
 <template>
 
-<!-- ナビバー -->
-<!-- <the-header /> -->
-<div class="navbar bg-base-200 mb-10">
+<div class="navbar bg-base-200">
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a @click="currentComponent = 'top'">TOP</a></li>
-                <li><a @click="currentComponent = 'movie'">MOVIES</a></li>
-                <li><a @click="currentComponent = 'review'">REVIEWS</a></li>
+                <li><a>TOP</a></li>
+                <li><a>MOVIES</a></li>
                 <li><a>RANKING</a></li>
             </ul>
         </div>
@@ -66,41 +63,4 @@
     </div>
 </div>
 
-<!-- カード -->
-<!-- <review /> -->
-<component :is="componentList[currentComponent]" />
-
 </template>
-
-<script lang="ts" setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import axios from 'axios'
-import { ref, computed, shallowReactive } from "vue";
-
-
-/**
- * Components
- */
-import TheHeader from "./templates/TheHeader.vue";
-import Review from "./views/Reviews.vue";
-import Movie from "./views/Movies.vue";
-import Top from "./views/Top.vue";
-
-const currentComponent = ref("review")
-const componentList = shallowReactive({
-  movie: Movie,
-  review: Review,
-  top: Top
-})
-
-const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"
-
-
-const msg = ref("")
-// res.data.resultsの中に格納
-const getDB = () => {
-  axios.get(axiosURL + '/db')
-    .then(res => msg.value = res.data)
-}
-</script>
