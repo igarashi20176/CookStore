@@ -8,20 +8,19 @@
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
-            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52">
                 <li><a @click="currentComponent = 'top'">TOP</a></li>
-                <li><a @click="currentComponent = 'movie'">MOVIES</a></li>
-                <li><a @click="currentComponent = 'review'">REVIEWS</a></li>
+                <li><a @click="currentComponent = 'recipe'">RECIPE</a></li>
                 <li><a>RANKING</a></li>
             </ul>
         </div>
     </div>
 
     <div class="navbar-center">
-        <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <a @click="currentComponent = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9" src="./assets/images/recipe-book.png" />CookStore</a>
     </div>
     <div class="navbar-end">
-        <input type="text" placeholder="Search Films" class="input input-bordered w-full max-w-xs" />
+        <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
         <button class="btn btn-ghost btn-circle">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </button>
@@ -66,6 +65,15 @@
     </div>
 </div>
 
+<div class="text-right mr-10" v-if="!(currentComponent == 'add')">
+    <button class="btn btn-primary bg-base-200 mr-2">
+        <img class="w-6 inline" src="./assets/images/writing.png" alt="">献立投稿
+    </button>
+    <button class="btn btn-primary bg-base-200" @click="currentComponent = 'add'">
+        <img class="w-6 inline" src="./assets/images/chef-hat.png" alt="">レシピ投稿  
+    </button>
+</div>
+
 <!-- カード -->
 <!-- <review /> -->
 <component :is="componentList[currentComponent]" />
@@ -76,22 +84,22 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import axios from 'axios'
-import { ref, computed, shallowReactive } from "vue";
+import { ref, shallowReactive } from "vue";
 
 
 /**
  * Components
  */
 import TheHeader from "./templates/TheHeader.vue";
-import Review from "./views/Reviews.vue";
-import Movie from "./views/Movies.vue";
 import Top from "./views/Top.vue";
+import Recipe from "./views/Recipe.vue";
+import AddRecipe from "./views/AddRecipe.vue";
 
-const currentComponent = ref("review")
-const componentList = shallowReactive({
-  movie: Movie,
-  review: Review,
-  top: Top
+const currentComponent = ref("add")
+const componentList = shallowReactive<any>({
+    top: Top,
+    recipe: Recipe,
+    add: AddRecipe
 })
 
 const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"

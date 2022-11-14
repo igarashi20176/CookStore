@@ -36,9 +36,10 @@ model Post {
 model Recipe {
   id            Int       @id @default(autoincrement())
   title         String    @db.VarChar(30)
-  description   String?   @db.Text
+  description   String?   @db.VarChar(60)
   category      String    @db.Char(10)
   ingredients   String    @db.Text
+  remarks       String?   @db.Text
   post          Post      @relation(fields: [postId], references: [id])
   postId        Int       
   nutrition     Nutrition?
@@ -53,7 +54,8 @@ model Recipe {
 model Menu {
   id            Int       @id @default(autoincrement())
   title         String    @db.VarChar(30)
-  description   String?   @db.Text
+  description   String?   @db.VarChar(60)
+  remarks       String?   @db.Text
   post          Post      @relation(fields: [postId], references: [id])
   postId        Int     
   staple        Recipe?   @relation("StapleRecipe", fields: [stapleId], references: [id])
@@ -78,7 +80,7 @@ model Like {
 
 model Comment {
   id            Int       @id @default(autoincrement())
-  body          String    @db.Text
+  body          String    @db.VarChar(100)
   user          User      @relation(fields: [userId], references: [id])
   userId        String
   post          Post      @relation(fields: [postId], references: [id])
