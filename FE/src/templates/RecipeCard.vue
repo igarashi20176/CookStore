@@ -28,7 +28,7 @@
                 <p class="inline m-1 ">22</p>
             </div>
             <div class="card-actions justify-end">
-                <button class="btn btn-primary">詳しく</button>
+                <button @click="emits('change-show')" class="btn btn-primary">詳しく</button>
             </div>
         </div>
 
@@ -40,6 +40,8 @@
 <script lang="ts" setup>
 
 import { computed } from "vue";
+
+const emits = defineEmits([ 'change-show' ])
 
 const title = "とろーり濃厚 ほくほくかぼちゃスープ"
 const name = "Alex"

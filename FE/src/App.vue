@@ -9,9 +9,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52">
-                <li><a @click="currentComponent = 'top'">TOP</a></li>
-                <li><a @click="currentComponent = 'recipe'">RECIPE</a></li>
-                <li><a @click="currentComponent = 'detail'">DETAIL</a></li>
+                <li><a @click="currentComponent = 'top'">-HOME- ホーム</a></li>
+                <li><a @click="currentComponent = 'recipe'">-RECIPE- レシピ</a></li>
+                <li><a @click="currentComponent = 'menu'">-MENU- メニュー</a></li>
             </ul>
         </div>
     </div>
@@ -21,25 +21,25 @@
     </div>
     <div class="navbar-end">
         <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
-        <button class="btn btn-ghost btn-circle">
+        <button class="btn btn-ghost btn-circle mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </button>
   
-    <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-            <div class="w-10 rounded-full">
-                <img src="https://placeimg.com/80/80/people" />
-            </div>
-        </label>
-        <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-            <li>
-                <a class="justify-between">
-                Profile
-                <span class="badge">New</span>
-                </a>
-            </li>
-            <li><a href="#my-modal-1" class="">Sigh In</a></li>
-            <li><a href="#my-modal-2" class="">Register</a></li>
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <img src="https://placeimg.com/80/80/people" />
+                </div>
+            </label>
+            <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                <li>
+                    <a class="justify-between">
+                    Profile
+                    <span class="badge">New</span>
+                    </a>
+                </li>
+                <li><a href="#my-modal-1" class="">Sigh In</a></li>
+                <li><a href="#my-modal-2" class="">Register</a></li>
             </ul>
         </div>
     </div>
@@ -94,14 +94,12 @@ import TheHeader from "./templates/TheHeader.vue";
 import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
 import AddRecipe from "./views/AddRecipe.vue";
-import Detail from "./templates/RecipeCardDetail.vue";
 
-const currentComponent = ref("detail")
+const currentComponent = ref("recipe")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
-    add: AddRecipe,
-    detail: Detail
+    add: AddRecipe
 })
 
 const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"

@@ -1,51 +1,60 @@
 <template>
-    <div class="flex">
-		<!-- レシピ本文 -->
-		<div class="m-6 p-5 border-2 w-[900px] rounded-md">
-			<p class="text-2xl mb-3 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ recipe_items.author }} <span class="text-base">作成日: {{ recipe_items.create_at }}</span></p>
 
-			<label class="inline-block font-bold mr-5 mb-7" for="title">★タイトル</label>
-			<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ recipe_items.title }}</h3>
+<div class="flex">
 
-			<div class="flex gap-x-20 text-center">
-			<figure class="mt-14">
-				<img class="rounded-xl" src="https://dummyimage.com/500x400/000000/fd7e00" alt="">
-			</figure>
-		
-			<figcaption>
-				<div class="mb-5">
-					<label class="block font-bold mb-3" for="title">★キャッチコピー</label>
-					<div class="ml-12" v-for="text in get_texts('description', 14)"> 
+	<!-- レシピ本文 -->
+	<div class="m-6 p-5 border-2 border-base-300 rounded-lg w-[920px]">
+		<div class="mb-3">
+			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
+			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ recipe_items.author }} <span class="text-base">作成日: {{ recipe_items.create_at }}</span></p>
+		</div>
+
+		<label class="inline-block font-bold mr-5 mb-5" for="title">★タイトル</label>
+		<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ recipe_items.title }}</h3>
+
+		<div class="flex gap-x-16">
+			<div class="flex flex-col w-[450px]">
+				<figure class="mt-5">
+					<img class="rounded-xl" src="https://dummyimage.com/500x400/000000/fd7e00" alt="">
+				</figure>
+
+				<div class="mt-8 text-center">	
+					<label class="block font-bold mb-5" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
+					<div class="ml-6"  v-for="text in get_texts('remarks', 21)"> 
+						<p class="text-lg font-bold text-left">{{ text }}</p>
+						<div class="border-t border-[#555] w-[390px] mb-3"></div>
+					</div>
+				</div>	
+			</div>
+
+			
+			<div class="flex flex-col w-[400px]">
+				<div class="my-5">
+					<label class="block text-center font-bold mb-3" for="title">★キャッチコピー</label>
+					<div class="ml-12" v-for="text in get_texts('description', 15)"> 
 						<p class="text-xl font-bold text-left">{{ text }}</p>
-						<div class="border-t border-[#555] w-[260px] mb-3"></div>
+						<div class="border-t border-[#555] w-[300px] mb-3"></div>
 					</div>
 				</div>
 
 				<div class="bg-orange-200 w-full h-auto p-2 rounded-xl ">
-					<label class="block text-lg font-bold mb-3" for="title">食材・分量</label>
+					<label class="block text-center text-lg font-bold mb-3" for="title">食材・分量</label>
 					<div v-for="ingredient in recipe_items.ingredients.split(',')"> 
 						<p class="text-xl font-bold text-center">{{ ingredient }}</p>
 						<div class="border-t border-dashed border-[#555] w-[350px] mb-3"></div>
 					</div>
 				</div>
-			</figcaption>
-		</div>
-
-		<div class="w-[400px]">
-			<label class="block font-bold mb-5" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
-			<div v-for="text in get_texts('remarks', 20)"> 
-				<p class="text-xl font-bold text-left">{{ text }}</p>
-				<div class="border-t border-[#555] w-[350px] mb-3"></div>
 			</div>
+
 		</div>
-	
 	</div>
+	
 
 	<!-- この記事に対するコメント欄 -->
-	<div class="mt-6 mr-3 p-5 w-[calc(100%_-_900px)] border-2 rounded-md">
+	<div class="mt-6 mr-3 p-5 w-[calc(100%_-_900px)] border-2 border-base-300 rounded-md">
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
 		<ul v-for="comment in comments">
-			<li class="">
+			<li>
 				<div class="flex flex-col w-full border-opacity-50">
 					<div class="grid h-auto card bg-base-200 rounded-box place-items-center p-3">
 						<p>by {{ comment.name }} {{ comment.date }}</p>
@@ -56,6 +65,7 @@
 			</li>
 		</ul>
 	</div>
+
 </div>
 
 </template>
@@ -63,6 +73,8 @@
 <script lang="ts" setup>
 
 import { computed } from "vue";
+
+const emits = defineEmits([ 'change-show' ])
 
 type recipe = {
 	author: string
