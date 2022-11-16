@@ -15,7 +15,7 @@
 </div>
 
 <h2 class="text-2xl font-bold text-center bg-base-300 w-1/4 m-auto rounded-xl">みんなのメニュー</h2>
-<div class="flex flex-row flex-wrap gap-7 m-10">
+<div class="flex flex-row flex-wrap gap-7 m-6">
      <ul v-for="i in ary">
         <li :key="i"><movie-card /></li>
     </ul>

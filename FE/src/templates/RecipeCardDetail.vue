@@ -1,0 +1,120 @@
+<template>
+    <div class="flex">
+		<!-- レシピ本文 -->
+		<div class="m-6 p-5 border-2 w-[900px] rounded-md">
+			<p class="text-2xl mb-3 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ recipe_items.author }} <span class="text-base">作成日: {{ recipe_items.create_at }}</span></p>
+
+			<label class="inline-block font-bold mr-5 mb-7" for="title">★タイトル</label>
+			<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ recipe_items.title }}</h3>
+
+			<div class="flex gap-x-20 text-center">
+			<figure class="mt-14">
+				<img class="rounded-xl" src="https://dummyimage.com/500x400/000000/fd7e00" alt="">
+			</figure>
+		
+			<figcaption>
+				<div class="mb-5">
+					<label class="block font-bold mb-3" for="title">★キャッチコピー</label>
+					<div class="ml-12" v-for="text in get_texts('description', 14)"> 
+						<p class="text-xl font-bold text-left">{{ text }}</p>
+						<div class="border-t border-[#555] w-[260px] mb-3"></div>
+					</div>
+				</div>
+
+				<div class="bg-orange-200 w-full h-auto p-2 rounded-xl ">
+					<label class="block text-lg font-bold mb-3" for="title">食材・分量</label>
+					<div v-for="ingredient in recipe_items.ingredients.split(',')"> 
+						<p class="text-xl font-bold text-center">{{ ingredient }}</p>
+						<div class="border-t border-dashed border-[#555] w-[350px] mb-3"></div>
+					</div>
+				</div>
+			</figcaption>
+		</div>
+
+		<div class="w-[400px]">
+			<label class="block font-bold mb-5" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
+			<div v-for="text in get_texts('remarks', 20)"> 
+				<p class="text-xl font-bold text-left">{{ text }}</p>
+				<div class="border-t border-[#555] w-[350px] mb-3"></div>
+			</div>
+		</div>
+	
+	</div>
+
+	<!-- この記事に対するコメント欄 -->
+	<div class="mt-6 mr-3 p-5 w-[calc(100%_-_900px)] border-2 rounded-md">
+		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
+		<ul v-for="comment in comments">
+			<li class="">
+				<div class="flex flex-col w-full border-opacity-50">
+					<div class="grid h-auto card bg-base-200 rounded-box place-items-center p-3">
+						<p>by {{ comment.name }} {{ comment.date }}</p>
+						<p>{{ comment.body }}</p>
+					</div>
+					<div class="divider"></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+</template>
+
+<script lang="ts" setup>
+
+import { computed } from "vue";
+
+type recipe = {
+	author: string
+	create_at: string
+	title: string,
+	description: string,
+	ingredients: string,
+	remarks: string
+};
+
+const recipe_items: recipe = {
+	author: "Jessy",
+	create_at: "2022-01-20",
+	title: "あったかトマトスープ♪",
+	description: "木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む",
+	ingredients: "卵 : 2個, 豚バラ : 100g, ほうれん草 : 2株, 醤油 : 大さじ1, みりん : 大さじ2",
+	remarks: "恥の多い生涯を送って来ました。自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎"
+};
+
+type comment = {
+	name: string,
+	body: string,
+	date: string
+};
+
+const comments: comment[] = [
+	{
+	name: "Jon Doe",
+	body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
+	date: "2022-05-21",
+	},
+	{
+	name: "Maxine",
+	body: "少し味付けが薄かったので塩コショウを足しました",
+	date: "2022-08-01",
+	},
+	{
+	name: "yayaya",
+	body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
+	date: "2022-01-10",
+	}
+];
+
+// keyof...プロパティ名をユニオンで返す
+const get_texts = computed( () => {
+	return (sentence: keyof recipe, line_count: number):string[] => {
+		const textAry: string[] = [];
+		for (let i = 0; i < recipe_items[sentence].length; i+=line_count) {
+			textAry.push(recipe_items[sentence].substring(i, i+line_count));
+		}
+		return textAry;
+	}
+});
+
+</script>

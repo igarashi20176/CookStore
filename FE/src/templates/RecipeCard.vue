@@ -1,7 +1,10 @@
 <template>
 
 <div class="card card-side bg-base-200 shadow-xl">
-    <figure><img src="https://dummyimage.com/350x300/000/fd7e00" alt="Movie"/></figure>
+    <figure>
+        <img class="pl-2 rounded-2xl" src="https://dummyimage.com/350x300/000/fd7e00" alt="Movie"/>
+    </figure>
+
     <div class="card-body w-[290px]">
         <div class="tooltip tooltip-primary font-bold" :data-tip="title">
             <h2 class="card-title">{{ title_short }}</h2>

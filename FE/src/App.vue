@@ -11,7 +11,7 @@
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52">
                 <li><a @click="currentComponent = 'top'">TOP</a></li>
                 <li><a @click="currentComponent = 'recipe'">RECIPE</a></li>
-                <li><a>RANKING</a></li>
+                <li><a @click="currentComponent = 'detail'">DETAIL</a></li>
             </ul>
         </div>
     </div>
@@ -94,12 +94,14 @@ import TheHeader from "./templates/TheHeader.vue";
 import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
 import AddRecipe from "./views/AddRecipe.vue";
+import Detail from "./templates/RecipeCardDetail.vue";
 
-const currentComponent = ref("add")
+const currentComponent = ref("detail")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
-    add: AddRecipe
+    add: AddRecipe,
+    detail: Detail
 })
 
 const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"

@@ -6,7 +6,7 @@
 </div>
 
 <div class="m-10 border-2 p-8 w-[900px] rounded-md">
-  <label class="font-bold mr-5" for="title">タイトル</label>
+  <label class="font-bold mr-5" for="title">★タイトル</label>
   <input id="title" type="text" placeholder="例) あったかトマトスープ" class="input input-bordered input-primary w-full max-w-xs mb-5" />
 
   <div class="flex gap-x-20 text-center">
@@ -26,8 +26,8 @@
     </figure>
 
     <figcaption>
-      <label class="block font-bold mb-3" for="title">キャッチコピー<span class="text-sm"> (最大60文字)</span></label>
-      <textarea class="textarea textarea-bordered mb-10" placeholder="Bio" maxlength="60" cols="30"></textarea>
+      <label class="block font-bold mb-3" for="title">★キャッチコピー<span class="text-sm"> (最大60文字)</span></label>
+      <textarea class="textarea textarea-bordered mb-10" placeholder="例) 美味しいのに超時短!忙しい日にぜひ作ってほしいレシピです" maxlength="60" cols="30"></textarea>
 
       <div class="bg-orange-200 w-full h-36 p-2 rounded-xl ">
         <label class="block font-bold mb-3" for="title">食材・分量を入力</label>
@@ -52,10 +52,15 @@
         </label>
       </div>
     </figcaption>
+
+  </div>
+
+  <div class="w-[400px]">
+    <label class="block font-bold mt-10" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
+    <textarea class="textarea textarea-bordered mt-5" id="remarks" placeholder="例) おばあちゃんから教えてもらった秘伝の料理です．   例) 砂糖の代わりにはちみつを使うことでより健康的になってます！" rows="5" cols="45"></textarea>
   </div>
 
 </div>
-
 
 </template>
 
