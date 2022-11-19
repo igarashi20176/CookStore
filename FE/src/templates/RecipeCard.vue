@@ -5,13 +5,13 @@
         <img class="pl-2 rounded-2xl" src="https://dummyimage.com/350x300/000/fd7e00" alt="Movie"/>
     </figure>
 
-    <div class="card-body w-[290px]">
-        <div class="tooltip tooltip-primary font-bold" :data-tip="title">
+    <div class="card-body w-[280px]">
+        <div class="tooltip tooltip-primary font-bold" :data-tip="props.recipe.get_title()">
             <h2 class="card-title">{{ title_short }}</h2>
         </div>
         <div class="flex items-center gap-x-2">
-            <p>by {{ name }}</p>
-            <p>投稿日: {{ release }}</p>
+            <p>by {{ props.recipe.get_author() }}</p>
+            <p>投稿日: {{ props.recipe.get_created_date() }}</p>
         </div>
         <div class="flex py-2">
             <p>{{ content_short }}</p>
@@ -28,12 +28,12 @@
                 <p class="inline m-1 ">22</p>
             </div>
             <div class="card-actions justify-end">
-                <button @click="emits('change-show')" class="btn btn-primary">詳しく</button>
+                <button @click="emits('change-show', props.recipe.get_postId())" class="btn btn-primary">詳しく</button>
             </div>
         </div>
 
     </div>
-</div>
+</div> 
 
 </template>
 
@@ -41,17 +41,15 @@
 
 import { computed } from "vue";
 
+const props = defineProps({
+    recipe: { type: Object, required: true }
+});
 const emits = defineEmits([ 'change-show' ])
 
-const title = "とろーり濃厚 ほくほくかぼちゃスープ"
-const name = "Alex"
-const release = "2021/03/21"
-const content = "ホーティングオブヒルハウスが傑作ホラーであり家族ドラマだったのでこちらも鑑賞してみましたが、今作もまあまあ面白い作品でした。根本的にフラナガンはホラー作家というよりは、心の成長を描くことに長けている人なので、今作のようなハンデを背負ったキャラクターを登場させたのは、映画としてどこかのクワイエットプレイス以上に成功していたと思います。音響や撮影も良かったし、ミューズであるケイトシーゲルも安定したパフォーマンスを披露していました。真夜中のミサやホーティングオブヒルハウスの時に引っかかったカラグレも今作だとそこまで目立っていなかったのが良かったです。ただそこまでリアルな脚本じゃないし、別に心に残るような作品でもありません。尺が短いから普通に楽しめるけど、今作を見るくらいだったら傑作ホーティングオブヒルハウスを見た方が良いです。"
 
+const title_short = computed(() => props.recipe.get_title().length >= 14 ? `${props.recipe.get_title().substring(0, 14)}...` : props.recipe.get_title());
 
-const title_short = computed(() => title.length >= 14 ? `${title.substring(0, 14)}...` : title)
-const content_short = computed(() => content.length >= 66 ? `${content.substring(0, 66)}...` : content)
-
+const content_short = computed(() => props.recipe.get_description().length >= 66 ? `${props.recipe.get_description().substring(0, 66)}...` : props.recipe.get_description());
 
 
 </script>

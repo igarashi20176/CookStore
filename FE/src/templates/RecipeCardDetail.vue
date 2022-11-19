@@ -2,15 +2,15 @@
 
 <div class="flex">
 
-	<!-- レシピ本文 -->
 	<div class="m-6 p-5 border-2 border-base-300 rounded-lg w-[920px]">
+
 		<div class="mb-3">
 			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
-			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ recipe_items.author }} <span class="text-base">作成日: {{ recipe_items.create_at }}</span></p>
+			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_author() }} <span class="text-base">作成日: {{ props.recipe.get_created_date() }}</span></p>
 		</div>
 
 		<label class="inline-block font-bold mr-5 mb-5" for="title">★タイトル</label>
-		<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ recipe_items.title }}</h3>
+		<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ props.recipe.get_title() }}</h3>
 
 		<div class="flex gap-x-16">
 			<div class="flex flex-col w-[450px]">
@@ -39,18 +39,20 @@
 
 				<div class="bg-orange-200 w-full h-auto p-2 rounded-xl ">
 					<label class="block text-center text-lg font-bold mb-3" for="title">食材・分量</label>
-					<div v-for="ingredient in recipe_items.ingredients.split(',')"> 
-						<p class="text-xl font-bold text-center">{{ ingredient }}</p>
+					<div v-for="ingredient in props.recipe.get_ingredients()"> 
+						<div class="flex justify-between">
+							<p class="ml-5 text-xl font-bold">{{ ingredient.name }}</p>
+							<p class="mr-5 text-xl font-bold">{{ ingredient.amount }}</p>
+							</div>
 						<div class="border-t border-dashed border-[#555] w-[350px] mb-3"></div>
 					</div>
 				</div>
 			</div>
-
 		</div>
+
 	</div>
 	
 
-	<!-- この記事に対するコメント欄 -->
 	<div class="mt-6 mr-3 p-5 w-[calc(100%_-_900px)] border-2 border-base-300 rounded-md">
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
 		<ul v-for="comment in comments">
@@ -74,25 +76,29 @@
 
 import { computed } from "vue";
 
+const props = defineProps({
+	recipe: { type: Object,  required: true }
+})
 const emits = defineEmits([ 'change-show' ])
+
 
 type recipe = {
 	author: string
-	create_at: string
+	create_date: string
 	title: string,
 	description: string,
 	ingredients: string,
 	remarks: string
 };
 
-const recipe_items: recipe = {
-	author: "Jessy",
-	create_at: "2022-01-20",
-	title: "あったかトマトスープ♪",
-	description: "木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む",
-	ingredients: "卵 : 2個, 豚バラ : 100g, ほうれん草 : 2株, 醤油 : 大さじ1, みりん : 大さじ2",
-	remarks: "恥の多い生涯を送って来ました。自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎"
-};
+// const props.recipe: recipe = {
+// 	author: "Jessy",
+// 	create_at: "2022-01-20",
+// 	title: "あったかトマトスープ♪",
+// 	description: "木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む",
+// 	ingredients: "卵 : 2個, 豚バラ : 100g, ほうれん草 : 2株, 醤油 : 大さじ1, みりん : 大さじ2",
+// 	remarks: "恥の多い生涯を送って来ました。自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎"
+// };
 
 type comment = {
 	name: string,
@@ -102,19 +108,19 @@ type comment = {
 
 const comments: comment[] = [
 	{
-	name: "Jon Doe",
-	body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
-	date: "2022-05-21",
+		name: "Jon Doe",
+		body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
+		date: "2022-05-21",
 	},
 	{
-	name: "Maxine",
-	body: "少し味付けが薄かったので塩コショウを足しました",
-	date: "2022-08-01",
+		name: "Maxine",
+		body: "少し味付けが薄かったので塩コショウを足しました",
+		date: "2022-08-01",
 	},
 	{
-	name: "yayaya",
-	body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
-	date: "2022-01-10",
+		name: "yayaya",
+		body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
+		date: "2022-01-10",
 	}
 ];
 
@@ -122,8 +128,12 @@ const comments: comment[] = [
 const get_texts = computed( () => {
 	return (sentence: keyof recipe, line_count: number):string[] => {
 		const textAry: string[] = [];
-		for (let i = 0; i < recipe_items[sentence].length; i+=line_count) {
-			textAry.push(recipe_items[sentence].substring(i, i+line_count));
+		const text = sentence === 'description' ? props.recipe.get_description() : props.recipe.get_remarks();
+
+		if ( text ) {
+			for (let i = 0; i < text.length; i+=line_count) {
+				textAry.push(text.substring(i, i+line_count));
+			}
 		}
 		return textAry;
 	}

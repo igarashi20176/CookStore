@@ -21,18 +21,29 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 
+/**
+ * ルーティング
+ */
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello from GCE EXPRESS!');
+});
+
+app.get('/api/v1/recipes', async (req: Request, res: Response) => {
+  const recipes = await prisma.recipe.findMany({
+    include: { post: { select: { authorId: true } } }
+  });
+  return res.json(recipes);
+});
+
+
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.LISTENPORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });
 
-/**
- * ルーティング　見本
- */
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('Hello from GCE EXPRESS!');
-// });
+
 
 // // リレーションモデルも含めたGET
 // app.get('/api/v1/users', async (req: Request, res: Response) => {

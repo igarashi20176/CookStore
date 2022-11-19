@@ -2,7 +2,7 @@
 
 <!-- ナビバー -->
 <!-- <the-header /> -->
-<div class="navbar bg-base-200 mb-10">
+<div class="navbar bg-base-200 mb-3">
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -81,9 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import axios from 'axios'
+
 import { ref, shallowReactive } from "vue";
 
 
@@ -102,13 +100,4 @@ const componentList = shallowReactive<any>({
     add: AddRecipe
 })
 
-const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"
-
-
-const msg = ref("")
-// res.data.resultsの中に格納
-const getDB = () => {
-  axios.get(axiosURL + '/db')
-    .then(res => msg.value = res.data)
-}
 </script>

@@ -1,13 +1,14 @@
 <template>
 
-<!-- modal trigger button -->
+<!-- モーダルトリガーボタン -->
 <label for="my-modal-4" class="btn btn-primary">食材を入力</label>
 
-<!-- modal -->
+<!-- モーダル本体 -->
 <input type="checkbox" id="my-modal-4" class="modal-toggle" />
 <label for="my-modal-4" class="modal cursor-pointer">
-  	<!-- modal body contents -->
-  	<label class="modal-box relative w-11/12 max-w-5xl" for="">
+  	
+	<!-- モーダルコンテンツ -->
+  	<label class="modal-box relative w-11/12 max-w-5xl">
     <label for="my-modal-4" class="btn btn-primary btn-sm btn-circle absolute right-2 top-2">✕</label>
     <h3 class="text-lg font-bold">材料と分量を入力してください</h3>
     
@@ -24,73 +25,76 @@
 		<input id="process" class="hidden peer/process" type="radio" name="status" />
 		<label for="process" class="peer-checked/process:text-orange-700 p-1 rounded-md bg-orange-200 border-2 hover:bg-orange-300 cursor-pointer">加工食品・缶詰</label>
 
-		<select v-model="food_id" required class="hidden peer-checked/meat:block mt-5 m-auto select select-accent border-red-400 w-full max-w-xs">
+		<select v-model="select_ingredent.name" required class="hidden peer-checked/meat:block mt-5 m-auto select select-accent border-red-400 w-full max-w-xs">
 			<option hidden>肉・魚類</option>
 			<optgroup label="さ行">
-				<option class="text-lg" value="1">サバ</option>
+				<option class="text-lg" value="サバ">サバ</option>
 			</optgroup>
 			<optgroup label="た">
-				<option class="text-lg" value="2">鶏モモ</option>
+				<option class="text-lg" value="鶏モモ">鶏モモ</option>
 			</optgroup>
 			<optgroup label="は">
-				<option class="text-lg" value="3">豚バラ</option>
+				<option class="text-lg" value="豚バラ">豚バラ</option>
 			</optgroup>
 		</select>
 
-		<select v-model="food_id" class="hidden peer-checked/vegetable:block mt-5 m-auto select select-accent border-green-400 w-full max-w-xs">
+		<select v-model="select_ingredent.name" class="hidden peer-checked/vegetable:block mt-5 m-auto select select-accent border-green-400 w-full max-w-xs">
 			<option hidden>野菜類</option>
 			<optgroup label="た行">
-				<option class="text-lg" value="4">トマト</option>
+				<option class="text-lg" value="トマト">トマト</option>
 			</optgroup>
 			<optgroup label="は">
-				<option class="text-lg" value="5">白菜</option>
+				<option class="text-lg" value="白菜">白菜</option>
 			</optgroup>
 			<optgroup label="な">
-				<option class="text-lg" value="6">ニラ</option>
+				<option class="text-lg" value="ニラ">ニラ</option>
 			</optgroup>
 		</select>
 
-		<select v-model="food_id" required class="hidden peer-checked/milk:block mt-5 m-auto select select-accent border-blue-400 w-full max-w-xs">
+		<select v-model="select_ingredent.name" required class="hidden peer-checked/milk:block mt-5 m-auto select select-accent border-blue-400 w-full max-w-xs">
 			<option hidden>乳製品・卵</option>
 			<optgroup label="か行">
-				<option class="text-lg" value="7">牛乳</option>
+				<option class="text-lg" value="牛乳">牛乳</option>
 			</optgroup>
 			<optgroup label="た">
-				<option class="text-lg" value="8">卵</option>
+				<option class="text-lg" value="卵">鶏卵</option>
 			</optgroup>
 			<optgroup label="は">
-				<option class="text-lg" value="9">バター</option>
+				<option class="text-lg" value="バター">バター</option>
 			</optgroup>
 		</select>
 
-		<select v-model="food_id" class="hidden peer-checked/process:block mt-5 m-auto select select-accent border-orange-400 w-full max-w-xs">
+		<select v-model="select_ingredent.name" class="hidden peer-checked/process:block mt-5 m-auto select select-accent border-orange-400 w-full max-w-xs">
 			<option hidden>加工食品・缶詰</option>
 			<optgroup label="さ行">
-				<option class="text-lg" value="10">サバ缶</option>
+				<option class="text-lg" value="サバ缶">サバ缶</option>
 			</optgroup>
 			<optgroup label="は">
-				<option class="text-lg" value="11">ハム</option>
-				<option class="text-lg" value="12">ベーコン</option>
+				<option class="text-lg" value="ハム">ハム</option>
+				<option class="text-lg" value="ベーコン">ベーコン</option>
 			</optgroup>
 		</select>
 
 		<label for="volume" class="font-bold">分量: </label>
-		<input id="volume" required v-model="food_amount" type="text" placeholder="例)100g, 小さじ1, 少々" class="mt-6 mr-5 input input-bordered input-accent max-w-xs" />
+		<input id="volume" required v-model="select_ingredent.amount" type="text" placeholder="例)100g, 小さじ1, 少々" class="mt-6 mr-5 input input-bordered input-accent max-w-xs" />
 
 		<label for="grams" class="font-bold">
-			<div class="tooltip tooltip-info" data-tip="栄養情報を記録したい場合，正確に入力してください">
+			<div class="tooltip tooltip-info" data-tip="栄養情報も記録したい場合，「栄養情報を記録する」にチェックしてください">
 			<img class="inline w-6" src="../assets/images/question.png" alt="" />
 			</div>
 			グラム: 
 		</label>
-		<input id="grams" v-model="food_grams" type="text" placeholder="※数字のみ入力してください" class="disabled mt-2 input input-bordered input-accent max-w-xs" :disabled="!props.isActive" />
+		<input id="grams" v-model="select_ingredent.grams" type="text" placeholder="※数字のみ入力してください" class="disabled mt-2 input input-bordered input-accent max-w-xs" :disabled="!props.isActive" />
 
 		<button  @click.prevent.stop="add_ingredients" class="ml-4 mb-5 btn btn-success">追加</button>
 		
 		<div>
-			<p class="font-bold mb-1">★ 選択した食材/分量</p>
-			<ul v-for="ingredient in ingredients">
-				<li>{{ ingredient }}</li>
+			<p class="font-bold mb-1 border-t-4 border-[#777] w-2/5 m-auto pt-2">★ 選択した食材/分量</p>
+			<ul v-for="ingredient, i in ingredients">
+				<li class="mb-2" :key="i">
+					{{ ingredient.name }} : {{ ingredient.amount }} (グラム {{ ingredient.grams ? ingredient.grams : "未選択" }}g)
+					<a href="#" class="ml-3 px-2 py-1 text-[#fafafa] bg-[#555] rounded-sm hover:bg-[#666]" @click.prevent="ingredients.splice(i, 1)">X</a>
+				</li>
 			</ul>
 		</div>  
 	</div>
@@ -106,20 +110,34 @@ import { ref } from "vue";
 
 const props = defineProps({
   isActive: Boolean
-})
+});
 
-let food_id = ref<string>("")
-let food_amount = ref<string>("")
-let food_grams = ref<number | null>(0)
+type ingredient = {
+	name: string,
+	amount: string,
+	grams: number | null
+};
 
-const ingredients = ref<any>({});
+const select_ingredent = ref<ingredient>({
+	name: "",
+	amount: "",
+	grams: 0
+});
+
+const ingredients = ref<ingredient[]>([]);
 
 const add_ingredients = () => {
-  ingredients.value[food_id.value] = {
-    amount: food_amount.value,
-    grams: food_grams.value ? food_grams.value : null
-  }
-  console.log(ingredients.value);
+  	ingredients.value.push({
+		name: select_ingredent.value.name,
+		amount: select_ingredent.value.amount,
+		grams: select_ingredent.value.grams ? select_ingredent.value.grams : null
+  	});
+
+	select_ingredent.value = {
+		name: "",
+		amount: "",
+		grams: 0
+	}
 };
 
 </script>
