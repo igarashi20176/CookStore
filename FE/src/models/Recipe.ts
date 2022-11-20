@@ -22,7 +22,7 @@ export class Recipe {
     };
 
     get_ingredients (): object[] {
-        const ary: { [K in 'name' & 'amount']: string }[] = [];
+        const ary: { [K in 'name' & 'amount']: string | number }[] = [];
         this.ingredients.split(",").map(value => value.split(":")).map(values => ary.push({ name: values[0], amount: values[1] }));
 
         return ary;

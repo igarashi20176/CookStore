@@ -45,6 +45,7 @@
 			</optgroup>
 			<optgroup label="は">
 				<option class="text-lg" value="白菜">白菜</option>
+				<option class="text-lg" value="ほうれん草">ほうれん草</option>
 			</optgroup>
 			<optgroup label="な">
 				<option class="text-lg" value="ニラ">ニラ</option>
@@ -84,9 +85,13 @@
 			</div>
 			グラム: 
 		</label>
-		<input id="grams" v-model="select_ingredent.grams" type="text" placeholder="※数字のみ入力してください" class="disabled mt-2 input input-bordered input-accent max-w-xs" :disabled="!props.isActive" />
+		<input id="grams" v-model="select_ingredent.grams" type="number" min="0" placeholder="※数字のみ入力してください" class="disabled mt-2 input input-bordered input-accent max-w-xs" :disabled="!props.isActive" />
 
-		<button  @click.prevent.stop="add_ingredients" class="ml-4 mb-5 btn btn-success">追加</button>
+		<button  @click="add_ingredients" class="ml-4 mb-5 btn btn-success">追加</button>
+
+		<div class="mb-5">
+			<label for="my-modal-4" class="text-center btn btn-primary" @click="emits('update:value', ingredients)">選択完了</label>
+		</div>
 		
 		<div>
 			<p class="font-bold mb-1 border-t-4 border-[#777] w-2/5 m-auto pt-2">★ 選択した食材/分量</p>
@@ -96,7 +101,7 @@
 					<a href="#" class="ml-3 px-2 py-1 text-[#fafafa] bg-[#555] rounded-sm hover:bg-[#666]" @click.prevent="ingredients.splice(i, 1)">X</a>
 				</li>
 			</ul>
-		</div>  
+		</div>	 
 	</div>
 
 	</label>
@@ -107,36 +112,34 @@
 <script lang="ts" setup>
 
 import { ref } from "vue";
+import { Ingredient } from "../models/Types";
 
 const props = defineProps({
-  isActive: Boolean
+  	isActive: Boolean
 });
 
-type ingredient = {
-	name: string,
-	amount: string,
-	grams: number | null
-};
+const emits = defineEmits([ 'update:value' ])
 
-const select_ingredent = ref<ingredient>({
+
+const select_ingredent = ref<Ingredient>({
 	name: "",
 	amount: "",
-	grams: 0
+	grams: null
 });
 
-const ingredients = ref<ingredient[]>([]);
+const ingredients = ref<Ingredient[]>([]);
 
-const add_ingredients = () => {
+const add_ingredients = (): void => {
   	ingredients.value.push({
 		name: select_ingredent.value.name,
 		amount: select_ingredent.value.amount,
-		grams: select_ingredent.value.grams ? select_ingredent.value.grams : null
+		grams: select_ingredent.value.grams ? Number(select_ingredent.value.grams) : null
   	});
 
 	select_ingredent.value = {
 		name: "",
 		amount: "",
-		grams: 0
+		grams: null
 	}
 };
 

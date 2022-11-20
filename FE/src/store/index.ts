@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Recipe } from "../models/Recipe";
+import { AddInfo } from "../models/Types";
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 
@@ -23,6 +24,9 @@ export const useRecipeStore = defineStore( "recipe", {
         get_length_recipes( state ): number { 
             return state.recipes.length 
         },
+        get_all_recipes( state ) {
+            return (postId: number): object[] => { return state.recipes }
+        },
         get_one_recipe( state ) {
             return (postId: number): object => { return state.recipes[postId] }
         },
@@ -32,7 +36,7 @@ export const useRecipeStore = defineStore( "recipe", {
     },
 
     actions: {
-        async get_Database_recipes() {
+        get_database_recipes() {
             this.recipes = [];
 
             axios(options)
@@ -47,6 +51,9 @@ export const useRecipeStore = defineStore( "recipe", {
               // エラー処理
               console.log(e.message);
             });
+        },
+        post_database_recipe( recipe: AddInfo ) {
+            console.log(recipe);
         }
     }
 });

@@ -1,6 +1,6 @@
 <template>
 
-<div v-show="!is_show && !isRecipeNull">
+<div v-show="!is_show">
 
 	<div class="w-1/5 ml-10 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
 		<input type="checkbox" class="peer" /> 
@@ -18,26 +18,26 @@
 	</div>
 
 	<h2 class="text-2xl font-bold text-center bg-base-300 w-1/4 m-auto rounded-xl">みんなのメニュー</h2>
-	<div class="flex flex-row flex-wrap gap-7 m-7">
-		<ul v-for="recipe, i in recipeStore.recipes">
+	<div v-if="is_recipe_null" class="mt-10 text-center text-2xl">
+		<p>データの取得に失敗しました</p>
+		<p>もう一度お試しください</p>
+	</div>
+	<div v-else class="flex flex-row flex-wrap gap-7 m-7">
+		<ul v-for="recipe, i in recipe_store.recipes">
 			<li :key="i"><recipe-card :recipe="recipe" @change-show="is_show_change" /></li>
 		</ul>
 	</div>
 </div>
 
 <div v-if="is_show">
-  	<recipe-detail :recipe="recipeStore.get_one_recipe(current_recipe)" @change-show="is_show_change" />
-</div>
-
-<div v-if="isRecipeNull">
-	<h3 class="text-2xl font-bold text-center">レシピの取得に失敗しました</h3>
+  	<recipe-detail :recipe="recipe_store.get_one_recipe(current_recipe)" @change-show="is_show_change" />
 </div>
 
 </template>
 
 <script lang="ts" setup>
 
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRecipeStore } from "../store";
 
 
@@ -48,24 +48,29 @@ import RecipeCard from "../templates/RecipeCard.vue";
 import RecipeDetail from "../templates/RecipeCardDetail.vue";
 
 
-const recipeStore = useRecipeStore();
-const isRecipeNull = ref<boolean>(false)
+const recipe_store = useRecipeStore();
+// レシピの取得
+recipe_store.get_database_recipes();
 
 
 const is_show = ref<boolean>(false);
 const current_recipe = ref<number>(0)
 
-const is_show_change = (postId: number) => {
+
+/**
+ * 概要一覧と詳細のview切り替え
+ * @param postId // レシピのID
+ */
+const is_show_change = (post_id: number) => {
 	is_show.value = !is_show.value;
 	
-	if ( postId ) {
-		current_recipe.value = recipeStore.find_one_recipe_index(postId)
+	if ( post_id ) {
+		current_recipe.value = recipe_store.find_one_recipe_index(post_id)
 	}
 };
 
-onMounted( async () => {
-	await recipeStore.get_Database_recipes();
-	isRecipeNull.value = recipeStore.get_length_recipes > 0 ? false : true;
-})
+const is_recipe_null = computed(() => {
+	return recipe_store.get_length_recipes === 0 ? true : false;
+});
 
 </script>

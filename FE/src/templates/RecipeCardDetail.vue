@@ -43,7 +43,7 @@
 						<div class="flex justify-between">
 							<p class="ml-5 text-xl font-bold">{{ ingredient.name }}</p>
 							<p class="mr-5 text-xl font-bold">{{ ingredient.amount }}</p>
-							</div>
+						</div>
 						<div class="border-t border-dashed border-[#555] w-[350px] mb-3"></div>
 					</div>
 				</div>
@@ -75,38 +75,16 @@
 <script lang="ts" setup>
 
 import { computed } from "vue";
+import { Recipe, Comment } from "../models/Types";
 
 const props = defineProps({
 	recipe: { type: Object,  required: true }
 })
+
 const emits = defineEmits([ 'change-show' ])
 
 
-type recipe = {
-	author: string
-	create_date: string
-	title: string,
-	description: string,
-	ingredients: string,
-	remarks: string
-};
-
-// const props.recipe: recipe = {
-// 	author: "Jessy",
-// 	create_at: "2022-01-20",
-// 	title: "あったかトマトスープ♪",
-// 	description: "木曾路はすべて山の中である。あるところは岨づたいに行く崖の道であり、あるところは数十間の深さに臨む",
-// 	ingredients: "卵 : 2個, 豚バラ : 100g, ほうれん草 : 2株, 醤油 : 大さじ1, みりん : 大さじ2",
-// 	remarks: "恥の多い生涯を送って来ました。自分には、人間の生活というものが、見当つかないのです。自分は東北の田舎"
-// };
-
-type comment = {
-	name: string,
-	body: string,
-	date: string
-};
-
-const comments: comment[] = [
+const comments: Comment[] = [
 	{
 		name: "Jon Doe",
 		body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
@@ -126,7 +104,7 @@ const comments: comment[] = [
 
 // keyof...プロパティ名をユニオンで返す
 const get_texts = computed( () => {
-	return (sentence: keyof recipe, line_count: number):string[] => {
+	return (sentence: keyof Recipe, line_count: number):string[] => {
 		const textAry: string[] = [];
 		const text = sentence === 'description' ? props.recipe.get_description() : props.recipe.get_remarks();
 

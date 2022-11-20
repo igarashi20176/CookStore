@@ -17,7 +17,7 @@
     </div>
 
     <div class="navbar-center">
-        <a @click="currentComponent = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9" src="./assets/images/recipe-book.png" />CookStore</a>
+        <a @click="currentComponent = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9" src="./assets/images/recipe-book.png" />クックストア</a>
     </div>
     <div class="navbar-end">
         <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
@@ -93,7 +93,7 @@ import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
 import AddRecipe from "./views/AddRecipe.vue";
 
-const currentComponent = ref("recipe")
+const currentComponent = ref("add")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
