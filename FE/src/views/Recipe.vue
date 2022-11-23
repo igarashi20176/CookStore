@@ -25,7 +25,7 @@
 		<p>もう一度お試しください</p>
 	</div>
 
-	<ul class="m-4 flex-row lg:flex lg:flex-wrap lg:gap-5 items-stretch">
+	<ul class="mt-10 mb-10 flex-row lg:flex lg:flex-wrap lg:gap-10 justify-center items-stretch">
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
 			<recipe-card :recipe="recipe" @change-show="is_show_change" />
 		</li>

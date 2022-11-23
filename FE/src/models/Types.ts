@@ -6,6 +6,7 @@ export type Ingredient = {
 
 export type AddInfo = {
 	title: string
+	category_id: number
 	description: string
 	ingredients: Array<Ingredient>
 	remarks: string

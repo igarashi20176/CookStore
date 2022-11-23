@@ -1,5 +1,18 @@
 <template>
 
+<div class="z-10 top-20 toast toast-top toast-end">
+  <div v-if="is_login === 1" class="alert alert-success">
+    <div>
+      <span class="font-bold">ログインに成功しました</span>
+    </div>
+  </div>
+  <div v-if="is_login === 2" class="alert alert-error">
+    <div>
+      <span class="font-bold">ログインに失敗しました</span>
+    </div>
+  </div>
+</div>
+
 <!-- ナビバー -->
 <!-- <the-header /> -->
 <div class="navbar bg-base-200 mb-3">
@@ -31,29 +44,24 @@
                     <img src="https://placeimg.com/80/80/people" />
                 </div>
             </label>
-            <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+            <ul v-if="!user_store.is_user_login" tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                <li><label for="my-modal-1" class="">ログイン</label></li>
+                <li><a href="#my-modal-2" class="">新規登録</a></li>
+            </ul>
+            <ul v-if="user_store.is_user_login" tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                 <li>
                     <a class="justify-between">
-                    Profile
-                    <span class="badge">New</span>
+                    マイページ
                     </a>
                 </li>
-                <li><a href="#my-modal-1" class="">Sigh In</a></li>
-                <li><a href="#my-modal-2" class="">Register</a></li>
+                <li><label @click="user_store.logout_user_info()" class="">ログアウト</label></li>
             </ul>
         </div>
     </div>
 </div>
+
   
-<div class="modal" id="my-modal-1">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">Sign In</h3>
-        <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-        <div class="modal-action">
-            <a href="#" class="btn">Yay!</a>
-        </div>
-    </div>
-</div>
+<sign-in-modal @save-login-info="save_login" :id="1" />
   
 <div class="modal" id="my-modal-2">
     <div class="modal-box">
@@ -82,7 +90,7 @@
 <script lang="ts" setup>
 
 import { ref, shallowReactive } from "vue";
-
+import { useUserStore } from "./store/userStore";
 
 /**
  * Components
@@ -92,16 +100,34 @@ import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
 import Menu from "./views/Menu.vue";
 import AddRecipe from "./views/AddRecipe.vue";
-import SignIn from "./views/SignIn.vue";
+import SignInModal from "./templates/TheSignInModal.vue";
 
 
-const currentComponent = ref("add")
+const user_store = useUserStore()
+
+const currentComponent = ref("top")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
     add: AddRecipe,
-    menu: Menu,
-    sign: SignIn
+    menu: Menu
 })
+
+const is_login = ref<number>(0)
+
+const save_login = ( uid: string, token: string ) => {
+    user_store.get_database_user( uid, token )
+
+    setTimeout( () => {
+        if (user_store.is_user_login) {
+            is_login.value = 1
+        } else {
+            is_login.value = 2
+        }
+    }, 2500)
+    setTimeout( () => {
+        is_login.value = 0
+    }, 7000)
+}
 
 </script>

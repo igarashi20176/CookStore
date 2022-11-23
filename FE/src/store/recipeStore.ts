@@ -11,19 +11,11 @@ import { storage } from "../firebase";
 const FOLDER_NAME = "recipe_images"
 const axios_url = "http://localhost:8080";
 
+// type RECIPE = typeof Recipe
+
 interface State {
     recipes: Recipe[];
 }
-
-const get_options: AxiosRequestConfig = {
-    url: `${axios_url}/api/v1/recipes`,
-    method: "GET",
-};
-
-const post_options: AxiosRequestConfig = {
-    url: `${axios_url}/api/v1/recipes`,
-    method: "GET",
-};
 
 export const useRecipeStore = defineStore( "recipe", {
     state: (): State => ({
@@ -49,7 +41,12 @@ export const useRecipeStore = defineStore( "recipe", {
         get_database_recipes() {
             this.recipes = [];
 
-            axios(options)
+            const get_options: AxiosRequestConfig = {
+                url: `${axios_url}/api/v1/recipes`,
+                method: "GET",
+            };
+
+            axios(get_options)
             .then((res: AxiosResponse<object[]>) => {
                 const { data, status } = res;
                                 
@@ -64,6 +61,7 @@ export const useRecipeStore = defineStore( "recipe", {
               console.log(e.message);
             });
         },
+
         get_recipes_images() {
             if ( this.get_length_recipes > 0 ) {
                 this.recipes.forEach( r => {
@@ -84,13 +82,26 @@ export const useRecipeStore = defineStore( "recipe", {
                 })
             }
         },
-        async post_database_recipe( recipe: AddInfo ) {
-            console.log(recipe);
-            let storageRef = fsRef(storage, `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`);
 
-            // await uploadBytes(storageRef, recipe.file).then((snapshot) => {
-            //     console.log("画像をアップロード", snapshot)
-            // }).catch(err => console.log(err))       
+        post_database_recipe( recipe: AddInfo ) {
+            const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
+            let storageRef = fsRef(storage, img_url);
+
+            // firebase storageに画像を格納
+            uploadBytes(storageRef, recipe.file)
+            .then( () => {
+                delete recipe.file;
+                const post_options: AxiosRequestConfig = {
+                    url: `${axios_url}/api/v1/recipe`,
+                    method: "POST",
+                    data: { uid: "jui221", ...recipe, img_url: img_url }
+                };
+
+                axios(post_options)
+                .then((res: AxiosResponse<object[]>) => {
+                    console.log(res);
+                })
+            }).catch(err => console.log(err)) 
         }
     }
 });

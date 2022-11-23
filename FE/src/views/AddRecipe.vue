@@ -36,8 +36,17 @@
 		</div>
 
 		<div>
-			<label class="block font-bold mb-3" for="title">★キャッチコピー<span class="text-sm"> (最大60文字)</span></label>
-			<textarea v-model="add_recipe_info.description" class="textarea textarea-bordered mb-10" placeholder="例) 美味しいのに超時短!忙しい日にぜひ作ってほしいレシピです" maxlength="60" cols="30"></textarea>
+			<label class="block font-bold mb-3" for="description">★キャッチコピー<span class="text-sm"> (最大60文字)</span></label>
+			<textarea id="description" v-model="add_recipe_info.description" class="textarea textarea-bordered mb-10" placeholder="例) 美味しいのに超時短!忙しい日にぜひ作ってほしいレシピです" maxlength="60" cols="30"></textarea>
+
+			<label class="block font-bold mb-3" for="category">★レシピのカテゴリ<span class="text-sm"> (最大60文字)</span></label>
+			<select v-model="add_recipe_info.category_id" id="category" class="mb-7 select select-bordered w-full max-w-xs">
+				<option disabled selected>どんな料理？</option>
+				<option value="1">ごはんもの</option>
+				<option value="2">肉のおかず</option>
+				<option value="3">野菜のおかず</option>
+				<option value="4">スープ・汁物</option>
+			</select>
 
 			<div v-if="(add_recipe_info.ingredients.length === 0)" class="bg-orange-200 w-full h-36 p-2 mb-10 text-center rounded-xl ">
 				<label class="block font-bold mb-3" for="title">食材・分量を入力</label>
@@ -86,6 +95,7 @@ const recipe_store = useRecipeStore();
 // 入力情報の保存
 const add_recipe_info = ref<AddInfo>({
 	title: "",
+	category_id: 0,
 	description: "",
 	ingredients: [],
 	remarks: "",
@@ -93,6 +103,10 @@ const add_recipe_info = ref<AddInfo>({
 	file: {}
 });
 
+
+/**
+ * 画像が入力されたらプレビューを表示
+ */
 const on_img = ref<boolean>(false);
 const img_data = ref<any>();
 
@@ -101,11 +115,17 @@ const getImageFile = (props: any): void => {
 	add_recipe_info.value.file = props.target.files[0];
 	on_img.value = !on_img.value 
 
-	img_data.value = URL.createObjectURL(add_recipe_info.value.file)
+	// プレビューURLの生成
+	img_data.value = URL.createObjectURL(add_recipe_info.value.file)	
 } 
 
-// 追加レシピの情報をpiniaに送信
+
+/**
+ *  追加レシピの情報をpiniaに送信
+ */
 const post_recipe = (): void => {
+	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
+	console.log(add_recipe_info.value);
 	recipe_store.post_database_recipe(add_recipe_info.value);
 }
 

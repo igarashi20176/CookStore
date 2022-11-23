@@ -48,7 +48,7 @@ async function main() {
     });
     const menus = await prisma.menu.createMany({
         data: [
-            { postId: 5, title: "簡単!彩メニュー", description: "彩鮮やかで超時短メニューです", remarks: "超おいしい！", stapleId: 4, mainId: 1, subId: 3, soupId: 2, created_at: new Date() },
+            { postId: 5, title: "簡単!彩メニュー", description: "彩鮮やかで超時短メニューです", remarks: "超おいしい！", stapleId: 1, mainId: 5, subId: 3, soupId: 2, created_at: new Date() },
             { postId: 10, title: "王道の家族大好評メニュー", description: "困ったときはこれを作れば大好評", remarks: "試してみてください！", stapleId: 4, mainId: 8, subId: 6, soupId: 7, created_at: new Date() },
         ]
     });

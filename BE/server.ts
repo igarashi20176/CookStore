@@ -7,6 +7,7 @@ const app = express();
  */
 
 import { PrismaClient, Prisma } from '@prisma/client';
+import { type } from "os";
 const prisma = new PrismaClient();
 
 
@@ -30,11 +31,20 @@ app.get('/', (req: Request, res: Response) => {
 	res.send('Hello from GCE EXPRESS!');
 });
 
-app.get('/api/v1/users', async (req: Request, res: Response) => {
-	const users = await prisma.user.findMany();
-	return res.json(users);
+app.get('/api/v1/user', async (req: Request, res: Response) => {
+	
+	const { uid } = req.query;
+	
+	const user = await prisma.user.findUnique({
+		where: {
+			id: String(uid)
+		},
+		select: { id: true, name: true }
+	});
+	return res.json(user);
 });
 
+// 全てのレシピを取得
 app.get('/api/v1/recipes', async (req: Request, res: Response) => {
  	 const recipes = await prisma.recipe.findMany({
     	include: { post: { select: { authorId: true } } }
@@ -42,27 +52,44 @@ app.get('/api/v1/recipes', async (req: Request, res: Response) => {
   	return res.json(recipes);
 });
 
+// レシピを登録
 app.post('/api/v1/recipe', async (req: Request, res: Response) => {
-  const { title, description, ingredients, remarks, nut_option } = req.body;
-  try {
-    // const user = await prisma.recipe.create({
-    //   data: {
-    //   }
-    // });
-    // return res.json(user);
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2002') {
-        console.log(
-          'There is a unique constraint violation, a new user cannot be created with this email'
-        );
-      }
-    }
-    return res.status(400).json(e);
-  }
+  	// const { uid ,title, description, ingredients, remarks, nut_option } = req.body;
+  	const { uid, title, category_id, description, ingredients, remarks, img_url ,nut_option } = req.body;
+
+	// 原材料のオブジェクトをテキストに変換
+	let ing: Array<string> = [];
+	ingredients.forEach( (i: any) => {
+		ing.push(`${i.name}:${i.amount}`)
+	});
+	
+  	try {
+    	const post = await prisma.post.create({
+      		data: {
+        		authorId: uid
+      		}
+    	});
+
+    	const recipe = await prisma.recipe.create({
+			data: {
+				postId: post.id, title: title, categoryId: category_id, description: description, ingredients: ing.join(), remarks: remarks, image: img_url
+			}
+		});
+    	return res.json(recipe);
+
+ 	} catch (e) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			if (e.code === 'P2002') {
+				console.log(
+				'There is a unique constraint violation, a new user cannot be created with this email'
+				);
+			}
+		}
+    	return res.status(400).json(e);
+  	}
   });
 
-
+// 全てのメニューを取得
 app.get('/api/v1/menus', async (req: Request, res: Response) => {
   	const menus = await prisma.menu.findMany({
     	include: { 

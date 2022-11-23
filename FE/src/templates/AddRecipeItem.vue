@@ -35,7 +35,7 @@
 		<label for="spices" class="peer-checked/spices:text-white p-1 rounded-md bg-slate-400 border-2 hover:bg-slate-500 cursor-pointer">調味料</label>
 
 		<select v-model="select_ingredent.name" required class="hidden peer-checked/meat:block mt-5 m-auto select select-accent border-red-400 w-full max-w-xs">
-			<option hidden>肉・魚類</option>
+			<option disabled selected>肉・魚類</option>
 			<optgroup label="さ行">
 				<option class="text-lg" value="鮭">鮭</option>
 				<option class="text-lg" value="サバ">サバ</option>
@@ -53,7 +53,7 @@
 		</select>
 
 		<select v-model="select_ingredent.name" class="hidden peer-checked/vegetable:block mt-5 m-auto select select-accent border-green-400 w-full max-w-xs">
-			<option hidden>野菜・果物</option>
+			<option disabled selected>野菜・果物</option>
 			<optgroup label="か行">
 				<option class="text-lg" value="キャベツ">キャベツ</option>
 			</optgroup>
@@ -79,14 +79,14 @@
 		</select>
 
 		<select v-model="select_ingredent.name" class="hidden peer-checked/kinoko:block mt-5 m-auto select select-accent border-amber-600 w-full max-w-xs">
-			<option hidden>きのこ類</option>
+			<option disabled selected>きのこ類</option>
 			<optgroup label="は">
 				<option class="text-lg" value="ぶなしめじ">ぶなしめじ</option>
 			</optgroup>
 		</select>
 
 		<select v-model="select_ingredent.name" required class="hidden peer-checked/milk:block mt-5 m-auto select select-accent border-blue-400 w-full max-w-xs">
-			<option hidden>乳製品・卵</option>
+			<option disabled selected>乳製品・卵</option>
 			<optgroup label="か行">
 				<option class="text-lg" value="牛乳">牛乳</option>
 			</optgroup>
@@ -99,7 +99,7 @@
 		</select>
 
 		<select v-model="select_ingredent.name" class="hidden peer-checked/process:block mt-5 m-auto select select-accent border-orange-400 w-full max-w-xs">
-			<option hidden>加工食品・缶詰</option>
+			<option disabled selected>加工食品・缶詰</option>
 			<optgroup label="さ行">
 				<option class="text-lg" value="サバ缶">サバ缶</option>
 			</optgroup>
@@ -110,14 +110,14 @@
 		</select>
 
 		<select v-model="select_ingredent.name" class="hidden peer-checked/seaweed:block mt-5 m-auto select select-accent border-green-600 w-full max-w-xs">
-			<option hidden>海藻</option>
+			<option disabled selected>海藻</option>
 			<optgroup label="か行">
 				<option class="text-lg" value="乾燥わかめ">乾燥わかめ</option>
 			</optgroup>
 		</select>
 
 		<select v-model="select_ingredent.name" class="hidden peer-checked/spices:block mt-5 m-auto select select-accent border-slate-500 w-full max-w-xs">
-			<option hidden>調味料</option>
+			<option disabled selected>調味料</option>
 			<optgroup label="さ行">
 				<option class="text-lg" value="砂糖">砂糖</option>
 				<option class="text-lg" value="醤油">醤油</option>
