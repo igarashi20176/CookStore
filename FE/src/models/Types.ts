@@ -10,16 +10,8 @@ export type AddInfo = {
 	ingredients: Array<Ingredient>
 	remarks: string
 	nut_option: boolean
+	file: any
 }
-
-export type Recipe = {
-	author: string
-	create_date: string
-	title: string
-	description: string
-	ingredients: string
-	remarks: string
-};
 
 export type Comment = {
 	name: string

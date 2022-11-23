@@ -7,13 +7,13 @@
 
 <div class="m-10 border-2 p-8 w-[930px] rounded-md">
   	<label class="font-bold mr-5" for="title">★タイトル</label>
-  	<input v-model="add_recipe_info.title" id="title" type="text" placeholder="例) あったかトマトスープ" class="input input-bordered input-primary w-full max-w-xs mb-5" />
+  	<input v-model="add_recipe_info.title" id="title" type="text" placeholder="例) あったかトマトスープ" class="input input-bordered input-primary w-full max-w-xs mb-7" />
 
 	<div class="flex gap-x-16">	
 		<div class="flex-col gap-y-16 text-center">
 			<figure>
-				<input id="file" type="file" class="hidden" /> 
-				<label for="file" class="block bg-base-200 w-[500px] h-[400px] p-8 cursor-pointer rounded-xl hover:bg-base-300">
+				<input @change="getImageFile" id="file" type="file" class="hidden" /> 
+				<label v-if="!on_img" for="file" class="block bg-base-200 w-[500px] h-[400px] p-8 cursor-pointer rounded-xl hover:bg-base-300">
 					<p class="font-bold mb-10 text-xl">料理の画像を挿入してください</p>
 					<img class="block w-20 m-auto " src="../assets/images/photo-camera.png" alt="">
 					<div class="alert alert-info shadow-lg mt-20 p-2 opacity-60">
@@ -23,7 +23,10 @@
 					</div>
 					</div>
 				</label>
-				<img v-if="on_img" src="https://dummyimage.com/500x400/000000/fd7e00" alt="">
+				<div v-else>
+					<p>画像をダブルクリックで差し替えることができます</p>
+					<img @dblclick="on_img = !on_img" id="preview" :src="img_data" class="w-[500px] h-[400px] rounded-xl border-2 border-[#888] cursor-pointer hover:opacity-60" />
+				</div>
 			</figure>
 
 			<div class="w-[400px]">
@@ -75,23 +78,36 @@
 import { ref } from "vue";
 import AddRecipeItem from "../templates/AddRecipeItem.vue";
 import { AddInfo } from "../models/Types";
-import { useRecipeStore } from "../store";
+import { useRecipeStore } from "../store/recipeStore";
 
 const recipe_store = useRecipeStore();
 
+
+// 入力情報の保存
 const add_recipe_info = ref<AddInfo>({
 	title: "",
 	description: "",
 	ingredients: [],
 	remarks: "",
-	nut_option: false
+	nut_option: false,
+	file: {}
 });
 
 const on_img = ref<boolean>(false);
+const img_data = ref<any>();
 
+// inputされたFileの保存
+const getImageFile = (props: any): void => {	
+	add_recipe_info.value.file = props.target.files[0];
+	on_img.value = !on_img.value 
 
+	img_data.value = URL.createObjectURL(add_recipe_info.value.file)
+} 
+
+// 追加レシピの情報をpiniaに送信
 const post_recipe = (): void => {
 	recipe_store.post_database_recipe(add_recipe_info.value);
 }
+
 
 </script>

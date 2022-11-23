@@ -1,24 +1,15 @@
-export class Recipe {
-    private postId: number;
-	private author: string;
-	private readonly create_at: string;
-	private title: string;
-	private description: string;
+import { Post } from "../models/Post";
+
+export class Recipe extends Post {
 	private ingredients: string;
-	private remarks: string;
+    private category: number;
+    private image: string;
 
-    constructor(postId: number, author: string, create_at: string, title: string, description: string, ingredients: string , remarks: string ) {
-        this.postId = postId;
-        this.author = author;
-        this.create_at = create_at;
-        this.title = title;
-        this.description = description;
+    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string ) {
+        super(articleId, postId, author, create_at, title, description, remarks);
         this.ingredients = ingredients;
-        this.remarks = remarks;
-    };
-
-    get_postId (): number {
-        return this.postId;
+        this.category = category;
+        this.image = image
     };
 
     get_ingredients (): object[] {
@@ -28,24 +19,15 @@ export class Recipe {
         return ary;
     }
 
-    get_author ():string {
-        return this.author;
+    get_category() {
+        return this.category;
+    }
+    
+    get_image() {
+        return this.image;
     }
 
-    get_created_date ():string {
-        return this.create_at;
+    set_image( imageURL: string ) {
+        this.image = imageURL;
     }
-
-    get_title ():string {
-        return this.title;
-    }
-
-    get_description ():string {
-        return this.description;
-    }
-
-    get_remarks ():string {
-        return this.remarks;
-    }
-
 };

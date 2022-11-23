@@ -31,18 +31,20 @@ model Post {
   menu          Menu[]
   like          Like[]
   comment       Comment[]
-  nutrition     Nutrition?
 }
 
 model Recipe {
   id            Int       @id @default(autoincrement())
   title         String    @db.VarChar(30)
-  description   String?   @db.VarChar(60)
-  category      String    @db.Char(10)
+  description   String?   @db.VarChar(60)    
   ingredients   String    @db.Text
   remarks       String?   @db.Text
+  image         String    @db.VarChar(35)
   post          Post      @relation(fields: [postId], references: [id])
-  postId        Int       
+  postId        Int       @unique
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    Int   
+  nutrition     Nutrition?       
   stapleRecipe  Menu[]    @relation("StapleRecipe")
   mainRecipe    Menu[]    @relation("MainRecipe")
   subRecipe     Menu[]    @relation("SubRecipe")
@@ -57,18 +59,24 @@ model Menu {
   description   String?   @db.VarChar(60)
   remarks       String?   @db.Text
   post          Post      @relation(fields: [postId], references: [id])
-  postId        Int     
-  staple        Recipe?   @relation("StapleRecipe", fields: [stapleId], references: [id])
+  postId        Int       @unique
+  staple        Recipe    @relation("StapleRecipe", fields: [stapleId], references: [id])
   stapleId      Int
-  main          Recipe?   @relation("MainRecipe", fields: [mainId], references: [id])
+  main          Recipe    @relation("MainRecipe", fields: [mainId], references: [id])
   mainId        Int
-  sub           Recipe?   @relation("SubRecipe", fields: [subId], references: [id])
+  sub           Recipe    @relation("SubRecipe", fields: [subId], references: [id])
   subId         Int
-  soup          Recipe?   @relation("SoupRecipe", fields: [soupId], references: [id])
+  soup          Recipe    @relation("SoupRecipe", fields: [soupId], references: [id])
   soupId        Int
   created_at    DateTime  @default(now()) 
   updated_at    DateTime  @default(now()) @updatedAt
 } 
+
+model Category {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.Char(15)
+  recipe        Recipe[] 
+}
 
 model Like {
   id            Int      @id @default(autoincrement())
@@ -76,6 +84,7 @@ model Like {
   userId        String
   post          Post      @relation(fields: [postId], references: [id])
   postId        Int   
+  @@unique([ userId, postId ])
 } 
 
 model Comment {
@@ -104,11 +113,12 @@ model Nutrition {
   vd            Float    @db.Float
   ve            Float    @db.Float
   folic         Float    @db.Float
+  nat           Int   
+  kal           Int   
   calc          Int   
   iron          Float    @db.Float
   mag           Int
   zinc          Float    @db.Float
-  post          Post?    @relation(fields: [recipeId], references: [id])
+  recipe        Recipe?  @relation(fields: [recipeId], references: [id])
   recipeId      Int?     @unique
 }
-

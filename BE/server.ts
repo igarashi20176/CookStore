@@ -5,6 +5,7 @@ const app = express();
 /**
  * Prisma
  */
+
 import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -14,10 +15,10 @@ app.use(express.urlencoded({extended: true}));
 
 //CROS対応（というか完全無防備：本番環境ではだめ絶対）
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Methods", "*");
+	res.header("Access-Control-Allow-Headers", "*");
+	next();
 });
 
 
@@ -26,14 +27,52 @@ app.use((req: Request, res: Response, next: NextFunction) => {
  */
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from GCE EXPRESS!');
+	res.send('Hello from GCE EXPRESS!');
+});
+
+app.get('/api/v1/users', async (req: Request, res: Response) => {
+	const users = await prisma.user.findMany();
+	return res.json(users);
 });
 
 app.get('/api/v1/recipes', async (req: Request, res: Response) => {
-  const recipes = await prisma.recipe.findMany({
-    include: { post: { select: { authorId: true } } }
+ 	 const recipes = await prisma.recipe.findMany({
+    	include: { post: { select: { authorId: true } } }
+  	});
+  	return res.json(recipes);
+});
+
+app.post('/api/v1/recipe', async (req: Request, res: Response) => {
+  const { title, description, ingredients, remarks, nut_option } = req.body;
+  try {
+    // const user = await prisma.recipe.create({
+    //   data: {
+    //   }
+    // });
+    // return res.json(user);
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2002') {
+        console.log(
+          'There is a unique constraint violation, a new user cannot be created with this email'
+        );
+      }
+    }
+    return res.status(400).json(e);
+  }
   });
-  return res.json(recipes);
+
+
+app.get('/api/v1/menus', async (req: Request, res: Response) => {
+  	const menus = await prisma.menu.findMany({
+    	include: { 
+			post: true, 
+			staple: { select: { title: true, created_at: true, image: true ,post: { select: { authorId: true } } } }, 
+			main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } }, 
+			sub: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
+			soup: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } } }
+  	});
+  	return res.json(menus);
 });
 
 

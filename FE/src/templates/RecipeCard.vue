@@ -2,16 +2,16 @@
 
 <div class="card card-side bg-base-200 shadow-xl">
     <figure>
-        <img class="pl-2 rounded-2xl" src="https://dummyimage.com/350x300/000/fd7e00" alt="Movie"/>
+        <img class="rounded-2xl w-[330px] h-[280px] border-2 border-[#999]" :src="props.recipe.get_image()" :alt="props.recipe.get_title()"/>
     </figure>
 
-    <div class="card-body w-[280px]">
+    <div class="relative card-body w-[270px] p-3">
         <div class="tooltip tooltip-primary font-bold" :data-tip="props.recipe.get_title()">
-            <h2 class="card-title">{{ title_short }}</h2>
+            <h2 class="abosolute card-title">{{ title_short }}</h2>
         </div>
         <div class="flex items-center gap-x-2">
             <p>by {{ props.recipe.get_author() }}</p>
-            <p>投稿日: {{ props.recipe.get_created_date() }}</p>
+            <p>投稿日: {{ props.recipe.get_created_at() }}</p>
         </div>
         <div class="flex py-2">
             <p>{{ content_short }}</p>
@@ -49,7 +49,7 @@ const emits = defineEmits([ 'change-show' ])
 
 const title_short = computed(() => props.recipe.get_title().length >= 14 ? `${props.recipe.get_title().substring(0, 14)}...` : props.recipe.get_title());
 
-const content_short = computed(() => props.recipe.get_description().length >= 66 ? `${props.recipe.get_description().substring(0, 66)}...` : props.recipe.get_description());
+const content_short = computed(() => props.recipe.get_description().length > 40? `${props.recipe.get_description().substring(0, 40)}...` : props.recipe.get_description());
 
 
 </script>

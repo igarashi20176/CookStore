@@ -2,10 +2,11 @@
 
 <div v-show="!is_show">
 
-	<div class="w-1/5 ml-10 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
+	<!-- レシピカテゴリー -->
+	<div class="w-1/3 lg:w-1/5 ml-5 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
 		<input type="checkbox" class="peer" /> 
 		<div class="peer-checked:bg-orange-200 collapse-title text-lg font-medium">
-			<p>レシピカテゴリー</p>
+			<p>レシピカテゴリ</p>
 		</div>
 		<div class="collapse-content"> 
 			<ul class="mt-3 text-lg">
@@ -17,16 +18,18 @@
 		</div>
 	</div>
 
-	<h2 class="text-2xl font-bold text-center bg-base-300 w-1/4 m-auto rounded-xl">みんなのメニュー</h2>
+	<h2 class="mt-5 text-2xl font-bold text-center bg-base-300 w-1/3 lg:w-1/4 m-auto rounded-xl">みんなのメニュー</h2>
+
 	<div v-if="is_recipe_null" class="mt-10 text-center text-2xl">
 		<p>データの取得に失敗しました</p>
 		<p>もう一度お試しください</p>
 	</div>
-	<div v-else class="flex flex-row flex-wrap gap-7 m-7">
-		<ul v-for="recipe, i in recipe_store.recipes">
-			<li :key="i"><recipe-card :recipe="recipe" @change-show="is_show_change" /></li>
-		</ul>
-	</div>
+
+	<ul class="m-4 flex-row lg:flex lg:flex-wrap lg:gap-5 items-stretch">
+		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
+			<recipe-card :recipe="recipe" @change-show="is_show_change" />
+		</li>
+	</ul>
 </div>
 
 <div v-if="is_show">
@@ -37,8 +40,8 @@
 
 <script lang="ts" setup>
 
-import { ref, computed, onMounted } from "vue";
-import { useRecipeStore } from "../store";
+import { ref, computed } from "vue";
+import { useRecipeStore } from "../store/recipeStore";
 
 
 /**

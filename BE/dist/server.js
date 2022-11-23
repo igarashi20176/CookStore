@@ -26,11 +26,27 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('Hello from GCE EXPRESS!');
 });
+app.get('/api/v1/users', async (req, res) => {
+    const users = await prisma.user.findMany();
+    return res.json(users);
+});
 app.get('/api/v1/recipes', async (req, res) => {
     const recipes = await prisma.recipe.findMany({
         include: { post: { select: { authorId: true } } }
     });
     return res.json(recipes);
+});
+app.get('/api/v1/menus', async (req, res) => {
+    const menus = await prisma.menu.findMany({
+        include: {
+            post: true,
+            staple: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
+            main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
+            sub: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
+            soup: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } }
+        }
+    });
+    return res.json(menus);
 });
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.LISTENPORT || 8080;

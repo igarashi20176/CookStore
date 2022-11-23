@@ -74,8 +74,7 @@
     </button>
 </div>
 
-<!-- カード -->
-<!-- <review /> -->
+
 <component :is="componentList[currentComponent]" />
 
 </template>
@@ -91,13 +90,18 @@ import { ref, shallowReactive } from "vue";
 import TheHeader from "./templates/TheHeader.vue";
 import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
+import Menu from "./views/Menu.vue";
 import AddRecipe from "./views/AddRecipe.vue";
+import SignIn from "./views/SignIn.vue";
+
 
 const currentComponent = ref("add")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
-    add: AddRecipe
+    add: AddRecipe,
+    menu: Menu,
+    sign: SignIn
 })
 
 </script>

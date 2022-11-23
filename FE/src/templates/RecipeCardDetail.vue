@@ -1,37 +1,39 @@
 <template>
 
-<div class="flex">
+<div class="lg:flex flex-row">
 
-	<div class="m-6 p-5 border-2 border-base-300 rounded-lg w-[920px]">
+	<div class="m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%]">
 
+		<!-- 投稿者・タイトル -->
 		<div class="mb-3">
 			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
-			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_author() }} <span class="text-base">作成日: {{ props.recipe.get_created_date() }}</span></p>
+			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_author() }} <span class="text-base">作成日: {{ props.recipe.get_created_at() }}</span></p>
 		</div>
 
 		<label class="inline-block font-bold mr-5 mb-5" for="title">★タイトル</label>
 		<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ props.recipe.get_title() }}</h3>
 
-		<div class="flex gap-x-16">
+		<!-- 料理の写真と補足説明 -->
+		<div class="lg:flex gap-x-16">
 			<div class="flex flex-col w-[450px]">
 				<figure class="mt-5">
-					<img class="rounded-xl" src="https://dummyimage.com/500x400/000000/fd7e00" alt="">
+					<img class="border-2 border-[#999] rounded-xl" :src="props.recipe.get_image()" :alt="props.recipe.get_title()">
 				</figure>
 
 				<div class="mt-8 text-center">	
 					<label class="block font-bold mb-5" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
-					<div class="ml-6"  v-for="text in get_texts('remarks', 21)"> 
+					<div class="ml-6" v-for="text in get_texts(props.recipe.get_remarks(), 21)"> 
 						<p class="text-lg font-bold text-left">{{ text }}</p>
 						<div class="border-t border-[#555] w-[390px] mb-3"></div>
 					</div>
 				</div>	
 			</div>
 
-			
+			<!-- キャッチコピーと食材・分量 -->
 			<div class="flex flex-col w-[400px]">
 				<div class="my-5">
 					<label class="block text-center font-bold mb-3" for="title">★キャッチコピー</label>
-					<div class="ml-12" v-for="text in get_texts('description', 15)"> 
+					<div class="ml-12" v-for="text in get_texts(props.recipe.get_description(), 15)"> 
 						<p class="text-xl font-bold text-left">{{ text }}</p>
 						<div class="border-t border-[#555] w-[300px] mb-3"></div>
 					</div>
@@ -52,8 +54,8 @@
 
 	</div>
 	
-
-	<div class="mt-6 mr-3 p-5 w-[calc(100%_-_900px)] border-2 border-base-300 rounded-md">
+	<!-- コメント欄 -->
+	<div class="m-5 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md">
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
 		<ul v-for="comment in comments">
 			<li>
@@ -75,7 +77,7 @@
 <script lang="ts" setup>
 
 import { computed } from "vue";
-import { Recipe, Comment } from "../models/Types";
+import { Comment } from "../models/Types";
 
 const props = defineProps({
 	recipe: { type: Object,  required: true }
@@ -104,17 +106,18 @@ const comments: Comment[] = [
 
 // keyof...プロパティ名をユニオンで返す
 const get_texts = computed( () => {
-	return (sentence: keyof Recipe, line_count: number):string[] => {
-		const textAry: string[] = [];
-		const text = sentence === 'description' ? props.recipe.get_description() : props.recipe.get_remarks();
-
-		if ( text ) {
-			for (let i = 0; i < text.length; i+=line_count) {
-				textAry.push(text.substring(i, i+line_count));
-			}
-		}
-		return textAry;
-	}
+    return ( text: string, line_length: number ):string[] | string => {
+        const textAry: string[] = [];
+        
+        if ( text ) {
+            for (let i = 0; i < text.length; i+=line_length) {
+                textAry.push(text.substring(i, i+line_length));
+            }    
+            return textAry;
+        } else {
+            return "";
+        }
+    }
 });
 
 </script>
