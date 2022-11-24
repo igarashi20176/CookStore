@@ -12,6 +12,7 @@ async function main() {
       { id: 'f29ai1', name: "jean", age: 32, gender: 0 },
       { id: 'bhu123', name: "Cael", age: 62, gender: 1 },
       { id: 'aaji21', name: "Hux", age: 27, gender: 3 },
+      { id: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', name: "test", age: 32, gender: 1 },
     ]
   });
 
@@ -61,8 +62,13 @@ async function main() {
     data: [
       { userId: 'sda234', postId: 2 }, 
       { userId: 'sda234', postId: 3 }, 
-      { userId: 'kji982', postId: 2 }, 
+      { userId: 'jui221', postId: 2 }, 
       { userId: 'jui221', postId: 3 }, 
+      { userId: 'f29ai1', postId: 2 }, 
+      { userId: 'f29ai1', postId: 3 }, 
+      { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 2 }, 
+      { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 3 }, 
+      { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 4 }, 
     ]
   });
 
@@ -70,8 +76,10 @@ async function main() {
     data: [
       { userId: 'sda234', postId: 2, body: "すごくおいしい!" }, 
       { userId: 'sda234', postId: 3, body: "すごく簡単です．" }, 
-      { userId: 'kji982', postId: 2, body: "すこし味が薄かったのでこちらは塩を足しました．" }, 
-      { userId: 'jui221', postId: 5, body: "バリエーション豊かなのに時間が掛からなくてイイ!" }, 
+      { userId: 'aaji21', postId: 2, body: "すこし味が薄かったのでこちらは塩を足しました．" }, 
+      { userId: 'aaji21', postId: 3, body: "バリエーション豊かなのに時間が掛からなくてイイ!" }, 
+      { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 2, body: "ちょうどいい味で満足です!リピ確です" }, 
+      { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 3, body: "僕はこのレシピ好きじゃないかなぁ" }, 
     ]
   });
 

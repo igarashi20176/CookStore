@@ -1,22 +1,16 @@
 import { defineStore } from "pinia";
 import { Menu } from "../models/Menu";
-import { AddInfo } from "../models/Types";
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 import { ref as fsRef, getDownloadURL } from "firebase/storage"
 import { storage } from "../firebase";
 
 
-const axios_url = "http://localhost:8080"
+const base_url = "http://localhost:8080"
 
 interface State {
     menus: Menu[]
 }
-
-const options: AxiosRequestConfig = {
-    url: `${axios_url}/api/v1/menus`,
-    method: "GET",
-};
 
 export const useMenuStore = defineStore( "menu", {
     state: (): State => ({
@@ -41,21 +35,30 @@ export const useMenuStore = defineStore( "menu", {
     },
 
     actions: {
-        get_database_menus() {
-            this.menus = [];
+        get_from_database_menus() {
+            return new Promise<boolean>((resolve, reject) => {
+                this.menus = [];
 
-            axios(options)
-            .then((res: AxiosResponse<object[]>) => {
-                const { data, status } = res;
-                                
-                data.forEach( (d: any) => {                    
-                    this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.create_at, d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
+                const get_menus_option: AxiosRequestConfig = {
+                    url: `${base_url}/api/v1/menus`,
+                    method: "GET",
+                };
+
+                axios(get_menus_option)
+                .then((res: AxiosResponse<object[]>) => {
+                    const { data, status } = res;
+                                    
+                    data.forEach( (d: any) => {                    
+                        this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.create_at, d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
+                    });
+                    this.get_recipes_images();
+                    resolve(false);
+                })
+                .catch((e: AxiosError<{ error: string }>) => {
+                // エラー処理
+                    console.log(e.message);
+                    reject(true);
                 });
-                this.get_recipes_images()
-            })
-            .catch((e: AxiosError<{ error: string }>) => {
-              // エラー処理
-              console.log(e.message);
             });
         },
         get_recipes_images() {
@@ -85,7 +88,7 @@ export const useMenuStore = defineStore( "menu", {
                 });
             }
         },
-        post_database_menu( recipe: AddInfo ) {
+        post_database_menu( recipe: any ) {
             console.log(recipe);
         }
     }

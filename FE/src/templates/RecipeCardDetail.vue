@@ -4,7 +4,7 @@
 
 	<div class="m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%]">
 
-		<!-- 投稿者・タイトル -->
+		<!-- author & title -->
 		<div class="mb-3">
 			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
 			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_author() }} <span class="text-base">作成日: {{ props.recipe.get_created_at() }}</span></p>

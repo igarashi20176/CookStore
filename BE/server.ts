@@ -31,6 +31,7 @@ app.get('/', (req: Request, res: Response) => {
 	res.send('Hello from GCE EXPRESS!');
 });
 
+// ユーザログイン
 app.get('/api/v1/user', async (req: Request, res: Response) => {
 	
 	const { uid } = req.query;
@@ -39,16 +40,39 @@ app.get('/api/v1/user', async (req: Request, res: Response) => {
 		where: {
 			id: String(uid)
 		},
-		select: { id: true, name: true }
+		select: { id: true, name: true, like: { select: { postId: true } } }
 	});
+	console.log(user);
 	return res.json(user);
+});
+
+// 新規ユーザーの登録
+app.post('/api/v1/user', async (req: Request, res: Response) => {
+	
+	const { uid, name, age, gender } = req.body;
+
+	try {
+    	const user = await prisma.user.create({
+      		data: {
+        		id: uid, name: name,  age: age, gender: gender
+      		}
+    	});
+		console.log(user);
+		return res.json(user);
+	} catch (e) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			if (e.code === 'P2002') {
+				console.log(e);
+			}
+		}
+		return res.status(400).json(e);
+	}
 });
 
 // 全てのレシピを取得
 app.get('/api/v1/recipes', async (req: Request, res: Response) => {
- 	 const recipes = await prisma.recipe.findMany({
-    	include: { post: { select: { authorId: true } } }
-  	});
+	const recipes = await prisma.recipe.findMany({
+    	include: { post: { select: { authorId: true, like: true, comment: true }}} })
   	return res.json(recipes);
 });
 
@@ -80,27 +104,46 @@ app.post('/api/v1/recipe', async (req: Request, res: Response) => {
  	} catch (e) {
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
 			if (e.code === 'P2002') {
-				console.log(
-				'There is a unique constraint violation, a new user cannot be created with this email'
-				);
+				console.log(e);
 			}
 		}
     	return res.status(400).json(e);
   	}
-  });
+});
 
-// 全てのメニューを取得
 app.get('/api/v1/menus', async (req: Request, res: Response) => {
-  	const menus = await prisma.menu.findMany({
-    	include: { 
+	const menus = await prisma.menu.findMany({
+		include: { 
 			post: true, 
 			staple: { select: { title: true, created_at: true, image: true ,post: { select: { authorId: true } } } }, 
 			main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } }, 
 			sub: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
 			soup: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } } }
-  	});
-  	return res.json(menus);
+	});
+	return res.json(menus);
 });
+
+// 全てのメニューを取得
+app.post('/api/v1/fav', async (req: Request, res: Response) => {
+	const { user_id, post_id } = req.body;
+	try {
+		const fav = await prisma.like.create({
+			data: {
+				userId: user_id, postId: post_id
+			}
+		});
+		console.log(fav);
+		return res.json(fav);
+	} catch (e) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			if (e.code === 'P2002') {
+				console.log(e);
+			}
+		}
+    	return res.status(400).json(e);
+  	}
+});
+
 
 
 // Listen to the App Engine-specified port, or 8080 otherwise

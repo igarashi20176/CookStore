@@ -86,14 +86,14 @@
 
 import { ref } from "vue";
 import AddRecipeItem from "../templates/AddRecipeItem.vue";
-import { AddInfo } from "../models/Types";
+import { AddRecipeInfo } from "../models/Types";
 import { useRecipeStore } from "../store/recipeStore";
 
 const recipe_store = useRecipeStore();
 
 
 // 入力情報の保存
-const add_recipe_info = ref<AddInfo>({
+const add_recipe_info = ref<AddRecipeInfo>({
 	title: "",
 	category_id: 0,
 	description: "",
@@ -126,7 +126,7 @@ const getImageFile = (props: any): void => {
 const post_recipe = (): void => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
 	console.log(add_recipe_info.value);
-	recipe_store.post_database_recipe(add_recipe_info.value);
+	recipe_store.post_to_database_recipe(add_recipe_info.value);
 }
 
 

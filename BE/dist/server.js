@@ -26,20 +26,43 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('Hello from GCE EXPRESS!');
 });
+// ユーザログイン
 app.get('/api/v1/user', async (req, res) => {
     const { uid } = req.query;
     const user = await prisma.user.findUnique({
         where: {
             id: String(uid)
         },
-        select: { id: true, name: true }
+        select: { id: true, name: true, like: { select: { postId: true } } }
     });
+    console.log(user);
     return res.json(user);
+});
+// 新規ユーザーの登録
+app.post('/api/v1/user', async (req, res) => {
+    const { uid, name, age, gender } = req.body;
+    try {
+        const user = await prisma.user.create({
+            data: {
+                id: uid, name: name, age: age, gender: gender
+            }
+        });
+        console.log(user);
+        return res.json(user);
+    }
+    catch (e) {
+        if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            if (e.code === 'P2002') {
+                console.log(e);
+            }
+        }
+        return res.status(400).json(e);
+    }
 });
 // 全てのレシピを取得
 app.get('/api/v1/recipes', async (req, res) => {
     const recipes = await prisma.recipe.findMany({
-        include: { post: { select: { authorId: true } } }
+        include: { post: { select: { authorId: true, like: true, comment: true } } }
     });
     return res.json(recipes);
 });
@@ -68,13 +91,12 @@ app.post('/api/v1/recipe', async (req, res) => {
     catch (e) {
         if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
             if (e.code === 'P2002') {
-                console.log('There is a unique constraint violation, a new user cannot be created with this email');
+                console.log(e);
             }
         }
         return res.status(400).json(e);
     }
 });
-// 全てのメニューを取得
 app.get('/api/v1/menus', async (req, res) => {
     const menus = await prisma.menu.findMany({
         include: {
@@ -86,6 +108,27 @@ app.get('/api/v1/menus', async (req, res) => {
         }
     });
     return res.json(menus);
+});
+// 全てのメニューを取得
+app.post('/api/v1/fav', async (req, res) => {
+    const { user_id, post_id } = req.body;
+    try {
+        const fav = await prisma.like.create({
+            data: {
+                userId: user_id, postId: post_id
+            }
+        });
+        console.log(fav);
+        return res.json(fav);
+    }
+    catch (e) {
+        if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            if (e.code === 'P2002') {
+                console.log(e);
+            }
+        }
+        return res.status(400).json(e);
+    }
 });
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.LISTENPORT || 8080;

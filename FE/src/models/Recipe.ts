@@ -4,12 +4,14 @@ export class Recipe extends Post {
 	private ingredients: string;
     private category: number;
     private image: string;
+    private favs: number;
 
-    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string ) {
+    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string, favs: number) {
         super(articleId, postId, author, create_at, title, description, remarks);
         this.ingredients = ingredients;
         this.category = category;
-        this.image = image
+        this.image = image;
+        this.favs = favs;
     };
 
     get_ingredients (): object[] {
@@ -19,15 +21,19 @@ export class Recipe extends Post {
         return ary;
     }
 
-    get_category() {
+    get_category(): number {
         return this.category;
     }
+
+    get_favs(): number {
+        return this.favs;
+    }
     
-    get_image() {
+    get_image(): string {
         return this.image;
     }
 
-    set_image( imageURL: string ) {
+    set_image( imageURL: string ): void {
         this.image = imageURL;
     }
 };

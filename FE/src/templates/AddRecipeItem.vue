@@ -165,7 +165,6 @@ import { Ingredient } from "../models/Types";
 const props = defineProps({
   	isActive: Boolean
 });
-
 const emits = defineEmits([ 'update:value' ])
 
 

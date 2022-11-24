@@ -4,7 +4,7 @@ export type Ingredient = {
 	grams: number | null
 };
 
-export type AddInfo = {
+export type AddRecipeInfo = {
 	title: string
 	category_id: number
 	description: string
@@ -12,6 +12,14 @@ export type AddInfo = {
 	remarks: string
 	nut_option: boolean
 	file: any
+}
+
+export type AddUserInfo = {
+	email: string
+	password: string
+	name: string
+	age: number | null
+	gender: number | null
 }
 
 export type Comment = {
