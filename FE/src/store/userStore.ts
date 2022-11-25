@@ -28,7 +28,7 @@ export const useUserStore = defineStore( "user", {
             return state.user.token ? true : false;
         },
         is_fav_recipe( state ) {
-            return (post_id: number) => state.user.favs.some( id => id === post_id );
+            return (post_id: number) => state.user.favs.some( f => f === post_id );
         },
         get_uid( state ): string {
             return state.user.uid
@@ -57,7 +57,7 @@ export const useUserStore = defineStore( "user", {
                     this.user.uid = res.data.id;   
                     this.user.token = token;   
                     this.user.name = res.data.name;  
-                    this.user.favs = res.data.like.map( (l: any) => l.postId );  
+                    this.user.favs = res.data.like.map( (l: any) => l.postId )
                     resolve(this.is_user_login) ;
                 }).catch( e => {
                     console.log(e);

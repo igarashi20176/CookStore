@@ -11,9 +11,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52">
-                <li><a @click="current_component = 'top'">-HOME- ホーム</a></li>
-                <li><a @click="current_component = 'recipe'">-RECIPE- レシピ</a></li>
-                <li><a @click="current_component = 'menu'">-MENU- メニュー</a></li>
+                <li><a class="text-base" @click="current_component = 'top'">HOME ホーム</a></li>
+                <li><a class="text-base" @click="current_component = 'recipe'">RECIPE レシピ</a></li>
+                <li><a class="text-base" @click="current_component = 'menu'">MENU メニュー</a></li>
             </ul>
         </div>
     </div>
@@ -35,8 +35,8 @@
                 </div>
             </label>
             <ul v-if="!user_store.is_user_login" tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                <li><label @click="is_register = false" for="my-modal-1">ログイン</label></li>
-                <li><label @click="is_register = true" for="my-modal-1">新規登録</label></li>
+                <li><label class="text-lg" @click="is_register = false" for="my-modal-1">ログイン</label></li>
+                <li><label class="text-lg" @click="is_register = true" for="my-modal-1">新規登録</label></li>
             </ul>
             <ul v-else tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                 <li><a class="justify-between">マイページ</a></li>
@@ -47,7 +47,7 @@
 </div>
 
   
-<sign-in-modal @close-view="current_component='top'" :is-register="is_register" :id="1" />
+<sign-in-modal :is-register="is_register" :id="1" />
   
 
 <div class="text-right mr-10" v-if="user_store.is_user_login">
@@ -59,8 +59,8 @@
     </button>
 </div>
 
-<div v-else class="text-right mr-10 hover:opacity-80">
-    <label class="btn btn-info" @click="is_register = false" for="my-modal-1">レシピを登録するにはログインしてください</label>
+<div v-else class="text-right mr-5 hover:opacity-80">
+    <label class="btn btn-secondary" @click="is_register = false" for="my-modal-1">レシピを登録するにはログインしてください</label>
 </div>
 
 

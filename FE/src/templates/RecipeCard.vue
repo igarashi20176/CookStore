@@ -1,6 +1,6 @@
 <template>
 
-<div class="card card-side bg-base-200 shadow-xl">
+<div class="m-3 lg:m-0 card card-side bg-base-200 shadow-xl">
     <figure>
         <img class="rounded-2xl w-[330px] h-[280px] border-2 border-[#999]" :src="props.recipe.get_image()" :alt="props.recipe.get_title()"/>
     </figure>
@@ -24,21 +24,21 @@
             <label class="swap swap-flip" v-if="props.isLogin">                
                 <input type="checkbox" v-model="is_fav" />
                 <!-- いいねボタン -->
-                <div class="swap-off" @click="emits('toggle-fav', props.recipe.get_postId())">
+                <div class="swap-off" @click="emits('toggle-fav', props.recipe.get_postId(), is_fav)">
                     <div class="flex tooltip tooltip-primary" data-tip="いいね">
                         <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
                         <p class="m-1">{{ props.recipe.get_favs() }}</p>
                     </div>
                 </div>
-                <div class="swap-on">
+                <div class="swap-on" @click="emits('toggle-fav', props.recipe.get_postId(), is_fav)">
                     <div class="flex tooltip tooltip-primary" data-tip="いいね">
                         <img class="w-8" src="../assets/images/heart_color.png" alt="fav_off">
-                        <p class="m-1">{{ props.recipe.get_favs() }}</p>
+                        <p class="m-1">{{ props.recipe.get_favs() + 1 }}</p>
                     </div>
                 </div>
             </label>
 
-            <div v-else class="flex tooltip tooltip-primary" data-tip="いいね">
+            <div v-else class="flex tooltip tooltip-info" data-tip="'いいね'するにはログインしてください">
                 <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
                 <p class="m-1">{{ props.recipe.get_favs() }}</p>
             </div>
@@ -60,7 +60,7 @@
                 </div>
             </label>
 
-            <div v-else class="flex tooltip tooltip-primary" data-tip="ブックマーク">
+            <div v-else class="flex tooltip tooltip-info" data-tip="'ブックマーク'するにはログインしてください">
                 <img class="w-8" src="../assets/images/bookmark.png" alt="bookmark_off">
                 <p class="inline m-1">{{ props.recipe.get_favs() }}</p>
             </div>

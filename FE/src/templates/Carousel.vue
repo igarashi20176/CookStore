@@ -1,20 +1,18 @@
 <template>
 
 <div class="carousel w-full h-auto">
-  <div v-for="i in ary">
-
-    <div :id="`item${i}`" class="carousel-item mx-2">
-      <div class="card w-96 bg-base-100 shadow-xl">
-        <div class="card-body p-4">
-          <h2 class="card-title">{{ title }}</h2>
-          
-          <p>by {{ name }}</p>
-          <p>{{ content_short }}</p>
-        </div>
-        <figure><img src="https://placeimg.com/400/225/arch" alt="Shoes" /></figure>
-      </div>
-    </div> 
-
+	<div v-for="i in ary">
+		<div :id="`item${i}`" class="carousel-item mx-2">
+			<div class="card w-96 bg-base-100 shadow-xl">
+				<div class="card-body p-4">
+				<h2 class="card-title">{{ title }}</h2>
+				
+				<p>by {{ name }}</p>
+				<p>{{ content_short }}</p>
+				</div>
+				<figure><img src="https://placeimg.com/400/225/arch" alt="Shoes" /></figure>
+			</div>
+		</div> 
   </div>
 </div>
 

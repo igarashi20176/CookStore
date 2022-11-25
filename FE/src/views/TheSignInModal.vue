@@ -37,7 +37,7 @@
                 <input v-model="input_user_info.name" type="text" placeholder="ユーザネーム" class="mb-3 input input-bordered w-full max-w-xs" />
                 <input v-model="input_user_info.age" type="number" min="0" placeholder="年齢" class="mb-3 input input-bordered w-full max-w-xs" />
                 <label class="block" for="gener">性別を選択してください</label>
-                <select v-model="input_user_info.gender" id="gender" class="select select-bordered text-xl w-full max-w-xs">
+                <select v-model="input_user_info.gender" id="gender" class="select select-bordered text-xl font-normal w-full max-w-xs">
                     <option value="0">女性</option>
                     <option value="1">男性</option>
                     <option value="2">その他</option>

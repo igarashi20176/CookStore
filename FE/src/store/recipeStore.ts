@@ -66,6 +66,34 @@ export const useRecipeStore = defineStore( "recipe", {
             });
         },
 
+        get_from_database_popular_recipes() {
+            return new Promise<boolean>((resolve, reject) => {
+                this.recipes = [];
+                
+                const get_recipes_options: AxiosRequestConfig = {
+                    url: `${base_url}/api/v1/popular`,
+                    method: "GET",
+                };
+
+                axios(get_recipes_options)
+                .then((res: AxiosResponse<object[]>) => {
+                    const { data, status } = res;
+                                    
+                    data.forEach( (d: any) => {
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like));
+                    });
+                    
+                    this.get_recipes_images();
+                    resolve(false);
+                })
+                .catch((e: AxiosError<{ error: string }>) => {
+                // エラー処理
+                    console.log(e.message);
+                    reject(true);
+                });
+            });
+        },
+
         get_recipes_images() {
             if ( this.get_length_recipes > 0 ) {
                 this.recipes.forEach( r => {
@@ -105,20 +133,25 @@ export const useRecipeStore = defineStore( "recipe", {
                 .then((res: AxiosResponse<object[]>) => {
                     console.log(res);
                 })
-            }).catch(err => console.log(err)) 
+                .catch( e => console.log(e)); 
+            })
+            .catch(err => console.log(err)) 
         },
 
-        toggle_fav(uid: string, post_id: string) {
-            const post_fav_options: AxiosRequestConfig = {
-                url: `${base_url}/api/v1/fav`,
-                method: "POST",
-                data: { user_id: uid, post_id: post_id }
-            };
-
-            axios(post_fav_options)
-            .then( res => {
-                console.log(res);
-            })
+        toggle_fav(uid: string, post_id: number, is_fav: boolean) {
+            console.log(uid, post_id, is_fav);
+            
+                const fav_options: AxiosRequestConfig = {
+                    url: `${base_url}/api/v1/fav`,
+                    method: is_fav ? "DELETE" : "POST",
+                    data: { user_id: uid, post_id: post_id }
+                };
+    
+                axios(fav_options)
+                .then( res => {
+                    console.log(res);
+                })
+                .catch( e => console.log(e)); 
         }
     }
 });

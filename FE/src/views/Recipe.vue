@@ -1,15 +1,19 @@
 <template>
 
-<div v-show="!is_show">
+<div class="relative" v-show="!is_show">
 
+	<div class="w-full text-left mt-7 lg:text-center">
+		<h2 class="inline text-2xl font-bold text-center bg-base-300 w-1/3 lg:w-1/4 ml-3 p-2 py-1 rounded-xl">みんなのレシピ</h2>
+	</div>
+	
 	<!-- レシピカテゴリー -->
-	<div class="w-1/3 lg:w-1/5 ml-5 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box" v-if="!is_recipe_null">
+	<div class="absolute top-[-10px] right-5 lg:left-0 z-10 w-1/3 lg:w-1/6 lg:h-auto text-center ml-5 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box" v-if="!is_recipe_null">
 		<input type="checkbox" class="peer" /> 
-		<div class="peer-checked:bg-orange-200 collapse-title text-lg font-medium">
+		<div class=" peer-checked:bg-orange-200 collapse-title text-lg font-medium">
 			<p>レシピカテゴリ</p>
 		</div>
 		<div class="collapse-content"> 
-			<ul class="mt-3 text-lg">
+			<ul class="text-left mt-3 text-lg">
 				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">ごはんもの</li>
 				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">肉のおかず</li>
 				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">野菜のおかず</li>
@@ -17,8 +21,6 @@
 			</ul>
 		</div>
 	</div>
-
-	<h2 class="mt-5 text-2xl font-bold text-center bg-base-300 py-1 w-1/3 lg:w-1/4 m-auto rounded-xl">みんなのレシピ</h2>
 
 	<div v-if="is_recipe_null" class="mt-10 text-center text-2xl">
 		<p>データの取得に失敗しました</p>
@@ -30,13 +32,14 @@
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
 			<!-- loginの可否でいいね&ブックマークボタンを非活性 -->
 			<recipe-card v-if="user_store.is_user_login" :is-login="true" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
-				@change-show="is_show_change" @toggle-fav="(postId: string) => recipe_store.toggle_fav(user_store.get_uid, postId)">
+				@change-show="is_show_change" @toggle-fav="toggle_fav">
 			</recipe-card>
-			<recipe-card v-else :recipe="recipe" :is-fav="false" :is-login="user_store.is_user_login"
-				@change-show="is_show_change" @toggle-fav="(postId: string) => recipe_store.toggle_fav(user_store.get_uid, postId)">
+			<recipe-card v-else :recipe="recipe" :is-fav="false" :is-login="false"
+				@change-show="is_show_change" @toggle-fav="toggle_fav">
 			</recipe-card>
 		</li>
 	</ul>
+	
 </div>
 
 <!-- recipe detail -->
@@ -67,6 +70,7 @@ const recipe_store = useRecipeStore();
 
 const is_recipe_null = ref<boolean>(false);
 
+
 /**
  * 概要一覧と詳細のview切り替え
  * @param postId // 切り替えしたいレシピのID
@@ -82,6 +86,15 @@ const is_show_change = (post_id: number) => {
 		current_recipe.value = recipe_store.find_one_recipe_index(post_id)
 	}
 };
+
+
+/**
+ * お気に入りの登録 / 解除
+ */
+const toggle_fav = (postId: number, is_fav: boolean) => {
+	recipe_store.toggle_fav(user_store.get_uid, postId, is_fav)
+}
+
 
 onMounted( async () => {
 	await recipe_store.get_from_database_recipes()
