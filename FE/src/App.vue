@@ -1,7 +1,5 @@
 <template>
 
-
-
 <!-- ナビバー -->
 <!-- <the-header /> -->
 <div class="navbar bg-base-200 mb-3">
@@ -39,7 +37,7 @@
                 <li><label class="text-lg" @click="is_register = true" for="my-modal-1">新規登録</label></li>
             </ul>
             <ul v-else tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-                <li><a class="justify-between">マイページ</a></li>
+                <li><a class="justify-between" @click="current_component = 'mypage'">マイページ</a></li>
                 <li><label @click="user_store.logout_user_info()" class="">ログアウト</label></li>
             </ul>
         </div>
@@ -64,7 +62,7 @@
 </div>
 
 
-<component :is="componentList[current_component]" />
+<component :is="componentList[current_component]" @change-view="( compo: string ) => current_component = compo" />
 
 </template>
 
@@ -72,6 +70,7 @@
 
 import { ref, shallowReactive } from "vue";
 import { useUserStore } from "./store/userStore";
+
 
 /**
  * Components
@@ -81,18 +80,24 @@ import Top from "./views/Top.vue";
 import Recipe from "./views/Recipe.vue";
 import Menu from "./views/Menu.vue";
 import AddRecipe from "./views/AddRecipe.vue";
-import SignInModal from "./views/TheSignInModal.vue";
+import SignInModal from "./views/SignInModal.vue";
+import Mypage from "./views/Mypage.vue";
 
-
+/**
+ *  Pinia init 
+ */
 const user_store = useUserStore()
+
 
 const current_component = ref<string>("recipe")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
     add: AddRecipe,
-    menu: Menu
-})
+    menu: Menu,
+    mypage: Mypage
+});
+
 
 const is_register = ref<boolean>(false);
 </script>

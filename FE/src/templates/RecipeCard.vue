@@ -12,7 +12,7 @@
 
         <!-- author & created_date -->
         <div class="flex items-center gap-x-2">
-            <p>by {{ props.recipe.get_author() }}</p>
+            <p>by {{ props.recipe.get_authorName() }}</p>
             <p>投稿日: 2022-02-10</p>
         </div>
         <div class="flex py-2">
@@ -82,8 +82,8 @@ import { ref } from "vue";
 
 const props = defineProps({
     recipe: { type: Object, required: true },
-    isFav: { type: Boolean, required: true },
-    isLogin: { type: Boolean, required: true }
+    isFav: { type: Boolean, default: false },
+    isLogin: { type: Boolean, default : false }
 });
 const emits = defineEmits([ 'change-show', 'toggle-fav' ]);
 

@@ -10,7 +10,7 @@
     <div class="card-body">
         <h2 class="card-title">{{ props.menu.get_title() }}</h2>
         <div class="flex mb-3">
-            <p>by {{ props.menu.get_author() }}</p>
+            <p>by {{ props.menu.get_authorName() }}</p>
             <p>投稿日: {{ props.menu.get_created_at() }}</p>
         </div>
         <p>{{ props.menu.get_description() }}</p>

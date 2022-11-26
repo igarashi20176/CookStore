@@ -1,7 +1,7 @@
 <template>
 
 <div class="w-[80%] m-auto mt-10">
-    <h2 class="text-2xl font-bold text-center bg-base-200 w-1/3 lg:w-1/4 m-auto rounded-xl mb-2"><img class="inline w-[50px]" src="../assets/images/ranking.png" alt="">人気のメニュー</h2>
+    <h2 class="text-2xl font-bold text-center bg-base-200 w-1/2 lg:w-1/3 lg:w-1/4 m-auto rounded-xl mb-2"><img class="inline w-[50px]" src="../assets/images/ranking.png" alt="">人気のメニュー</h2>
 
     <div class="mt-5 carousel w-full h-auto rounded-xl">
         <li class="carousel-item m-0 lg:mx-2" v-for="recipe, i in recipe_store.recipes">
@@ -44,7 +44,7 @@ const toggle_fav = (postId: number, is_fav: boolean) => {
 }
 
 onMounted( () => {
-    recipe_store.get_from_database_popular_recipes()
+    recipe_store.get_popular_recipes()
 })
 
 </script>

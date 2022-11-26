@@ -6,8 +6,8 @@ export class Menu extends Post {
     private sub: object;
     private soup: object;
 
-    constructor( articleId: number, postId: number, author: string, create_at: string, title: string, description: string , remarks: string, staple: object, main: object, sub: object, soup: object ) {
-        super(articleId, postId, author, create_at, title, description, remarks)
+    constructor( articleId: number, postId: number, authorId: string, authorName: string, create_at: string, title: string, description: string , remarks: string, staple: object, main: object, sub: object, soup: object ) {
+        super(articleId, postId, authorId, authorName, create_at, title, description, remarks)
         this.staple = staple;
         this.main = main;
         this.sub = sub;

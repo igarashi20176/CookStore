@@ -8,8 +8,8 @@ export class Recipe extends Post {
     private favs: number;
     private nutrition: Nutriton | null;
 
-    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string, favs: number, nutrition: Nutriton | null) {
-        super(articleId, postId, author, create_at, title, description, remarks);
+    constructor( articleId: number ,postId: number, authorId: string, authorName: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string, favs: number, nutrition: Nutriton | null) {
+        super(articleId, postId, authorId, authorName, create_at, title, description, remarks);
         this.ingredients = ingredients;
         this.category = category;
         this.image = image;

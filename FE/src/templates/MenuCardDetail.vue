@@ -7,7 +7,7 @@
         <!-- 投稿者・タイトル -->
         <div class="mb-5">
             <button @click="emits('change-view')" class="btn btn-primary">◀ 戻る</button>
-            <p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.menu.get_author() }} <span class="text-base">作成日: {{ props.menu.get_created_at() }}</span></p>
+            <p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.menu.get_authorName() }} <span class="text-base">作成日: {{ props.menu.get_created_at() }}</span></p>
         </div>
 
         <label class="block font-bold mr-5" for="title">★献立名</label>
@@ -34,14 +34,6 @@
                         <div class="border-t border-[#555] w-[300px] mb-3"></div>
                     </div>
                 </div>
-
-                <!-- <div class="mt-8 text-center">	
-                    <label class="block font-bold mb-5" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
-                    <div class="ml-6"  v-for="text in get_texts('remarks', 21)"> 
-                        <p class="text-lg font-bold text-left">{{ text }}</p>
-                        <div class="border-t border-[#555] w-[390px] mb-3"></div>
-                    </div>
-                </div>	 -->
             </div>
         </div>
 
@@ -99,12 +91,6 @@ const comments: Comment[] = [
 ];
 
 
-const title_short = computed(() => {
-    return ( text: string ) => text.length >= 14 ? `${text.substring(0, 13)}...` : text
-});
-
-
-// keyof...プロパティ名をユニオンで返す
 const get_texts = computed( () => {
     return ( text: string, line_length: number ):string[] | string => {
         const textAry: string[] = [];

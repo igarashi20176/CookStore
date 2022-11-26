@@ -7,22 +7,23 @@
 	</div>
 	
 	<!-- レシピカテゴリー -->
-	<div class="absolute top-[-10px] right-5 lg:left-0 z-10 w-1/3 lg:w-1/6 lg:h-auto text-center ml-5 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box" v-if="!is_recipe_null">
+	<div v-if="!is_recipe_null" class="absolute top-[-10px] right-5 lg:left-0 z-10 w-1/3 lg:w-1/6 lg:h-auto text-center ml-5 collapse collapse-arrow border border-base-300 bg-base-100 rounded-box">
 		<input type="checkbox" class="peer" /> 
 		<div class=" peer-checked:bg-orange-200 collapse-title text-lg font-medium">
 			<p>レシピカテゴリ</p>
 		</div>
 		<div class="collapse-content"> 
 			<ul class="text-left mt-3 text-lg">
-				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">ごはんもの</li>
-				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">肉のおかず</li>
-				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">野菜のおかず</li>
-				<li class="border-b border-[#333] cursor-pointer hover:text-orange-500">スープ・汁物</li>
+				<li @click="get_recipes_by_category(0)" class="border-b border-[#333] cursor-pointer hover:text-orange-500">すべて</li>
+				<li @click="get_recipes_by_category(1)" class="border-b border-[#333] cursor-pointer hover:text-orange-500">ごはんもの</li>
+				<li @click="get_recipes_by_category(2)" class="border-b border-[#333] cursor-pointer hover:text-orange-500">肉のおかず</li>
+				<li @click="get_recipes_by_category(3)" class="border-b border-[#333] cursor-pointer hover:text-orange-500">野菜のおかず</li>
+				<li @click="get_recipes_by_category(4)" class="border-b border-[#333] cursor-pointer hover:text-orange-500">スープ・汁物</li>
 			</ul>
 		</div>
 	</div>
 
-	<div v-if="is_recipe_null" class="mt-10 text-center text-2xl">
+	<div v-if="!recipe_store.get_length_recipes" class="mt-10 text-center text-2xl">
 		<p>データの取得に失敗しました</p>
 		<p>もう一度お試しください</p>
 	</div>
@@ -44,7 +45,7 @@
 
 <!-- recipe detail -->
 <div v-if="is_show">
-  	<recipe-detail :recipe="recipe_store.get_one_recipe(current_recipe)" @change-show="is_show_change" />
+  	<recipe-detail :comments="current_comments" :recipe="current_recipe" @change-show="is_show_change" />
 </div>
 
 </template>
@@ -54,6 +55,7 @@
 import { ref, onMounted } from "vue";
 import { useRecipeStore } from "../store/recipeStore";
 import { useUserStore } from "../store/userStore";
+import { Comment } from "../models/Types";
 
 /**
  * components
@@ -68,38 +70,53 @@ const user_store = useUserStore();
 const recipe_store = useRecipeStore();
 
 
-const is_recipe_null = ref<boolean>(false);
+const is_recipe_null = ref<boolean>(true);
 
 
 /**
- * 概要一覧と詳細のview切り替え
+ * レシピ一覧とレシピ詳細の切り替え
  * @param postId // 切り替えしたいレシピのID
  */
 
 const is_show = ref<boolean>(false);
-const current_recipe = ref<number>(0)
+const current_recipe = ref<object>({})
+const current_comments = ref<Array<Comment>>([])
 
 const is_show_change = (post_id: number) => {
 	is_show.value = !is_show.value;
 	
 	if ( post_id ) {
-		current_recipe.value = recipe_store.find_one_recipe_index(post_id)
+		current_recipe.value = recipe_store.find_one_recipe(post_id)
+		current_comments.value = recipe_store.find_recipe_comments(post_id)
 	}
 };
 
 
-/**
- * お気に入りの登録 / 解除
- */
 const toggle_fav = (postId: number, is_fav: boolean) => {
 	recipe_store.toggle_fav(user_store.get_uid, postId, is_fav)
 }
 
 
+const get_recipes_by_category = async ( category_id: number ) => {
+	if( category_id !== 0 ) {
+		await recipe_store.get_recipes_by_category(category_id)
+		.then( (res :boolean) => is_recipe_null.value = res )
+		.catch( (err: boolean) => is_recipe_null.value = err );
+	} else {
+		await recipe_store.get_all_recipes()
+		.then( (res :boolean) => is_recipe_null.value = res )
+		.catch( (err: boolean) => is_recipe_null.value = err );
+	}
+}
+
+
+/**
+ * レシピの初期化
+ */
 onMounted( async () => {
-	await recipe_store.get_from_database_recipes()
-	.then((result) => {
-		is_recipe_null.value = result;	
+	await recipe_store.get_all_recipes()
+	.then((res) => {
+		is_recipe_null.value = res;	
 	}).catch((err) => {
 		is_recipe_null.value = err;	
 	});

@@ -47,15 +47,17 @@ export const useMenuStore = defineStore( "menu", {
                 axios(get_menus_option)
                 .then((res: AxiosResponse<object[]>) => {
                     const { data, status } = res;
-                                    
+                                 
+                    console.log(data);
+                    
                     data.forEach( (d: any) => {                    
-                        this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.create_at, d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
+                        this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.post.author.name, d.create_at, d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
                     });
                     this.get_recipes_images();
                     resolve(false);
                 })
                 .catch((e: AxiosError<{ error: string }>) => {
-                // エラー処理
+                    // エラー処理
                     console.log(e.message);
                     reject(true);
                 });

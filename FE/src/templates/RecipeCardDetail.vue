@@ -1,13 +1,13 @@
 <template>
 
-<div class="lg:flex flex-row">
+<div class="lg:flex">
 
-	<div class="m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%]">
+	<div class="m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%] lg:h-[800px] lg:overflow-y-auto">
 
 		<!-- author & title -->
 		<div class="mb-3">
 			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
-			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_author() }} <span class="text-base">作成日: {{ props.recipe.get_created_at() }}</span></p>
+			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_authorName() }} <span class="text-base">作成日: {{ props.recipe.get_created_at() }}</span></p>
 		</div>
 
 		<label class="inline-block font-bold mr-5 mb-5" for="title">★タイトル</label>
@@ -15,7 +15,7 @@
 
 		<!-- 料理の写真と補足説明 -->
 		<div class="lg:flex gap-x-16">
-			<div class="flex flex-col w-[450px]">
+			<div class="m-auto flex flex-col w-[450px]">
 				<figure class="mt-5">
 					<img class="border-2 border-[#999] rounded-xl" :src="props.recipe.get_image()" :alt="props.recipe.get_title()">
 				</figure>
@@ -30,7 +30,7 @@
 			</div>
 
 			<!-- キャッチコピーと食材・分量 -->
-			<div class="flex flex-col w-[400px]">
+			<div class="m-auto flex flex-col w-[400px]">
 				<div class="my-5">
 					<label class="block text-center font-bold mb-3" for="title">★キャッチコピー</label>
 					<div class="ml-12" v-for="text in get_texts(props.recipe.get_description(), 15)"> 
@@ -55,26 +55,27 @@
 	</div>
 	
 	<!-- コメント欄 -->
-	<div class="m-5 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md">
+	<div class="m-5 lg:m-2 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md h-[800px] overflow-y-auto">
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
-		<ul v-for="comment in comments">
-			<li>
+		<ul v-if="props.comments.length !== 0">
+			<li v-for="comment in props.comments">
 				<div class="flex flex-col w-full border-opacity-50">
 					<div class="grid h-auto card bg-base-200 rounded-box place-items-center p-3">
-						<p>by {{ comment.name }} {{ comment.date }}</p>
+						<p>by {{ comment.name }} / {{ comment.createdAt.substring(0, 10) }}</p>
 						<p>{{ comment.body }}</p>
 					</div>
 					<div class="divider"></div>
 				</div>
 			</li>
 		</ul>
+		<div v-else class="text-center">コメントはまだありません</div>
 	</div>
 
 </div>
 
-<div v-if="nut_data" class="border-2 border-base-300 rounded-md m-3">
+<div v-if="nut_data" class="border-2 border-base-300 rounded-md m-5">
 	<h2 class="text-2xl text-[#333] text-center mt-3">栄養バランスグラフ</h2>
-	<div class="lg:m-0 flex-row lg:flex items-end gap-x-10">
+	<div class="lg:m-0 flex-row lg:flex items-end gap-x-16">
 		<div class="mb-7">
 			<div class="mt-5 ml-5 lg:ml-10 text-center w-[400px] bg-base-200 py-1 rounded-md">
 				<label class="text-xl">総摂取カロリーに対するPCFバランス</label>
@@ -101,7 +102,7 @@
 	</div>
 </div>
 
-<div v-else class="text-center mb-5">
+<div v-else class="text-center mt-7 mb-5">
 	<h2 class="inline text-2xl btn-secondary px-2 rounded-md">栄養情報は記録されていません</h2>
 	<p class="mt-3">栄養情報を表示するには，レシピ投稿時に"栄養情報を記録する"にチェックを入れてください</p>
 </div>
@@ -115,10 +116,12 @@ import { Comment } from "../models/Types";
 
 import PieChart from "../graphComponents/pieChart";
 import BarChart from "../graphComponents/barChart";
+import { objectToString } from "@vue/shared";
 
 
 const props = defineProps({
-	recipe: { type: Object,  required: true }
+	recipe: { type: Object,  required: true },
+	comments: { type: Array<Comment>, default: [] }
 })
 
 const emits = defineEmits([ 'change-show' ])
@@ -126,31 +129,6 @@ const emits = defineEmits([ 'change-show' ])
 const nut_data = props.recipe.get_nut();
 
 
-const comments: Comment[] = [
-	{
-		name: "Jon Doe",
-		body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
-		date: "2022-05-21",
-	},
-	{
-		name: "Maxine",
-		body: "少し味付けが薄かったので塩コショウを足しました",
-		date: "2022-08-01",
-	},
-	{
-		name: "yayaya",
-		body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
-		date: "2022-01-10",
-	},
-	{
-		name: "yayaya",
-		body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
-		date: "2022-01-10",
-	}
-];
-
-
-// keyof...プロパティ名をユニオンで返す
 const get_texts = computed( () => {
     return ( text: string, line_length: number ):string[] | string => {
         const textAry: string[] = [];

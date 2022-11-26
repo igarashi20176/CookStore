@@ -1,16 +1,18 @@
 export class Post {
     private articleId: number;
     private postId: number;
-	private author: string;
+	private authorId: string;
+	private authorName: string;
 	private create_at: any;
 	private title: string;
 	private description: string;
 	private remarks: string;
 
-    constructor( articleId: number ,postId: number, author: string, create_at: any, title: string, description: string, remarks: string ) {
+    constructor( articleId: number ,postId: number, authorId: string, authorName: string, create_at: any, title: string, description: string, remarks: string ) {
         this.articleId = articleId;
         this.postId = postId;
-        this.author = author;
+        this.authorId = authorId;
+        this.authorName = authorName;
         this.create_at = create_at;
         this.title = title;
         this.description = description;
@@ -25,8 +27,12 @@ export class Post {
         return this.postId;
     };
 
-    get_author ():string {
-        return this.author;
+    get_authorid ():string {
+        return this.authorId;
+    }
+
+    get_authorName ():string {
+        return this.authorName;
     }
 
     get_created_at ():any {

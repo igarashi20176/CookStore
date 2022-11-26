@@ -40,7 +40,7 @@
 			<textarea id="description" v-model="add_recipe_info.description" class="textarea textarea-bordered mb-10" placeholder="例) 美味しいのに超時短!忙しい日にぜひ作ってほしいレシピです" maxlength="60" cols="30"></textarea>
 
 			<label class="block font-bold mb-3" for="category">★レシピのカテゴリ<span class="text-sm"> (最大60文字)</span></label>
-			<select v-model="add_recipe_info.category_id" id="category" class="mb-7 select select-bordered w-full max-w-xs">
+			<select v-model="add_recipe_info.category_id" id="category" class="mb-7 text-xl select select-bordered w-full max-w-xs">
 				<option disabled selected>どんな料理？</option>
 				<option value="1">ごはんもの</option>
 				<option value="2">肉のおかず</option>
@@ -87,10 +87,16 @@
 import { ref } from "vue";
 import AddRecipeItem from "../templates/AddRecipeItem.vue";
 import { AddRecipeInfo } from "../models/Types";
+
 import { useRecipeStore } from "../store/recipeStore";
+import { useUserStore } from "../store/userStore";
+
+
+const emits = defineEmits([ 'change-view' ])
+
 
 const recipe_store = useRecipeStore();
-
+const user_store = useUserStore();
 
 // 入力情報の保存
 const add_recipe_info = ref<AddRecipeInfo>({
@@ -125,8 +131,8 @@ const getImageFile = (props: any): void => {
  */
 const post_recipe = (): void => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
-	console.log(add_recipe_info.value);
-	recipe_store.post_to_database_recipe(add_recipe_info.value);
+	recipe_store.post_my_recipe(user_store.get_uid, add_recipe_info.value);
+	emits('change-view', 'recipe');
 }
 
 

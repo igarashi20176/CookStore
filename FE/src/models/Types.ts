@@ -47,5 +47,11 @@ export type Nutriton = {
 export type Comment = {
 	name: string
 	body: string
-	date: string
+	createdAt: string
 };
+
+export type Mypage = {
+	posts: number,
+	likes: number,
+	comments: number
+}
