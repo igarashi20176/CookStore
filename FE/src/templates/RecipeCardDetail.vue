@@ -72,27 +72,38 @@
 
 </div>
 
-<div v-if="nut_data">
-	<h2 class="text-2xl text-red-500 text-center">栄養バランスグラフ</h2>
-	<div class="mt-5 lg:ml-10 text-center w-[400px] bg-base-200 py-1 rounded-md">
-		<label class="text-xl">総摂取カロリーに対するPCFバランス</label>
-		<label class="mt-3 flex justify-center gap-x-3">
-			<p class="text-[#808080]">炭水化物: {{ Math.round(nut_data.carbo*4 / nut_data.kcal * 100) }}%</p>
-			<p class="text-[#ff6347]">タンパク質: {{ Math.round(nut_data.protein*4 / nut_data.kcal * 100) }}%</p>
-			<p class="text-yellow-500">脂質: {{ Math.round(nut_data.fat*4 / nut_data.kcal * 100) }}%</p>
-		</label>
-	</div>
-	<div class="text-left lg:ml-24 w-[310px]">
-		<PieChart class="" :width="300" :height="300" :nut="nut_data" />
-	</div>
+<div v-if="nut_data" class="border-2 border-base-300 rounded-md m-3">
+	<h2 class="text-2xl text-[#333] text-center mt-3">栄養バランスグラフ</h2>
+	<div class="lg:m-0 flex-row lg:flex items-end gap-x-10">
+		<div class="mb-7">
+			<div class="mt-5 ml-5 lg:ml-10 text-center w-[400px] bg-base-200 py-1 rounded-md">
+				<label class="text-xl">総摂取カロリーに対するPCFバランス</label>
+				<label class="mt-3 flex justify-center gap-x-3">
+					<p class="text-[#808080]">炭水化物: {{ Math.round(nut_data.carbo*4 / nut_data.kcal * 100) }}%</p>
+					<p class="text-[#ff6347]">タンパク質: {{ Math.round(nut_data.protein*4 / nut_data.kcal * 100) }}%</p>
+					<p class="text-yellow-500">脂質: {{ Math.round(nut_data.fat*9 / nut_data.kcal * 100) }}%</p>
+				</label>
+			</div>
+			<div class="text-left ml-14 lg:ml-24 w-[310px]">
+				<PieChart class="" :width="300" :height="300" :base="'kcal'" :data="{ '炭水化物': nut_data.carbo*4, 'タンパク質': nut_data.protein*4, '脂質': nut_data.fat*4 }" />
+			</div>
+		</div>
+		
+		<div class="ml-14 lg:ml-0 mb-5 w-[300px] text-center">
+			<label class="bg-base-200 rounded-md px-2">食物繊維・ビタミン群</label>
+			<BarChart :height="300" :color="'#ff7f50'" :data="{ 'fiber': nut_data.fiber, 'VA': nut_data.va, 'VB1': nut_data.vb1, 'VB2': nut_data.vb2, 'VB6': nut_data.vb6, 'VC': nut_data.vc, 'VD': nut_data.vd, 'VE': nut_data.ve, 'folic': nut_data.folic }" />
+		</div>
 
-	<div class="w-[300px]">
-		<BarChart :width="300" />
+		<div class="mb-5 ml-14 lg:ml-0 w-[300px] text-center">
+			<label class="bg-base-200 rounded-md px-2">ミネラル群</label>
+			<BarChart :height="300" :color="'#00bfff'" :data="{ 'natrium': nut_data.nat, 'kalium': nut_data.kal, 'calcium': nut_data.calc, 'iron': nut_data.iron, 'magnesium': nut_data.mag, 'zinc': nut_data.zinc }" />
+		</div>
 	</div>
 </div>
 
-<div v-else class="text-2xl text-center mb-5">
-	<h2 class="inline bg-base-200 px-2 rounded-md">栄養情報は登録されていません</h2>
+<div v-else class="text-center mb-5">
+	<h2 class="inline text-2xl btn-secondary px-2 rounded-md">栄養情報は記録されていません</h2>
+	<p class="mt-3">栄養情報を表示するには，レシピ投稿時に"栄養情報を記録する"にチェックを入れてください</p>
 </div>
 
 </template>
@@ -114,6 +125,7 @@ const emits = defineEmits([ 'change-show' ])
 
 const nut_data = props.recipe.get_nut();
 
+
 const comments: Comment[] = [
 	{
 		name: "Jon Doe",
@@ -124,6 +136,11 @@ const comments: Comment[] = [
 		name: "Maxine",
 		body: "少し味付けが薄かったので塩コショウを足しました",
 		date: "2022-08-01",
+	},
+	{
+		name: "yayaya",
+		body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
+		date: "2022-01-10",
 	},
 	{
 		name: "yayaya",

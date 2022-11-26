@@ -1,6 +1,14 @@
 import { defineComponent, h, PropType } from 'vue'
+import { Nutriton } from "../models/Types";
 
 import { Bar } from 'vue-chartjs'
+import data from "../models/nut_requirement.json"
+
+const data_demo = {
+    prop1: 10,
+    prop2: 20,
+    prop3: 30
+} 
 
 import {
   Chart as ChartJS,
@@ -15,15 +23,20 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
+
 export default defineComponent({
-  name: 'BarChart',
+  name: 'Bar2Chart',
   components: {
     Bar
   },
   props: {
-    nut: {
+    data: {
         type: Object,
         default: null 
+    },
+    color: {
+      type: String,
+      default: "#333"
     },
     chartId: {
       type: String,
@@ -50,24 +63,15 @@ export default defineComponent({
       default: () => []
     }
   },
+
   setup(props) {
     const chartData = {
-      labels: [
-        '食物繊維',
-        'VA',
-        'VB1',
-        'VB2',
-        'VB6',
-        'VC',
-        'VD',
-        'VE',
-        '葉酸'
-      ],
+      labels: Object.keys(props.data).map( (k: string) => k ),
       datasets: [
         {
-          label: 'Data One',
-          backgroundColor: '#f87979',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 100]
+          label: '各栄養素の摂取割合 (%)',
+          backgroundColor: props.color,
+          data: Object.keys(props.data).map( k => Math.round(props.data[k] / data[k] * 100) )
         }
       ]
     }
@@ -89,4 +93,22 @@ export default defineComponent({
         plugins: props.plugins
       })
   }
+
+    //   labels: [
+    //     'nat',
+    //     'kal',
+    //     'calc',
+    //     'iron',
+    //     'mag',
+    //     'zinc',
+    //   ],
+
+    //   data: [
+    //     Math.round(props.nut.nat / data.nat * 100),
+    //     Math.round(props.nut.kal / data.kal * 100),
+    //     Math.round(props.nut.calc / data.calc * 100),
+    //     Math.round(props.nut.iron / data.iron * 100),
+    //     Math.round(props.nut.mag / data.mag * 100),
+    //     Math.round(props.nut.zinc / data.zinc * 100),
+    //   ]
 })

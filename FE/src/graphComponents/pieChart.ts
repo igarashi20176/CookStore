@@ -19,9 +19,13 @@ export default defineComponent({
     Pie
   },
   props: {
-    nut: {
+    data: {
       type: Object,
       default: null
+    },
+    base: {
+      type: String,
+      default: ""
     },
     chartId: {
       type: String,
@@ -50,11 +54,11 @@ export default defineComponent({
   },
   setup(props) {
     const chartData = {
-      labels: ['炭水化物', 'タンパク質', '脂質'],
+      labels: Object.keys(props.data).map( (k: string) => `${k} ${ props.base ? `(${props.base})`: "" }` ),
       datasets: [
         {
           backgroundColor: ['#808080', '#ff6347', '#fdd35c'],
-          data: [props.nut.carbo*4, props.nut.protein*4, props.nut.fat*9]
+          data: Object.keys(props.data).map( (k: string) => props.data[k] )
         }
       ]
     }
