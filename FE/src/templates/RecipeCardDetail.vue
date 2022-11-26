@@ -72,6 +72,29 @@
 
 </div>
 
+<div v-if="nut_data">
+	<h2 class="text-2xl text-red-500 text-center">栄養バランスグラフ</h2>
+	<div class="mt-5 lg:ml-10 text-center w-[400px] bg-base-200 py-1 rounded-md">
+		<label class="text-xl">総摂取カロリーに対するPCFバランス</label>
+		<label class="mt-3 flex justify-center gap-x-3">
+			<p class="text-[#808080]">炭水化物: {{ Math.round(nut_data.carbo*4 / nut_data.kcal * 100) }}%</p>
+			<p class="text-[#ff6347]">タンパク質: {{ Math.round(nut_data.protein*4 / nut_data.kcal * 100) }}%</p>
+			<p class="text-yellow-500">脂質: {{ Math.round(nut_data.fat*4 / nut_data.kcal * 100) }}%</p>
+		</label>
+	</div>
+	<div class="text-left lg:ml-24 w-[310px]">
+		<PieChart class="" :width="300" :height="300" :nut="nut_data" />
+	</div>
+
+	<div class="w-[300px]">
+		<BarChart :width="300" />
+	</div>
+</div>
+
+<div v-else class="text-2xl text-center mb-5">
+	<h2 class="inline bg-base-200 px-2 rounded-md">栄養情報は登録されていません</h2>
+</div>
+
 </template>
 
 <script lang="ts" setup>
@@ -79,12 +102,17 @@
 import { computed } from "vue";
 import { Comment } from "../models/Types";
 
+import PieChart from "../graphComponents/pieChart";
+import BarChart from "../graphComponents/barChart";
+
+
 const props = defineProps({
 	recipe: { type: Object,  required: true }
 })
 
 const emits = defineEmits([ 'change-show' ])
 
+const nut_data = props.recipe.get_nut();
 
 const comments: Comment[] = [
 	{
@@ -103,6 +131,7 @@ const comments: Comment[] = [
 		date: "2022-01-10",
 	}
 ];
+
 
 // keyof...プロパティ名をユニオンで返す
 const get_texts = computed( () => {

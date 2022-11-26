@@ -72,7 +72,17 @@ app.post('/api/v1/user', async (req: Request, res: Response) => {
 // 全てのレシピを取得
 app.get('/api/v1/recipes', async (req: Request, res: Response) => {
 	const recipes = await prisma.recipe.findMany({
-    	include: { post: { select: { authorId: true, like: true, comment: true }}} 
+    	include: { post: { 
+			select: {
+				authorId: true, like: true, comment: true 
+			}
+		},
+			nutrition: {
+				select: {
+					kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+				}
+			}
+		} 
 	});
 
   	return res.json(recipes);
@@ -139,25 +149,25 @@ app.post('/api/v1/recipe', async (req: Request, res: Response) => {
 			};
 			ingredients.forEach( (i: any) => {
 				const n = food_nut.find( f => f.name === i.name ); 
-				nut_sum_list.kcal += n!.kcal * (i.grams /100);
-				nut_sum_list.carbo += n!.carbo * (i.grams /100);
-				nut_sum_list.protein += n!.protein * (i.grams /100);
-				nut_sum_list.fat += n!.fat * (i.grams /100);
-				nut_sum_list.fiber += n!.fiber * (i.grams /100);
-				nut_sum_list.va += n!.va * (i.grams /100);
-				nut_sum_list.vb1 += n!.vb1 * (i.grams /100);
-				nut_sum_list.vb2 += n!.vb2 * (i.grams /100);
-				nut_sum_list.vb6 += n!.vb6 * (i.grams /100);
-				nut_sum_list.vc += n!.vc * (i.grams /100);
-				nut_sum_list.vd += n!.vd * (i.grams /100);
-				nut_sum_list.ve += n!.ve * (i.grams /100);
-				nut_sum_list.folic += n!.folic * (i.grams /100);
-				nut_sum_list.nat += n!.nat * (i.grams /100);
-				nut_sum_list.kal += n!.kal * (i.grams /100);
-				nut_sum_list.calc += n!.calc * (i.grams /100);
-				nut_sum_list.iron += n!.iron * (i.grams /100);
-				nut_sum_list.mag += n!.mag * (i.grams /100);
-				nut_sum_list.zinc += n!.zinc * (i.grams /100);
+				nut_sum_list.kcal += n!.kcal * (i.grams / 100);
+				nut_sum_list.carbo += n!.carbo * (i.grams / 100);
+				nut_sum_list.protein += n!.protein * (i.grams / 100);
+				nut_sum_list.fat += n!.fat * (i.grams / 100);
+				nut_sum_list.fiber += n!.fiber * (i.grams / 100);
+				nut_sum_list.va += n!.va * (i.grams / 100);
+				nut_sum_list.vb1 += n!.vb1 * (i.grams / 100);
+				nut_sum_list.vb2 += n!.vb2 * (i.grams / 100);
+				nut_sum_list.vb6 += n!.vb6 * (i.grams / 100);
+				nut_sum_list.vc += n!.vc * (i.grams / 100);
+				nut_sum_list.vd += n!.vd * (i.grams / 100);
+				nut_sum_list.ve += n!.ve * (i.grams / 100);
+				nut_sum_list.folic += n!.folic * (i.grams / 100);
+				nut_sum_list.nat += n!.nat * (i.grams / 100);
+				nut_sum_list.kal += n!.kal * (i.grams / 100);
+				nut_sum_list.calc += n!.calc * (i.grams / 100);
+				nut_sum_list.iron += n!.iron * (i.grams / 100);
+				nut_sum_list.mag += n!.mag * (i.grams / 100);
+				nut_sum_list.zinc += n!.zinc * (i.grams / 100);
 			});
 
 			const nut = await prisma.nutrition.create({

@@ -22,6 +22,28 @@ export type AddUserInfo = {
 	gender: number | null
 }
 
+export type Nutriton = {
+	kcal: number,
+	carbo: number,
+	protein: number,
+	fat: number,
+	fiber: number,
+	va: number,
+	vb1: number,
+	vb2: number,
+	vb6: number,
+	vc: number,
+	vd: number,
+	ve: number,
+	folic: number,
+	nat: number,
+	kal: number,
+	calc: number,
+	iron: number, 
+	mag: number,
+	zinc: number,
+}
+
 export type Comment = {
 	name: string
 	body: string

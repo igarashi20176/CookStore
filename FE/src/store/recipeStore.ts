@@ -52,7 +52,7 @@ export const useRecipeStore = defineStore( "recipe", {
                     const { data, status } = res;
                                     
                     data.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post.like.length));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post.like.length, d.nutrition ? d.nutrition : null));
                     });
                     
                     this.get_recipes_images();
@@ -80,7 +80,7 @@ export const useRecipeStore = defineStore( "recipe", {
                     const { data, status } = res;
                                     
                     data.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
                     });
                     
                     this.get_recipes_images();
@@ -139,7 +139,6 @@ export const useRecipeStore = defineStore( "recipe", {
         },
 
         toggle_fav(uid: string, post_id: number, is_fav: boolean) {
-            console.log(uid, post_id, is_fav);
             
                 const fav_options: AxiosRequestConfig = {
                     url: `${base_url}/api/v1/fav`,

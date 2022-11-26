@@ -138,7 +138,7 @@
 		<button  @click="add_ingredients" class="ml-4 mb-5 btn btn-success">追加</button>
 
 		<div class="mb-5">
-			<label for="my-modal-4" class="text-center btn btn-primary" @click="emits('update:value', ingredients)">選択完了</label>
+			<label for="my-modal-4" class="text-right btn btn-primary" @click="emits('update:value', ingredients)">選択完了</label>
 		</div>
 		
 		<div>

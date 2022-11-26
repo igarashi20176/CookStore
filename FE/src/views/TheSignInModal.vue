@@ -16,7 +16,7 @@
 
 <!-- signin & register modal -->
 <input type="checkbox" :id="`my-modal-${props.id}`" class="modal-toggle" />
-<div class="modal">
+<div class="modal" v-if="!props.isLogin">
 
     <div class="modal-box relative">
         <label :for="`my-modal-${props.id}`" class="btn btn-primary btn-sm btn-circle absolute right-2 top-2">✕</label>
@@ -70,7 +70,8 @@ const user_store = useUserStore();
 
 const props = defineProps({
     id: { type: Number, default: 0 },
-    isRegister: { type: Boolean, required: true }
+    isRegister: { type: Boolean, required: true },
+    isLogin: { type: Boolean, required: true }
 });
 
 

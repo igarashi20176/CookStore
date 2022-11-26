@@ -1,22 +1,25 @@
 import { Post } from "../models/Post";
+import { Nutriton } from "../models/Types";
 
 export class Recipe extends Post {
 	private ingredients: string;
     private category: number;
     private image: string;
     private favs: number;
+    private nutrition: Nutriton | null;
 
-    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string, favs: number) {
+    constructor( articleId: number ,postId: number, author: string, category: number, create_at: string, title: string, description: string, ingredients: string , remarks: string, image: string, favs: number, nutrition: Nutriton | null) {
         super(articleId, postId, author, create_at, title, description, remarks);
         this.ingredients = ingredients;
         this.category = category;
         this.image = image;
         this.favs = favs;
+        this.nutrition = nutrition;
     };
 
     get_ingredients (): object[] {
         const ary: { [K in 'name' & 'amount']: string | number }[] = [];
-        this.ingredients.split(",").map(value => value.split(":")).map(values => ary.push({ name: values[0], amount: values[1] }));
+        this.ingredients.split(",").map(value => value.split(":")).forEach(values => ary.push({ name: values[0], amount: values[1] }));
 
         return ary;
     }
@@ -27,6 +30,10 @@ export class Recipe extends Post {
 
     get_favs(): number {
         return this.favs;
+    }
+
+    get_nut(): Nutriton | null{
+        return this.nutrition;
     }
     
     get_image(): string {

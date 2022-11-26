@@ -47,7 +47,7 @@
 </div>
 
   
-<sign-in-modal :is-register="is_register" :id="1" />
+<sign-in-modal :is-login="user_store.is_user_login" :is-register="is_register" :id="1" />
   
 
 <div class="text-right mr-10" v-if="user_store.is_user_login">

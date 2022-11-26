@@ -1,11 +1,10 @@
 <template>
 
 <div class="w-[80%] m-auto mt-10">
-    <h2 class="text-2xl font-bold text-center bg-base-300 w-1/3 lg:w-1/4 m-auto rounded-xl mb-2">人気のメニュー</h2>
+    <h2 class="text-2xl font-bold text-center bg-base-200 w-1/3 lg:w-1/4 m-auto rounded-xl mb-2"><img class="inline w-[50px]" src="../assets/images/ranking.png" alt="">人気のメニュー</h2>
 
-    <div class="relative mt-5 carousel w-full h-auto rounded-xl">
-        <li class="carousel-item mx-2" v-for="recipe, i in recipe_store.recipes">
-            <img class="absolute z-10 top-5 left-0 w-[50px]" src="../assets/images/ranking.png" alt="">
+    <div class="mt-5 carousel w-full h-auto rounded-xl">
+        <li class="carousel-item m-0 lg:mx-2" v-for="recipe, i in recipe_store.recipes">
 			<!-- loginの可否でいいね&ブックマークボタンを非活性 -->
 			<recipe-card :id="`item${i+1}`" v-if="user_store.is_user_login" :is-login="true" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
 				@toggle-fav="toggle_fav">

@@ -60,7 +60,17 @@ app.post('/api/v1/user', async (req, res) => {
 // 全てのレシピを取得
 app.get('/api/v1/recipes', async (req, res) => {
     const recipes = await prisma.recipe.findMany({
-        include: { post: { select: { authorId: true, like: true, comment: true } } }
+        include: { post: {
+                select: {
+                    authorId: true, like: true, comment: true
+                }
+            },
+            nutrition: {
+                select: {
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                }
+            }
+        }
     });
     return res.json(recipes);
 });
@@ -118,7 +128,6 @@ app.post('/api/v1/recipe', async (req, res) => {
             };
             ingredients.forEach((i) => {
                 const n = food_nut.find(f => f.name === i.name);
-                console.log(n);
                 nut_sum_list.kcal += n.kcal * (i.grams / 100);
                 nut_sum_list.carbo += n.carbo * (i.grams / 100);
                 nut_sum_list.protein += n.protein * (i.grams / 100);
@@ -144,7 +153,6 @@ app.post('/api/v1/recipe', async (req, res) => {
                     recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), va: roundDecimal(nut_sum_list.va, 0), vb1: roundDecimal(nut_sum_list.vb1, 2), vb2: roundDecimal(nut_sum_list.vb2, 2), vb6: roundDecimal(nut_sum_list.vb6, 2), vc: roundDecimal(nut_sum_list.vc, 0), vd: roundDecimal(nut_sum_list.vd, 1), ve: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), nat: roundDecimal(nut_sum_list.nat, 0), kal: roundDecimal(nut_sum_list.kal, 0), calc: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), mag: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
                 }
             });
-            console.log(nut);
         }
         res.json(recipe);
     }
