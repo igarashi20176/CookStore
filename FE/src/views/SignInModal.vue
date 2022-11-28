@@ -2,17 +2,18 @@
 
 <!-- ログインの可否を表示  -->
 <div class="z-10 top-24 toast toast-top toast-end">
-  <div v-if="is_login && !(is_login === undefined)" class="alert alert-success">
-    <div>
-      <span class="font-bold">ログインに成功しました</span>
+    <div v-if="is_login && !(is_login === undefined)" class="alert alert-success">
+        <div>
+            <span class="font-bold">ログインに成功しました</span>
+        </div>
     </div>
-  </div>
-  <div v-if="!is_login && !(is_login === undefined)" class="alert alert-error">
-    <div>
-      <span class="font-bold">ログインに失敗しました</span>
+    <div v-if="!is_login && !(is_login === undefined)" class="alert alert-error">
+        <div>
+            <span class="font-bold">ログインに失敗しました</span>
+        </div>
     </div>
-  </div>
 </div>
+
 
 <!-- signin & register modal -->
 <input type="checkbox" :id="`my-modal-${props.id}`" class="modal-toggle" />
@@ -35,7 +36,9 @@
                 <h3 class="font-bold text-base text-center mt-5 mb-2">ユーザ情報</h3>
 
                 <input v-model="input_user_info.name" type="text" placeholder="ユーザネーム" class="mb-3 input input-bordered w-full max-w-xs" />
+
                 <input v-model="input_user_info.age" type="number" min="0" placeholder="年齢" class="mb-3 input input-bordered w-full max-w-xs" />
+
                 <label class="block" for="gener">性別を選択してください</label>
                 <select v-model="input_user_info.gender" id="gender" class="select select-bordered text-xl font-normal w-full max-w-xs">
                     <option value="0">女性</option>
@@ -85,6 +88,7 @@ const input_user_info = ref<AddUserInfo>({
     age: null,
     gender: null,
 })
+
 const errMsg = ref<string>("");
 
 

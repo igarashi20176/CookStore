@@ -41,12 +41,12 @@ app.get('/api/v1/user', async (req, res) => {
 app.post('/api/v1/user', async (req, res) => {
     const { uid, name, age, gender } = req.body;
     try {
-        const user = await prisma.user.create({
+        const post_user = await prisma.user.create({
             data: {
                 id: uid, name: name, age: age, gender: gender
             }
         });
-        return res.json(user);
+        return res.json(post_user);
     }
     catch (e) {
         if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
@@ -59,10 +59,161 @@ app.post('/api/v1/user', async (req, res) => {
 });
 // 全てのレシピを取得
 app.get('/api/v1/recipes', async (req, res) => {
-    const recipes = await prisma.recipe.findMany({
-        include: { post: {
+    const all_recipes = await prisma.recipe.findMany({
+        include: {
+            post: {
                 select: {
-                    authorId: true, like: true, comment: true
+                    authorId: true,
+                    _count: {
+                        select: { like: true }
+                    },
+                    comment: {
+                        select: {
+                            user: {
+                                select: { name: true }
+                            },
+                            body: true,
+                            created_at: true
+                        }
+                    },
+                    author: {
+                        select: { name: true }
+                    }
+                }
+            },
+            nutrition: {
+                select: {
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                }
+            }
+        }
+    });
+    return res.json(all_recipes);
+});
+app.get('/api/v1/category/:id', async (req, res) => {
+    const category_id = req.params.id;
+    const recipes = await prisma.recipe.findMany({
+        where: {
+            categoryId: Number(category_id)
+        },
+        include: {
+            post: {
+                select: {
+                    authorId: true,
+                    _count: {
+                        select: { like: true }
+                    },
+                    comment: {
+                        select: {
+                            user: {
+                                select: { name: true }
+                            },
+                            body: true,
+                            created_at: true
+                        }
+                    },
+                    author: {
+                        select: { name: true }
+                    }
+                }
+            },
+            nutrition: {
+                select: {
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                }
+            }
+        }
+    });
+    return res.json(recipes);
+});
+app.get('/api/v1/mypage/:uid', async (req, res) => {
+    const uid = req.params.uid;
+    const my_recipes = await prisma.recipe.findMany({
+        where: {
+            post: {
+                authorId: uid
+            }
+        },
+        include: {
+            post: {
+                select: {
+                    authorId: true,
+                    _count: {
+                        select: { like: true }
+                    },
+                    comment: {
+                        select: {
+                            user: {
+                                select: { name: true }
+                            },
+                            body: true,
+                            created_at: true
+                        }
+                    },
+                    author: {
+                        select: { name: true }
+                    }
+                }
+            },
+            nutrition: {
+                select: {
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                }
+            }
+        }
+    });
+    const all_post_number = await prisma.post.count({
+        where: {
+            authorId: uid
+        }
+    });
+    const all_like_number = await prisma.like.count({
+        where: {
+            post: {
+                authorId: uid
+            }
+        }
+    });
+    const all_comment_number = await prisma.comment.count({
+        where: {
+            post: {
+                authorId: uid
+            }
+        }
+    });
+    const my_recipe_info = Object.assign({ my_recipes }, { posts: all_post_number, likes: all_like_number, comments: all_comment_number });
+    return res.json(my_recipe_info);
+});
+// いいね数が多い上位5レシピを取得
+app.get('/api/v1/popular', async (req, res) => {
+    const recipes = await prisma.recipe.findMany({
+        take: 5,
+        orderBy: {
+            post: {
+                like: {
+                    _count: 'desc'
+                }
+            }
+        },
+        include: {
+            post: {
+                select: {
+                    authorId: true,
+                    _count: {
+                        select: { like: true }
+                    },
+                    comment: {
+                        select: {
+                            user: {
+                                select: { name: true }
+                            },
+                            body: true,
+                            created_at: true
+                        }
+                    },
+                    author: {
+                        select: { name: true }
+                    }
                 }
             },
             nutrition: {
@@ -148,7 +299,7 @@ app.post('/api/v1/recipe', async (req, res) => {
                 nut_sum_list.mag += n.mag * (i.grams / 100);
                 nut_sum_list.zinc += n.zinc * (i.grams / 100);
             });
-            const nut = await prisma.nutrition.create({
+            await prisma.nutrition.create({
                 data: {
                     recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), va: roundDecimal(nut_sum_list.va, 0), vb1: roundDecimal(nut_sum_list.vb1, 2), vb2: roundDecimal(nut_sum_list.vb2, 2), vb6: roundDecimal(nut_sum_list.vb6, 2), vc: roundDecimal(nut_sum_list.vc, 0), vd: roundDecimal(nut_sum_list.vd, 1), ve: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), nat: roundDecimal(nut_sum_list.nat, 0), kal: roundDecimal(nut_sum_list.kal, 0), calc: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), mag: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
                 }
@@ -166,39 +317,41 @@ app.post('/api/v1/recipe', async (req, res) => {
         return res.status(400).json(e);
     }
 });
-// いいね数が多い上位5レシピを取得
-app.get('/api/v1/popular', async (req, res) => {
-    const recipes = await prisma.recipe.findMany({
-        take: 5,
-        orderBy: {
-            post: {
-                like: {
-                    _count: 'desc'
-                }
+// レシピを削除 
+app.delete('/api/v1/fav', async (req, res) => {
+    const { post_id } = req.body;
+    try {
+        const delete_recipe = await prisma.recipe.delete({
+            where: {
+                postId: post_id
             }
-        },
-        include: {
-            post: {
-                include: {
-                    _count: {
-                        select: {
-                            like: true
-                        }
-                    },
-                }
+        });
+        const delete_post = await prisma.post.delete({
+            where: {
+                id: post_id
+            }
+        });
+        return res.json(delete_post);
+    }
+    catch (e) {
+        if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            if (e.code === 'P2002') {
+                console.log(e);
             }
         }
-    });
-    return res.json(recipes);
+        return res.status(400).json(e);
+    }
 });
 app.get('/api/v1/menus', async (req, res) => {
     const menus = await prisma.menu.findMany({
         include: {
-            post: true,
-            staple: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
-            main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
-            sub: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } },
-            soup: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true } } } }
+            post: {
+                select: { author: { select: { name: true } } }
+            },
+            staple: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true, author: { select: { name: true } } }, } } },
+            main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true, author: { select: { name: true } } } } } },
+            sub: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true, author: { select: { name: true } } } } } },
+            soup: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true, author: { select: { name: true } } } } } }
         }
     });
     return res.json(menus);
@@ -223,7 +376,7 @@ app.post('/api/v1/fav', async (req, res) => {
         return res.status(400).json(e);
     }
 });
-// 全てのメニューを取得
+// お気に入りから削除 
 app.delete('/api/v1/fav', async (req, res) => {
     const { user_id, post_id } = req.body;
     try {

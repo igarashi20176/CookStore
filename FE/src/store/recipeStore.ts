@@ -164,26 +164,30 @@ export const useRecipeStore = defineStore( "recipe", {
         },
 
         post_my_recipe( uid: string ,recipe: AddRecipeInfo ) {
-            const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
-            let storageRef = fsRef(storage, img_url);
+            return new Promise<void>((resolve, reject) => {
+                const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
+                let storageRef = fsRef(storage, img_url);
 
-            // firebase storageに画像を格納
-            uploadBytes(storageRef, recipe.file)
-            .then( () => {
-                delete recipe.file;
-                const post_opt: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/recipe`,
-                    method: "POST",
-                    data: { uid: uid, ...recipe, img_url: img_url }
-                };
+                // firebase storageに画像を格納
+                uploadBytes(storageRef, recipe.file)
+                .then( () => {
+                    delete recipe.file;
+                    const post_opt: AxiosRequestConfig = {
+                        url: `${base_url}/api/v1/recipe`,
+                        method: "POST",
+                        data: { uid: uid, ...recipe, img_url: img_url }
+                    };
 
-                axios(post_opt)
-                .then((res: AxiosResponse<object[]>) => {
-                    console.log(res);
+                    axios(post_opt)
+                    .then((res: AxiosResponse<object[]>) => {
+                        console.log(res);
+                        resolve();
+                    })
+                    .catch( e => console.log(e)); 
+                        reject();
                 })
-                .catch( e => console.log(e)); 
+                .catch(err => console.log(err)) 
             })
-            .catch(err => console.log(err)) 
         },
 
         delete_my_recipe( post_id: number, img_url: string ) {

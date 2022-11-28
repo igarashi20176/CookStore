@@ -11,6 +11,7 @@
 
 	<div class="flex gap-x-16">	
 		<div class="flex-col gap-y-16 text-center">
+			<!-- 画像の選択 -->
 			<figure>
 				<input @change="getImageFile" id="file" type="file" class="hidden" /> 
 				<label v-if="!on_img" for="file" class="block bg-base-200 w-[500px] h-[400px] p-8 cursor-pointer rounded-xl hover:bg-base-300">
@@ -23,6 +24,7 @@
 					</div>
 					</div>
 				</label>
+
 				<div v-else>
 					<p>画像をダブルクリックで差し替えることができます</p>
 					<img @dblclick="on_img = !on_img" id="preview" :src="img_data" class="w-[500px] h-[400px] rounded-xl border-2 border-[#888] cursor-pointer hover:opacity-60" />
@@ -62,6 +64,7 @@
 					</div>
 					<div class="border-t border-dashed border-[#555] mx-3 mb-3"></div>
 				</div>
+
 				<button @click="add_recipe_info.ingredients = []" class="bg-base-100 rounded-md m-auto p-1 px-2 hover:bg-base-200 transition">選択をリセット</button>
 			</div>
 
@@ -94,9 +97,12 @@ import { useUserStore } from "../store/userStore";
 
 const emits = defineEmits([ 'change-view' ])
 
-
+/**
+ * Pinia init
+ */
 const recipe_store = useRecipeStore();
 const user_store = useUserStore();
+
 
 // 入力情報の保存
 const add_recipe_info = ref<AddRecipeInfo>({
@@ -129,10 +135,13 @@ const getImageFile = (props: any): void => {
 /**
  *  追加レシピの情報をpiniaに送信
  */
-const post_recipe = (): void => {
+const post_recipe = async (): Promise<void> => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
-	recipe_store.post_my_recipe(user_store.get_uid, add_recipe_info.value);
-	emits('change-view', 'recipe');
+	await recipe_store.post_my_recipe(user_store.get_uid, add_recipe_info.value)
+	.then( () => {
+		emits('change-view', 'recipe');
+	})
+	.catch( () => alert("レシピの送信に失敗しました．もう一度お試しください"));
 }
 
 
