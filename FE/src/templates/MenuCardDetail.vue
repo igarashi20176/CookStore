@@ -46,7 +46,7 @@
             <li>
                 <div class="flex flex-col w-full border-opacity-50">
                     <div class="grid h-auto card bg-base-200 rounded-box place-items-center p-3">
-                        <p>by {{ comment.name }} {{ comment.date }}</p>
+                        <p>by {{ comment.name }} {{ comment.createdAt }}</p>
                         <p>{{ comment.body }}</p>
                     </div>
                     <div class="divider"></div>
@@ -64,7 +64,7 @@
 import { computed } from "vue";
 import { Comment } from "../models/Types";
 
-import RecipeImage from "../parts/TheImageWithTitle.vue";
+import RecipeImage from "./TheImageWithTitle.vue";
 
 const props = defineProps({
     menu: { type: Object, required: true }
@@ -76,17 +76,17 @@ const comments: Comment[] = [
     {
         name: "Jon Doe",
         body: "昨日家族に作りましたが，美味しいと好評でした!短時間で作れてこんなに感謝されるのはお得ですね^^",
-        date: "2022-05-21",
+        createdAt: "2022-05-21",
     },
     {
         name: "Maxine",
         body: "少し味付けが薄かったので塩コショウを足しました",
-        date: "2022-08-01",
+        createdAt: "2022-08-01",
     },
     {
         name: "yayaya",
         body: "私もこれ良く作ってます!一週間たつとふと食べたくなるんですよね~",
-        date: "2022-01-10",
+        createdAt: "2022-01-10",
     }
 ];
 

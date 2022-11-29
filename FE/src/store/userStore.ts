@@ -33,8 +33,8 @@ export const useUserStore = defineStore( "user", {
         get_uid( state ): string {
             return state.user.uid
         },
-        get_user_token( state ): string | boolean {
-            return state.user.token ? state.user.token : false
+        get_user_token( state ): string {
+            return state.user.token ? state.user.token : ""
         },
         get_user_name( state ): string {
             return state.user.name
@@ -46,11 +46,10 @@ export const useUserStore = defineStore( "user", {
             return new Promise<boolean>((resolve, reject) => {
                 const get_user_option: AxiosRequestConfig = {
                     method: "GET",
-                    url: `${base_url}/api/v1/user`,
+                    url: `${base_url}/api/v1/user/${uid}`,
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },  
-                    params: { uid }
                 };
                 axios(get_user_option)
                 .then( (res: AxiosResponse<{ id: string, name: string, like: [] }> ) => {
@@ -82,6 +81,15 @@ export const useUserStore = defineStore( "user", {
                     reject();
                 })
             })
+        },
+
+        user_toggle_favs( postId: number, is_fav: boolean ) {
+            if ( is_fav ) { 
+                const i = this.user.favs.indexOf(postId);
+                this.user.favs.splice(i, 1);
+            } else {
+                this.user.favs.push(postId);
+            }
         },
 
         logout_user_info() {

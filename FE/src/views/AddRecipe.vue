@@ -68,7 +68,7 @@
 				<button @click="add_recipe_info.ingredients = []" class="bg-base-100 rounded-md m-auto p-1 px-2 hover:bg-base-200 transition">選択をリセット</button>
 			</div>
 
-			<div class="form-control bg-base-200 rounded-md p-1 px-2">
+			<div class="form-control bg-gray-100 rounded-md p-1 px-2">
 				<label class="cursor-pointer label">
 				<span class="">栄養情報を記録する</span>
 				<input type="checkbox" v-model="add_recipe_info.nut_option" class="checkbox checkbox-success" />
@@ -106,11 +106,11 @@ const user_store = useUserStore();
 
 // 入力情報の保存
 const add_recipe_info = ref<AddRecipeInfo>({
-	title: "",
-	category_id: 0,
-	description: "",
+	title: "a",
+	category_id: 2,
+	description: "a",
 	ingredients: [],
-	remarks: "",
+	remarks: "a",
 	nut_option: false,
 	file: {}
 });
@@ -121,6 +121,7 @@ const add_recipe_info = ref<AddRecipeInfo>({
  */
 const on_img = ref<boolean>(false);
 const img_data = ref<any>();
+
 
 // inputされたFileの保存
 const getImageFile = (props: any): void => {	
@@ -137,11 +138,12 @@ const getImageFile = (props: any): void => {
  */
 const post_recipe = async (): Promise<void> => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
+
 	await recipe_store.post_my_recipe(user_store.get_uid, add_recipe_info.value)
-	.then( () => {
+	.then( res => {
 		emits('change-view', 'recipe');
 	})
-	.catch( () => alert("レシピの送信に失敗しました．もう一度お試しください"));
+	.catch( err => alert("レシピの送信に失敗しました．もう一度お試しください"));
 }
 
 

@@ -27,7 +27,7 @@ export class Post {
         return this.postId;
     };
 
-    get_authorid ():string {
+    get_authorId ():string {
         return this.authorId;
     }
 

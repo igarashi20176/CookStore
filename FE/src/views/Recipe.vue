@@ -45,7 +45,7 @@
 
 <!-- recipe detail -->
 <div v-if="is_show">
-  	<recipe-detail :comments="current_comments" :recipe="current_recipe" @change-show="is_show_change" />
+  	<recipe-detail :comments="current_comments" :recipe="current_recipe" :is-author="user_store.get_uid"  @post-comment="post_comment" @change-show="is_show_change" />
 </div>
 
 </template>
@@ -79,21 +79,31 @@ const is_recipe_null = ref<boolean>(true);
  */
 
 const is_show = ref<boolean>(false);
-const current_recipe = ref<object>({})
-const current_comments = ref<Array<Comment>>([])
+const current_recipe = ref<object>({});
+const current_comments = ref<Array<Comment>>([]);
 
+	
 const is_show_change = (post_id: number) => {
 	is_show.value = !is_show.value;
 	
 	if ( post_id ) {
-		current_recipe.value = recipe_store.find_one_recipe(post_id)
-		current_comments.value = recipe_store.find_recipe_comments(post_id)
+		current_recipe.value = recipe_store.find_one_recipe(post_id);
+		current_comments.value = recipe_store.find_recipe_comments(post_id);
 	}
 };
 
 
-const toggle_fav = (postId: number, is_fav: boolean) => {
-	recipe_store.toggle_fav(user_store.get_uid, postId, is_fav)
+const toggle_fav = async (postId: number, is_fav: boolean) => {
+	await recipe_store.toggle_fav(user_store.get_uid, postId, is_fav)
+	.then( res => {
+		user_store.user_toggle_favs(postId, is_fav);
+	})
+	.catch( e => console.log("いいね失敗"));
+}
+
+
+const post_comment = ( post_id: number, comment: string ) => {
+	recipe_store.post_comment(user_store.get_uid, post_id, comment);
 }
 
 

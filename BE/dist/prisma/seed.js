@@ -13,6 +13,8 @@ async function main() {
             { id: 'f29ai1', name: "jean", age: 32, gender: 0 },
             { id: 'bhu123', name: "Cael", age: 62, gender: 1 },
             { id: 'aaji21', name: "Hux", age: 27, gender: 3 },
+            { id: 'cghi11', name: "Hil", age: 18, gender: 1 },
+            { id: 'zzxx21', name: "lux", age: 42, gender: 0 },
             { id: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', name: "test", age: 32, gender: 1 },
         ]
     });
@@ -73,9 +75,12 @@ async function main() {
             { userId: 'sda234', postId: 2, body: "すごくおいしい!" },
             { userId: 'sda234', postId: 3, body: "すごく簡単です．" },
             { userId: 'jui221', postId: 3, body: "すごく簡単です．" },
-            { userId: '', postId: 3, body: "すごく簡単です．" },
+            { userId: 'ghu562', postId: 3, body: "1コメ!" },
+            { userId: 'bhu123', postId: 3, body: "すごく美味しい!" },
             { userId: 'aaji21', postId: 2, body: "すこし味が薄かったのでこちらは塩を足しました．" },
             { userId: 'aaji21', postId: 3, body: "バリエーション豊かなのに時間が掛からなくてイイ!" },
+            { userId: 'cghi11', postId: 3, body: "毎日食べてみたいかも!" },
+            { userId: 'zzxx21', postId: 3, body: "これを毎日食べたら受験に合格しました!" },
             { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 2, body: "ちょうどいい味で満足です!リピ確です" },
             { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 3, body: "僕はこのレシピ好きじゃないかなぁ" },
         ]

@@ -2,7 +2,9 @@
 
 <div class="lg:flex">
 
-	<div class="m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%] lg:h-[800px] lg:overflow-y-auto">
+	<div class="relative m-4 p-5 border-2 border-base-300 rounded-lg lg:w-[920px] w-[95%] lg:h-[800px] lg:overflow-y-auto">
+
+		<button v-if="props.uid === props.recipe.get_authorId()" @click="delete_recipe" class="absolute right-8 btn btn-error">削除する</button>
 
 		<!-- author & title -->
 		<div class="mb-3">
@@ -14,7 +16,7 @@
 		<h3 class="inline text-4xl font-bold border-b border-[#333]">{{ props.recipe.get_title() }}</h3>
 
 		<!-- 料理の写真と補足説明 -->
-		<div class="lg:flex gap-x-16">
+		<div class="lg:flex gap-x-10">
 			<div class="m-auto flex flex-col w-[450px]">
 				<figure class="mt-5">
 					<img class="border-2 border-[#999] rounded-xl" :src="props.recipe.get_image()" :alt="props.recipe.get_title()">
@@ -55,7 +57,8 @@
 	</div>
 	
 	<!-- コメント欄 -->
-	<div class="m-5 lg:m-2 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md h-[800px] overflow-y-auto">
+	<div class="relative m-5 lg:m-2 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md h-[800px] overflow-y-auto">
+		<post-comment v-if="props.uid" @post-comment="( comment: string ) => emits('post-comment', props.recipe.get_postId(), comment)">コメントする</post-comment>
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
 		<ul v-if="props.comments.length !== 0">
 			<li v-for="comment in props.comments">
@@ -73,6 +76,7 @@
 
 </div>
 
+<!-- 栄養バランスチャート -->
 <div v-if="nut_data" class="border-2 border-base-300 rounded-md m-5">
 	<h2 class="text-2xl text-[#333] text-center mt-3">栄養バランスグラフ</h2>
 	<div class="lg:m-0 flex-row lg:flex items-end gap-x-16">
@@ -86,7 +90,7 @@
 				</label>
 			</div>
 			<div class="text-left ml-14 lg:ml-24 w-[310px]">
-				<PieChart class="" :width="300" :height="300" :base="'kcal'" :data="{ '炭水化物': nut_data.carbo*4, 'タンパク質': nut_data.protein*4, '脂質': nut_data.fat*4 }" />
+				<PieChart :width="300" :height="300" :base="'kcal'" :data="{ '炭水化物': nut_data.carbo*4, 'タンパク質': nut_data.protein*4, '脂質': nut_data.fat*4 }" />
 			</div>
 		</div>
 		
@@ -112,23 +116,28 @@
 <script lang="ts" setup>
 
 import { computed } from "vue";
-import { Comment } from "../models/Types";
+import { Comment, Nutriton } from "../models/Types";
 
 import PieChart from "../graphComponents/pieChart";
 import BarChart from "../graphComponents/barChart";
-import { objectToString } from "@vue/shared";
+import PostComment from "../templates/ThePostComment.vue";
 
 
 const props = defineProps({
 	recipe: { type: Object,  required: true },
-	comments: { type: Array<Comment>, default: [] }
+	comments: { type: Array<Comment>, default: [] },
+	uid: { type: String, default: "" }
 })
-
-const emits = defineEmits([ 'change-show' ])
-
-const nut_data = props.recipe.get_nut();
+const emits = defineEmits([ 'change-show', 'post-comment', 'delete-recipe' ])
 
 
+// 栄養情報を取得
+const nut_data: Nutriton  = props.recipe.get_nut();
+
+
+/**
+ * 罫線一行の文字数を指定し，配列で返す
+ */
 const get_texts = computed( () => {
     return ( text: string, line_length: number ):string[] | string => {
         const textAry: string[] = [];
@@ -143,5 +152,12 @@ const get_texts = computed( () => {
         }
     }
 });
+
+
+const delete_recipe = () => {
+	if ( confirm("本当に削除しますか？") ) {
+		emits('delete-recipe', props.recipe.get_postId(), props.recipe.get_image());
+	}
+}
 
 </script>

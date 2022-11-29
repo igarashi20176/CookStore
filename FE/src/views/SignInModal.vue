@@ -82,8 +82,8 @@ const is_login = ref<boolean | undefined>(undefined);
 const is_register = ref<boolean>(props.isRegister);
 
 const input_user_info = ref<AddUserInfo>({
-    email: "",
-    password: "",
+    email: "test@gmail.com",
+    password: "test_1234",
     name: "",
     age: null,
     gender: null,

@@ -7,6 +7,7 @@ const app = express();
  */
 
 import { PrismaClient, Prisma } from '@prisma/client';
+import { toASCII } from "punycode";
 const prisma = new PrismaClient();
 
 
@@ -31,13 +32,13 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // ユーザログイン
-app.get('/api/v1/user', async (req: Request, res: Response) => {
+app.get('/api/v1/user/:uid', async (req: Request, res: Response) => {
 	
-	const { uid } = req.query;
+	const uid  = req.params.uid;
 	
 	const user = await prisma.user.findUnique({
 		where: {
-			id: String(uid)
+			id: uid
 		},
 		select: { id: true, name: true, like: { select: { postId: true } } }
 	});
@@ -353,7 +354,7 @@ app.post('/api/v1/recipe', async (req: Request, res: Response) => {
 });
 
 // レシピを削除 
-app.delete('/api/v1/fav', async (req: Request, res: Response) => {
+app.delete('/api/v1/recipe', async (req: Request, res: Response) => {
 	const { post_id } = req.body;
 	
 	try {
@@ -400,6 +401,7 @@ app.get('/api/v1/menus', async (req: Request, res: Response) => {
 // お気に入りに追加
 app.post('/api/v1/fav', async (req: Request, res: Response) => {
 	const { user_id, post_id } = req.body;
+	
 	try {
 		const like = await prisma.like.create({
 			data: {
@@ -432,6 +434,27 @@ app.delete('/api/v1/fav', async (req: Request, res: Response) => {
 		});
 
 		return res.json(like);
+	} catch (e) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			if (e.code === 'P2002') {
+				console.log(e);
+			}
+		}
+    	return res.status(400).json(e);
+  	}
+});
+
+app.post('/api/v1/comment', async (req: Request, res: Response) => {
+	const { uid, postId, body } = req.body;
+	
+	try {
+		const comment = await prisma.comment.create({
+			data: {
+				userId: uid, postId: postId, body: body
+			}
+		});
+		return res.json(comment);
+
 	} catch (e) {
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
 			if (e.code === 'P2002') {

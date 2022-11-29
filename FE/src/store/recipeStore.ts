@@ -57,7 +57,7 @@ export const useRecipeStore = defineStore( "recipe", {
                     const { data, status } = res;
                                                   
                     data.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.categoryId, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
                         this.comments.push({
                             postId: d.postId,
                             comments: d.post.comment.map( (c: { user: { name: string }, body: string, created_at: string }) => {
@@ -80,6 +80,7 @@ export const useRecipeStore = defineStore( "recipe", {
         get_popular_recipes() {
             return new Promise<boolean>((resolve, reject) => {
                 this.recipes = [];
+                this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
                     url: `${base_url}/api/v1/popular`,
@@ -91,7 +92,13 @@ export const useRecipeStore = defineStore( "recipe", {
                     const { data, status } = res;
                                     
                     data.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name ,d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name ,d.categoryId, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.comments.push({
+                            postId: d.postId,
+                            comments: d.post.comment.map( (c: { user: { name: string }, body: string, created_at: string }) => {
+                                    return { name: c.user.name, body: c.body, createdAt: c.created_at }  
+                                })
+                        });
                     });
                     
                     this.get_recipes_images();
@@ -108,6 +115,7 @@ export const useRecipeStore = defineStore( "recipe", {
         get_recipes_by_category( category_id: number ) {
             return new Promise<boolean>((resolve, reject) => {
                 this.recipes = [];
+                this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
                     url: `${base_url}/api/v1/category/${category_id}`,
@@ -119,7 +127,13 @@ export const useRecipeStore = defineStore( "recipe", {
                     const { data, status } = res;
                                     
                     data.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.categoryId, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.comments.push({
+                            postId: d.postId,
+                            comments: d.post.comment.map( (c: { user: { name: string }, body: string, created_at: string }) => {
+                                    return { name: c.user.name, body: c.body, createdAt: c.created_at }  
+                                })
+                        });
                     });
                     
                     this.get_recipes_images();
@@ -136,6 +150,7 @@ export const useRecipeStore = defineStore( "recipe", {
         get_my_recipes( author_id: string ) {
             return new Promise<Mypage>((resolve, reject) => {
                 this.recipes = [];
+                this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
                     url: `${base_url}/api/v1/mypage/${author_id}`,
@@ -148,10 +163,16 @@ export const useRecipeStore = defineStore( "recipe", {
                     
                     console.log(data);
                     data.my_recipes.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.category, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.categoryId, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
+                        this.comments.push({
+                            postId: d.postId,
+                            comments: d.post.comment.map( (c: { user: { name: string }, body: string, created_at: string }) => {
+                                    return { name: c.user.name, body: c.body, createdAt: c.created_at }  
+                                })
+                        });
                     });
                     
-                    this.get_recipes_images
+                    this.get_recipes_images();
                     
                     resolve({ posts: data.posts, likes: data.likes, comments: data.comments});
                 })
@@ -164,7 +185,7 @@ export const useRecipeStore = defineStore( "recipe", {
         },
 
         post_my_recipe( uid: string ,recipe: AddRecipeInfo ) {
-            return new Promise<void>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
                 const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
                 let storageRef = fsRef(storage, img_url);
 
@@ -181,48 +202,76 @@ export const useRecipeStore = defineStore( "recipe", {
                     axios(post_opt)
                     .then((res: AxiosResponse<object[]>) => {
                         console.log(res);
-                        resolve();
+                        resolve(true);
                     })
-                    .catch( e => console.log(e)); 
-                        reject();
+                    .catch( e => {
+                        console.log(e);
+                        reject(false);
+                    });
                 })
                 .catch(err => console.log(err)) 
             })
         },
 
-        delete_my_recipe( post_id: number, img_url: string ) {
-            let storageRef = fsRef(storage, img_url);
+        delete_my_recipe( token: string , post_id: number, img_url: string ) {
+            return new Promise<boolean>((resolve, reject) => {
 
-            // firebase storageに画像を格納
-            deleteObject(storageRef)
-            .then( () => {
-                const delete_opt: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/recipe`,
-                    method: "delete",
-                    data: { post_id: post_id }
-                };
+                let storageRef = fsRef(storage, img_url);
+                
+                // firebase storageの画像を削除
+                deleteObject(storageRef)
+                .then( () => {
+                    const delete_opt: AxiosRequestConfig = {
+                        url: `${base_url}/api/v1/recipe`,
+                        method: "delete",
+                        data: { post_id: post_id },
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }, 
+                    };
 
-                axios(delete_opt)
-                .then((res: AxiosResponse<object>) => {
-                    console.log(res);
+                    axios(delete_opt)
+                    .then((res: AxiosResponse<object>) => {
+                        // 現在保持しているレシピから削除
+                        this.recipes.splice(this.recipes.findIndex( r => r.get_postId() === post_id ), 1);
+                        resolve(true);
+                    })
+                    .catch( e => {
+                        reject(false);
+                    }); 
                 })
-                .catch( e => console.log(e)); 
-            })
-            .catch(err => console.log(err)) 
+                .catch(err => console.log(err)) 
+            });
         },
 
         toggle_fav(uid: string, post_id: number, is_fav: boolean) {  
-            const fav_opt: AxiosRequestConfig = {
-                url: `${base_url}/api/v1/fav`,
-                method: is_fav ? "DELETE" : "POST",
-                data: { user_id: uid, post_id: post_id }
+            return new Promise<boolean>(( resolve, reject ) => {
+                const fav_opt: AxiosRequestConfig = {
+                    url: `${base_url}/api/v1/fav`,
+                    method: is_fav ? "DELETE" : "POST",
+                    data: { user_id: uid, post_id: post_id }
+                };
+                
+                axios(fav_opt)
+                .then( res => {
+                    resolve(true);
+                })
+                .catch( e => reject(false) ); 
+            });
+        },
+
+        post_comment( uid: string, postId: number, comment: string ) {
+            console.log(uid, postId, comment);
+            
+            const com_opt: AxiosRequestConfig = {
+                url: `${base_url}/api/v1/comment`,
+                method: "POST",
+                data: { uid: uid, postId: postId, body: comment }
             };
 
-            axios(fav_opt)
-            .then( res => {
-                console.log(res);
-            })
-            .catch( e => console.log(e)); 
+            axios(com_opt)
+            .then( res => console.log( res ))
+            .catch( err => console.log( err ));
         },
 
         get_recipes_images() {

@@ -27,11 +27,11 @@ app.get('/', (req, res) => {
     res.send('Hello from GCE EXPRESS!');
 });
 // ユーザログイン
-app.get('/api/v1/user', async (req, res) => {
-    const { uid } = req.query;
+app.get('/api/v1/user/:uid', async (req, res) => {
+    const uid = req.params.uid;
     const user = await prisma.user.findUnique({
         where: {
-            id: String(uid)
+            id: uid
         },
         select: { id: true, name: true, like: { select: { postId: true } } }
     });
@@ -318,7 +318,7 @@ app.post('/api/v1/recipe', async (req, res) => {
     }
 });
 // レシピを削除 
-app.delete('/api/v1/fav', async (req, res) => {
+app.delete('/api/v1/recipe', async (req, res) => {
     const { post_id } = req.body;
     try {
         const delete_recipe = await prisma.recipe.delete({
@@ -388,6 +388,25 @@ app.delete('/api/v1/fav', async (req, res) => {
             }
         });
         return res.json(like);
+    }
+    catch (e) {
+        if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {
+            if (e.code === 'P2002') {
+                console.log(e);
+            }
+        }
+        return res.status(400).json(e);
+    }
+});
+app.post('/api/v1/comment', async (req, res) => {
+    const { uid, postId, body } = req.body;
+    try {
+        const comment = await prisma.comment.create({
+            data: {
+                userId: uid, postId: postId, body: body
+            }
+        });
+        return res.json(comment);
     }
     catch (e) {
         if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {

@@ -24,23 +24,23 @@
             <label class="swap swap-flip" v-if="props.isLogin">                
                 <input type="checkbox" v-model="is_fav" />
                 <!-- いいねボタン -->
-                <div class="swap-off" @click="emits('toggle-fav', props.recipe.get_postId(), is_fav)">
+                <div class="swap-off" @click="toggle_fav">
                     <div class="flex tooltip tooltip-primary" data-tip="いいね">
                         <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
-                        <p class="m-1">{{ props.recipe.get_favs() }}</p>
+                        <p class="m-1">{{ favs }}</p>
                     </div>
                 </div>
-                <div class="swap-on" @click="emits('toggle-fav', props.recipe.get_postId(), is_fav)">
+                <div class="swap-on" @click="toggle_fav">
                     <div class="flex tooltip tooltip-primary" data-tip="いいね">
                         <img class="w-8" src="../assets/images/heart_color.png" alt="fav_off">
-                        <p class="m-1">{{ props.recipe.get_favs() + 1 }}</p>
+                        <p class="m-1">{{ favs }}</p>
                     </div>
                 </div>
             </label>
 
             <div v-else class="flex tooltip tooltip-info" data-tip="'いいね'するにはログインしてください">
                 <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
-                <p class="m-1">{{ props.recipe.get_favs() }}</p>
+                <p class="m-1">{{ favs }}</p>
             </div>
 
             <!-- ブックマーク -->
@@ -88,5 +88,16 @@ const props = defineProps({
 const emits = defineEmits([ 'change-show', 'toggle-fav' ]);
 
 const is_fav = ref<boolean>(props.isFav);
+const favs = ref<number>(props.recipe.get_favs());
 
+
+const toggle_fav = () => {
+    if ( !is_fav.value ) {
+        emits('toggle-fav', props.recipe.get_postId(), is_fav.value);
+        favs.value++;
+    } else {
+        emits('toggle-fav', props.recipe.get_postId(), is_fav.value);
+        favs.value--;
+    }
+}
 </script>
