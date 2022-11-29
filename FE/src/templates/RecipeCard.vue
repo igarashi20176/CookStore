@@ -21,9 +21,10 @@
 
 
         <div class="flex items-center gap-x-5 ml-5">
-            <label class="swap swap-flip" v-if="props.isLogin">                
-                <input type="checkbox" v-model="is_fav" />
+            <label class="swap swap-flip" v-if="props.uid">                
+
                 <!-- いいねボタン -->
+                <input type="checkbox" v-model="is_fav" />
                 <div class="swap-off" @click="toggle_fav">
                     <div class="flex tooltip tooltip-primary" data-tip="いいね">
                         <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
@@ -38,13 +39,13 @@
                 </div>
             </label>
 
-            <div v-else class="flex tooltip tooltip-info" data-tip="'いいね'するにはログインしてください">
+            <div v-if="!props.uid" class="flex tooltip tooltip-info" data-tip="いいね'するにはログインしてください">
                 <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
                 <p class="m-1">{{ favs }}</p>
             </div>
 
             <!-- ブックマーク -->
-            <label class="swap swap-flip" v-if="props.isLogin" >                
+            <label class="swap swap-flip" v-if="props.uid" >                
                 <input type="checkbox" />
                 <div class="swap-off">
                     <div class="flex tooltip tooltip-primary" data-tip="ブックマーク">
@@ -83,7 +84,7 @@ import { ref } from "vue";
 const props = defineProps({
     recipe: { type: Object, required: true },
     isFav: { type: Boolean, default: false },
-    isLogin: { type: Boolean, default : false }
+    uid: { type: String, default : "" }
 });
 const emits = defineEmits([ 'change-show', 'toggle-fav' ]);
 

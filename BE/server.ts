@@ -369,6 +369,18 @@ app.delete('/api/v1/recipe', async (req: Request, res: Response) => {
 				id: post_id
 			}
 		});
+		
+		const delete_like = await prisma.like.deleteMany({
+			where: {
+				postId: post_id
+			}
+		});
+
+		const delete_comment = await prisma.comment.deleteMany({
+			where: {
+				postId: post_id
+			}
+		});
 
 		return res.json(delete_post);
 	} catch (e) {

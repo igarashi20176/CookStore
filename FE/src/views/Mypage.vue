@@ -8,7 +8,7 @@
     <!-- recipe card -->
 	<ul class="mt-10 mb-10 flex-row lg:flex lg:flex-wrap lg:gap-10 justify-center items-stretch">
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
-			<recipe-card :recipe="recipe"
+			<recipe-card :recipe="recipe" :uid="user_store.get_uid"
 				@change-show="is_show_change" >
 			</recipe-card>
         </li>

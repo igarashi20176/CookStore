@@ -32,12 +32,12 @@
 	<ul class="mt-10 mb-10 flex-row lg:flex lg:flex-wrap lg:gap-10 justify-center items-stretch">
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
 			<!-- loginの可否でいいね&ブックマークボタンを非活性 -->
-			<recipe-card v-if="user_store.is_user_login" :is-login="true" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
+			<recipe-card :uid="user_store.get_uid" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
 				@change-show="is_show_change" @toggle-fav="toggle_fav">
 			</recipe-card>
-			<recipe-card v-else :recipe="recipe" :is-fav="false" :is-login="false"
+			<!-- <recipe-card v-else :recipe="recipe" :is-fav="false" :is-login="false"
 				@change-show="is_show_change" @toggle-fav="toggle_fav">
-			</recipe-card>
+			</recipe-card> -->
 		</li>
 	</ul>
 	
@@ -45,7 +45,7 @@
 
 <!-- recipe detail -->
 <div v-if="is_show">
-  	<recipe-detail :comments="current_comments" :recipe="current_recipe" :is-author="user_store.get_uid"  @post-comment="post_comment" @change-show="is_show_change" />
+  	<recipe-detail :comments="current_comments" :recipe="current_recipe" :uid="user_store.get_uid"  @post-comment="post_comment" @change-show="is_show_change" />
 </div>
 
 </template>
