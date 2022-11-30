@@ -83,6 +83,7 @@ export const useUserStore = defineStore( "user", {
             })
         },
 
+        // お気に入りの登録/解除をリアクティブに対応
         user_toggle_favs( postId: number, is_fav: boolean ) {
             if ( is_fav ) { 
                 const i = this.user.favs.indexOf(postId);
@@ -92,7 +93,7 @@ export const useUserStore = defineStore( "user", {
             }
         },
 
-        logout_user_info() {
+        logout_user() {
             this.user = {
                 uid: "",
                 token: "",

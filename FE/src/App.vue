@@ -17,7 +17,7 @@
     </div>
 
     <div class="navbar-center">
-        <a @click="current_component = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9" src="./assets/images/recipe-book.png" />クックストア</a>
+        <a @click="current_component = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9 mr-1" src="./assets/images/recipe-book.png" />クックストア</a>
     </div>
     <div class="navbar-end">
         <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
@@ -38,7 +38,7 @@
             </ul>
             <ul v-else tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                 <li><a class="justify-between" @click="current_component = 'mypage'">マイページ</a></li>
-                <li><label @click="user_store.logout_user_info()" class="">ログアウト</label></li>
+                <li><label @click="user_store.logout_user()" class="">ログアウト</label></li>
             </ul>
         </div>
     </div>
