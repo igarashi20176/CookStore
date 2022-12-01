@@ -1,3 +1,17 @@
+export type AppImages = {
+	title_log: string
+    bookmark: string
+    bookmark_color: string
+    heart: string
+    heart_color: string
+    chef_hat: string
+    user: string
+    writing: string
+    ranking: string
+    question: string
+    photo_camera: string
+}
+
 export type Ingredient = {
 	name: string
 	amount: string

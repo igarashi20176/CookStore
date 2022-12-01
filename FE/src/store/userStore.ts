@@ -46,7 +46,7 @@ export const useUserStore = defineStore( "user", {
             return new Promise<boolean>((resolve, reject) => {
                 const get_user_option: AxiosRequestConfig = {
                     method: "GET",
-                    url: `${base_url}/api/v1/user/${uid}`,
+                    url: `${base_url}/api/v1/users/${uid}`,
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },  
@@ -68,7 +68,7 @@ export const useUserStore = defineStore( "user", {
         register_database_user( uid: string, user_info: AddUserInfo ) {
             return new Promise<void>((resolve, reject) => {
                 const post_user_option: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/user`,
+                    url: `${base_url}/api/v1/users`,
                     method: "POST",
                     data: { uid: uid, name: user_info.name, age: Number(user_info.age), gender: Number(user_info.gender) }
                 };

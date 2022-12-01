@@ -1,26 +1,15 @@
 <template>
 
 <!-- ログインの可否を表示  -->
-<div class="z-10 top-24 toast toast-top toast-end">
-    <div v-if="is_login && !(is_login === undefined)" class="alert alert-success">
-        <div>
-            <span class="font-bold">ログインに成功しました</span>
-        </div>
-    </div>
-    <div v-if="!is_login && !(is_login === undefined)" class="alert alert-error">
-        <div>
-            <span class="font-bold">ログインに失敗しました</span>
-        </div>
-    </div>
-</div>
+<Toast :condition="notice" :suc-str="'ログインに成功しました'" :err-str="'ログインに失敗しました'" />
 
 
 <!-- signin & register modal -->
-<input type="checkbox" :id="`my-modal-${props.id}`" class="modal-toggle" />
+<input type="checkbox" :id="`my-modal-${props.modalId}`" class="modal-toggle" />
 <div class="modal" v-if="!props.isLogin">
 
     <div class="modal-box relative">
-        <label :for="`my-modal-${props.id}`" class="btn btn-primary btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <label :for="`my-modal-${props.modalId}`" class="btn btn-primary btn-sm btn-circle absolute right-2 top-2">✕</label>
         <div class="ml-10">
             <a href="#" class="underline text-orange-400 hover:opacity-70" @click.prevent="is_register = !is_register">{{ !is_register ? "新規登録" : "ログイン" }}</a>
             <h2 class="font-bold text-2xl text-center mb-5">{{ is_register ? "新規登録" : "ログイン" }}</h2>
@@ -66,19 +55,23 @@ import { useUserStore } from "../store/userStore";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
 import { auth } from "../firebase/index";
 
+import Toast from "../parts/TheToast.vue";
+
 /**
  * Pinia Store
  */
 const user_store = useUserStore();
 
 const props = defineProps({
-    id: { type: Number, default: 0 },
+    modalId: { type: Number, default: 0 },
     isRegister: { type: Boolean, required: true },
-    isLogin: { type: Boolean, required: true }
+    isLogin: { type: Boolean, default: false }
 });
 
 
-const is_login = ref<boolean | undefined>(undefined);
+// ログインの可否を判定し，Toastで告知
+const notice = ref<boolean | undefined>(undefined);
+// サインインか新規登録かの切り替え
 const is_register = ref<boolean>(props.isRegister);
 
 const input_user_info = ref<AddUserInfo>({
@@ -116,12 +109,12 @@ const signIn = () => {
         .then( credential => {            
             user_store.get_from_database_user(res.user.uid, credential.token)
             .then( success => {
-                is_login.value = success;
+                notice.value = success;
             })
-            .catch( error => is_login.value = error )
+            .catch( error => notice.value = error )
             .then( () => {
                 setTimeout( () => {
-                    is_login.value = undefined;
+                    notice.value = undefined;
                 }, 3000);
             });
         });

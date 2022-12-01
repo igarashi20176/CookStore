@@ -35,9 +35,6 @@
 			<recipe-card :uid="user_store.get_uid" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
 				@change-show="is_show_change" @toggle-fav="toggle_fav">
 			</recipe-card>
-			<!-- <recipe-card v-else :recipe="recipe" :is-fav="false" :is-login="false"
-				@change-show="is_show_change" @toggle-fav="toggle_fav">
-			</recipe-card> -->
 		</li>
 	</ul>
 	
@@ -70,9 +67,6 @@ const user_store = useUserStore();
 const recipe_store = useRecipeStore();
 
 
-const is_recipe_null = ref<boolean>(true);
-
-
 /**
  * レシピ一覧とレシピ詳細の切り替え
  * @param postId // 切り替えしたいレシピのID
@@ -103,9 +97,11 @@ const toggle_fav = async (postId: number, is_fav: boolean) => {
 
 
 const post_comment = ( post_id: number, comment: string ) => {
-	recipe_store.post_comment(user_store.get_uid, post_id, comment);
+	recipe_store.post_comment(user_store.get_uid, user_store.get_user_name, post_id, comment);
 }
 
+
+const is_recipe_null = ref<boolean>(true);
 
 const get_recipes_by_category = async ( category_id: number ) => {
 	if( category_id !== 0 ) {

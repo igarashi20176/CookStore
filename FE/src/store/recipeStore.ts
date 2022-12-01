@@ -11,7 +11,6 @@ import { storage } from "../firebase";
 const FOLDER_NAME = "recipe_images";
 const base_url = "http://localhost:8080";
 
-// type RECIPE = typeof Recipe
 
 interface State {
     recipes: Recipe[];
@@ -35,7 +34,7 @@ export const useRecipeStore = defineStore( "recipe", {
         // c: { postId: number, comments: Comment[] }を型指定してもエラーが出る → anyで代用
         find_recipe_comments( state ) {
             return ( postId: number ): Comment[] => { 
-                const c: any = state.comments.find( (c: any) => c.postId === postId )
+                const c: any = state.comments.find( (c: any) => c.postId === postId );
                 return c.comments;
             }
         }
@@ -83,7 +82,7 @@ export const useRecipeStore = defineStore( "recipe", {
                 this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/popular`,
+                    url: `${base_url}/api/v1/recipes/popular`,
                     method: "GET",
                 };
 
@@ -118,7 +117,7 @@ export const useRecipeStore = defineStore( "recipe", {
                 this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/category/${category_id}`,
+                    url: `${base_url}/api/v1/recipes/category/${category_id}`,
                     method: "GET",
                 };
 
@@ -153,7 +152,7 @@ export const useRecipeStore = defineStore( "recipe", {
                 this.comments = [];
                 
                 const get_recipes_opt: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/mypage/${author_id}`,
+                    url: `${base_url}/api/v1/recipes/mypage/${author_id}`,
                     method: "GET",
                 };
 
@@ -161,7 +160,6 @@ export const useRecipeStore = defineStore( "recipe", {
                 .then((res: AxiosResponse) => {
                     const { data, status } = res;
                     
-                    console.log(data);
                     data.my_recipes.forEach( (d: any) => {
                         this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.categoryId, d.create_at, d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
                         this.comments.push({
@@ -194,18 +192,18 @@ export const useRecipeStore = defineStore( "recipe", {
                 .then( () => {
                     delete recipe.file;
                     const post_opt: AxiosRequestConfig = {
-                        url: `${base_url}/api/v1/recipe`,
+                        url: `${base_url}/api/v1/recipes`,
                         method: "POST",
                         data: { uid: uid, ...recipe, img_url: img_url }
                     };
 
                     axios(post_opt)
                     .then((res: AxiosResponse<object[]>) => {
-                        console.log(res);
                         resolve(true);
                     })
                     .catch( e => {
                         console.log(e);
+                        deleteObject(storageRef);
                         reject(false);
                     });
                 })
@@ -222,7 +220,7 @@ export const useRecipeStore = defineStore( "recipe", {
                 deleteObject(storageRef)
                 .then( () => {
                     const delete_opt: AxiosRequestConfig = {
-                        url: `${base_url}/api/v1/recipe`,
+                        url: `${base_url}/api/v1/recipes`,
                         method: "delete",
                         data: { post_id: post_id },
                         headers: {
@@ -260,8 +258,7 @@ export const useRecipeStore = defineStore( "recipe", {
             });
         },
 
-        post_comment( uid: string, postId: number, comment: string ) {
-            console.log(uid, postId, comment);
+        post_comment(  uid: string, name: string, postId: number, comment: string ) {
             
             const com_opt: AxiosRequestConfig = {
                 url: `${base_url}/api/v1/comment`,
@@ -270,11 +267,39 @@ export const useRecipeStore = defineStore( "recipe", {
             };
 
             axios(com_opt)
-            .then( res => console.log( res ))
+            .then( res => {
+                const c = this.comments.find( c => c.postId === postId );
+                c?.comments.push({ 
+                    body: comment,
+                    createdAt: new Date().toISOString().substring(0, 10),
+                    name: name
+                 });
+            } )
             .catch( err => console.log( err ));
         },
 
         get_recipes_images() {
+            if ( this.get_length_recipes > 0 ) {
+                this.recipes.forEach( r => {
+                    getDownloadURL(fsRef(storage, r.get_image()))
+                    .then((url: string) => {const xhr = new XMLHttpRequest()
+                        xhr.responseType = 'blob'
+                        xhr.onload = (event) => {
+                        // const blob = xhr.response
+                        }
+                        xhr.open('GET', url)
+                        xhr.send();
+
+                        r.set_image(url);
+                    }).catch((error: any) => {
+                        console.log('画像の取得に失敗しました')
+                        console.log(error);
+                    })
+                })
+            }
+        },
+        
+        get_app_images() {
             if ( this.get_length_recipes > 0 ) {
                 this.recipes.forEach( r => {
                     getDownloadURL(fsRef(storage, r.get_image()))

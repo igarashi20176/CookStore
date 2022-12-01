@@ -17,7 +17,7 @@
     </div>
 
     <div class="navbar-center">
-        <a @click="current_component = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9 mr-1" src="./assets/images/recipe-book.png" />クックストア</a>
+        <a @click="current_component = 'top'" class="btn btn-ghost normal-case text-2xl"><img class="w-9 mr-1" :src="app_images.title_log" />クックストア</a>
     </div>
     <div class="navbar-end">
         <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
@@ -29,7 +29,7 @@
             <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                 <div class="w-10 rounded-full">
                     <img v-if="user_store.is_user_login" src="https://placeimg.com/80/80/people" />
-                    <img v-if="!user_store.is_user_login" class="w-[80px]" src="./assets/images/user.png" />
+                    <img v-if="!user_store.is_user_login" class="w-[80px]" :src="app_images.user" />
                 </div>
             </label>
             <ul v-if="!user_store.is_user_login" tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
@@ -45,15 +45,15 @@
 </div>
 
   
-<sign-in-modal :is-login="user_store.is_user_login" :is-register="is_register" :id="1" />
+<sign-in-modal :is-login="user_store.is_user_login" :is-register="is_register" :modal-id="1" />
   
 
 <div class="text-right mr-10" v-if="user_store.is_user_login">
     <button class="btn btn-primary bg-base-200 mr-2">
-        <img class="w-6 inline" src="./assets/images/writing.png" alt="">献立投稿
+        <img class="w-6 inline" :src="app_images.writing" alt="">献立投稿
     </button>
     <button class="btn btn-primary bg-base-200" @click="current_component = 'add'">
-        <img class="w-6 inline" src="./assets/images/chef-hat.png" alt="">レシピ投稿  
+        <img class="w-6 inline" :src="app_images.chef_hat" alt="">レシピ投稿  
     </button>
 </div>
 
@@ -68,9 +68,12 @@
 
 <script lang="ts" setup>
 
-import { ref, shallowReactive } from "vue";
+import { provide, ref, shallowReactive, readonly, onBeforeMount } from "vue";
 import { useUserStore } from "./store/userStore";
+import { AppImages } from "./models/Types";
 
+import { getDownloadURL , ref as fsRef } from "firebase/storage";
+import { storage } from "./firebase";
 
 /**
  * Components
@@ -88,7 +91,7 @@ import Mypage from "./views/Mypage.vue";
  */
 const user_store = useUserStore()
 
-
+// 動的コンポーネントの切り替え
 const current_component = ref<string>("recipe")
 const componentList = shallowReactive<any>({
     top: Top,
@@ -98,6 +101,44 @@ const componentList = shallowReactive<any>({
     mypage: Mypage
 });
 
-
+// ログインかサインインを判断
 const is_register = ref<boolean>(false);
+
+// アプリ内のアイコン画像を取得
+const app_images = ref<AppImages>({
+    title_log: "app_images/recipe_book.png",
+    bookmark: "app_images/bookmark.png",
+    bookmark_color: "app_images/bookmark_color.png",
+    heart: "app_images/heart.png",
+    heart_color: "app_images/heart_color.png",
+    chef_hat: "app_images/chef_hat.png",
+    user: "app_images/user.png",
+    writing: "app_images/writing.png",
+    ranking: "app_images/ranking.png",
+    question: "app_images/question.png",
+    photo_camera: "app_images/photo_camera.png"
+});
+
+provide( "app_images", readonly(app_images) );
+
+
+onBeforeMount( () => {
+    (Object.keys(app_images.value) as (keyof AppImages)[]).forEach( i => {
+        getDownloadURL(fsRef(storage, app_images.value[i]))
+        .then((url: string) => {const xhr = new XMLHttpRequest()
+            xhr.responseType = 'blob'
+            xhr.onload = (event) => {
+            // const blob = xhr.response
+            }
+            xhr.open('GET', url)
+            xhr.send();
+
+            app_images.value[i] = url;
+        }).catch((error: any) => {
+            console.log('画像の取得に失敗しました')
+        })
+        .then(( )=> provide('app_images', app_images.value) );
+    });
+})
+
 </script>

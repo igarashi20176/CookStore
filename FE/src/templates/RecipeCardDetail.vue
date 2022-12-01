@@ -9,7 +9,7 @@
 		<!-- author & title -->
 		<div class="mb-3">
 			<button @click="emits('change-show')" class="btn btn-primary">◀ 戻る</button>
-			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_authorName() }} <span class="text-base">作成日: {{ props.recipe.get_created_at() }}</span></p>
+			<p class="inline text-2xl ml-7 pb-2 pl-2 border-l-8 border-orange-400"><span class="text-base">投稿者:</span> {{ props.recipe.get_authorName() }} <span class="text-base">作成日: 2022-02-10</span></p>
 		</div>
 
 		<label class="inline-block font-bold mr-5 mb-5" for="title">★タイトル</label>
@@ -57,8 +57,7 @@
 	</div>
 	
 	<!-- コメント欄 -->
-	<div class="relative m-5 lg:m-2 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md h-[800px] overflow-y-auto">
-		<post-comment v-if="props.uid" @post-comment="( comment: string ) => emits('post-comment', props.recipe.get_postId(), comment)">コメントする</post-comment>
+	<div class="m-5 lg:m-2 lg:mt-4 lg:mr-3 p-5 lg:w-[calc(100%_-_900px)] flex-row border-2 border-base-300 rounded-md h-[800px] overflow-y-auto">
 		<h3 class="text-center text-2xl mb-5">みんなのコメント</h3>
 		<ul v-if="props.comments.length !== 0">
 			<li v-for="comment in props.comments">
@@ -71,7 +70,11 @@
 				</div>
 			</li>
 		</ul>
-		<div v-else class="text-center">コメントはまだありません</div>
+		<div v-else class="text-center underline">コメントはまだありません</div>
+		<div class="text-center mt-3">
+			<post-comment v-if="props.uid" @post-comment="( comment: string ) => emits('post-comment', props.recipe.get_postId(), comment)">コメントする</post-comment>
+			<label v-else class="inline-block btn-secondary mt-3 p-2 rounded-md">コメントするにはログインしてください</label>
+		</div>
 	</div>
 
 </div>

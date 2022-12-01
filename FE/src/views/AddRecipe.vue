@@ -1,7 +1,9 @@
 <template>
 
+<Toast :condition="notice" :suc-str="'投稿しました'" :err-str="'投稿に失敗しました'" />
+
 <div class="text-center">
-  	<img class="inline w-16" src="../assets/images/chef-hat.png" alt="" />
+  	<img class="inline w-16" :src="app_images?.chef_hat" alt="chef_hat" />
   	<h2 class="text-2xl font-bold">あなたの自慢の料理を投稿しよう</h2>
 </div>
 
@@ -16,7 +18,7 @@
 				<input @change="getImageFile" id="file" type="file" class="hidden" /> 
 				<label v-if="!on_img" for="file" class="block bg-base-200 w-[500px] h-[400px] p-8 cursor-pointer rounded-xl hover:bg-base-300">
 					<p class="font-bold mb-10 text-xl">料理の画像を挿入してください</p>
-					<img class="block w-20 m-auto " src="../assets/images/photo-camera.png" alt="">
+					<img class="block w-20 m-auto " :src="app_images?.photo_camera" alt="camera">
 					<div class="alert alert-info shadow-lg mt-20 p-2 opacity-60">
 					<div>
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -87,9 +89,11 @@
 
 <script lang="ts" setup>
 
-import { ref } from "vue";
+import {  inject, ref } from "vue";
 import AddRecipeItem from "../templates/AddRecipeItem.vue";
-import { AddRecipeInfo } from "../models/Types";
+import { AddRecipeInfo, AppImages } from "../models/Types";
+
+import Toast from "../parts/TheToast.vue";
 
 import { useRecipeStore } from "../store/recipeStore";
 import { useUserStore } from "../store/userStore";
@@ -103,6 +107,10 @@ const emits = defineEmits([ 'change-view' ])
 const recipe_store = useRecipeStore();
 const user_store = useUserStore();
 
+const app_images: AppImages | undefined = inject("app_images");
+
+
+const notice = ref<Boolean | null>(null);
 
 // 入力情報の保存
 const add_recipe_info = ref<AddRecipeInfo>({
@@ -140,10 +148,14 @@ const post_recipe = async (): Promise<void> => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
 
 	await recipe_store.post_my_recipe(user_store.get_uid, add_recipe_info.value)
-	.then( res => {
-		emits('change-view', 'recipe');
-	})
-	.catch( err => alert("レシピの送信に失敗しました．もう一度お試しください"));
+	.then( success => notice.value = success)
+	.catch( err => notice.value = err )
+	.then( () => {
+		setTimeout( () => {
+            notice.value = null;
+			emits('change-view', 'recipe');
+		}, 2000);
+	});
 }
 
 
