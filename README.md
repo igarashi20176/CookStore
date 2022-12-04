@@ -1,5 +1,5 @@
 # CookStore アプリ
-This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~
+This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~ 2022/12/1
   
 作品のURL  
 
