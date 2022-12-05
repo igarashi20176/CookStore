@@ -6,14 +6,14 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 router.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://moviewer-e9b49.web.app/',
     credentials: true,
     optionsSuccessStatus: 200 
 }));
 
 
 // お気に入りに追加
-router.post('/', async (req: Request, res: Response) => {
+router.post('/on_fav', async (req: Request, res: Response) => {
 	const { user_id, post_id } = req.body;
 	
 	try {
@@ -35,7 +35,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // お気に入りから削除 
-router.delete('/', async (req: Request, res: Response) => {
+router.delete('/off_fav', async (req: Request, res: Response) => {
 	const { user_id, post_id } = req.body;
 	
 	try {

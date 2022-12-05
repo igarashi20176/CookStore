@@ -13,7 +13,7 @@ router.use((0, cors_1.default)({
     credentials: true,
     optionsSuccessStatus: 200
 }));
-router.post('/', async (req, res) => {
+router.post('/my_comment', async (req, res) => {
     const { uid, postId, body } = req.body;
     try {
         const comment = await prisma.comment.create({

@@ -54,7 +54,7 @@ const post_info = ref<Mypage>({
     posts: 0,
     likes: 0,
     comments: 0
-})
+});
 
 
 /**

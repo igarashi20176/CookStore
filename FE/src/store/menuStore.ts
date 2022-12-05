@@ -6,7 +6,9 @@ import { ref as fsRef, getDownloadURL } from "firebase/storage"
 import { storage } from "../firebase";
 
 
-const base_url = "http://localhost:8080"
+// const BASE_URL = "http://localhost:8080"
+const BASE_URL = "https://authcloudrun-x3e22bo5za-an.a.run.app";
+
 
 interface State {
     menus: Menu[]
@@ -40,7 +42,7 @@ export const useMenuStore = defineStore( "menu", {
                 this.menus = [];
 
                 const get_menus_option: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/menus`,
+                    url: `${BASE_URL}/v1/menus/all`,
                     method: "GET",
                 };
 
@@ -50,8 +52,10 @@ export const useMenuStore = defineStore( "menu", {
                                  
                     console.log(data);
                     
-                    data.forEach( (d: any) => {                    
-                        this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.post.author.name, d.create_at, d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
+                    data.forEach( (d: any) => {          
+                        console.log(d);
+                                  
+                        this.menus.push(new Menu(d.id, d.postId, d.post.authorId, d.post.author.name, d.created_at.substring(0, 10), d.title, d.description, d.remarks, d.staple, d.main, d.sub, d.soup ));
                     });
                     this.get_recipes_images();
                     resolve(false);

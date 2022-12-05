@@ -16,21 +16,11 @@ const recipe_1 = __importDefault(require("./routes/recipe"));
 const menu_1 = __importDefault(require("./routes/menu"));
 const fav_1 = __importDefault(require("./routes/fav"));
 const comment_1 = __importDefault(require("./routes/comment"));
-app.use('/api/v1/recipes', recipe_1.default);
-app.use('/api/v1/menus', menu_1.default);
-app.use('/api/v1/users', signup_1.default);
-app.use('/api/v1/fav', fav_1.default);
-app.use('/api/v1/comment', comment_1.default);
-//CROS対応（というか完全無防備：本番環境ではだめ絶対）
-// app.use((req: Request, res: Response, next: NextFunction) => {
-// 	res.header("Access-Control-Allow-Origin", "*");
-// 	res.header("Access-Control-Allow-Methods", "*");
-// 	res.header("Access-Control-Allow-Headers", "*");
-// 	next();
-// });
-app.get('/', (req, res) => {
-    res.send('Hello from GCE EXPRESS!');
-});
+app.use('/v1/recipes', recipe_1.default);
+app.use('/v1/menus', menu_1.default);
+app.use('/v1/users', signup_1.default);
+app.use('/v1/fav', fav_1.default);
+app.use('/v1/comment', comment_1.default);
 // Listen to the App Engine-specified port, or 8080 otherwise
 const PORT = process.env.LISTENPORT || 8080;
 app.listen(PORT, () => {

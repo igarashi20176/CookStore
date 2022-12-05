@@ -14,7 +14,7 @@ router.use((0, cors_1.default)({
     optionsSuccessStatus: 200
 }));
 // お気に入りに追加
-router.post('/', async (req, res) => {
+router.post('/on_fav', async (req, res) => {
     const { user_id, post_id } = req.body;
     try {
         const like = await prisma.like.create({
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
     }
 });
 // お気に入りから削除 
-router.delete('/', async (req, res) => {
+router.delete('/off_fav', async (req, res) => {
     const { user_id, post_id } = req.body;
     try {
         const like = await prisma.like.delete({

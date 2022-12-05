@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { AddUserInfo } from "../models/Types";
 
-const base_url = "http://localhost:8080";
+// const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://authcloudrun-x3e22bo5za-an.a.run.app";
 
 interface State {
     user: {
@@ -28,7 +29,7 @@ export const useUserStore = defineStore( "user", {
             return state.user.token ? true : false;
         },
         is_fav_recipe( state ) {
-            return (post_id: number) => state.user.favs.some( f => f === post_id );
+            return (post_id: number): boolean => state.user.favs.some( f => f === post_id );
         },
         get_uid( state ): string {
             return state.user.uid
@@ -42,11 +43,11 @@ export const useUserStore = defineStore( "user", {
     },
 
     actions: {
-        get_from_database_user( uid: string, token: string ) {
+        get_user_account( uid: string, token: string ) {
             return new Promise<boolean>((resolve, reject) => {
                 const get_user_option: AxiosRequestConfig = {
                     method: "GET",
-                    url: `${base_url}/api/v1/users/${uid}`,
+                    url: `${BASE_URL}/v1/users/${uid}/account`,
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },  
@@ -65,12 +66,16 @@ export const useUserStore = defineStore( "user", {
             });
         },
         
-        register_database_user( uid: string, user_info: AddUserInfo ) {
+        register_user_account( uid: string, token: string, user_info: AddUserInfo ) {
             return new Promise<void>((resolve, reject) => {
+                
                 const post_user_option: AxiosRequestConfig = {
-                    url: `${base_url}/api/v1/users`,
+                    url: `${BASE_URL}/v1/users/account`,
                     method: "POST",
-                    data: { uid: uid, name: user_info.name, age: Number(user_info.age), gender: Number(user_info.gender) }
+                    data: { uid: uid, name: user_info.name, age: Number(user_info.age), gender: Number(user_info.gender) },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },  
                 };
                 axios(post_user_option)
                 .then( res => {

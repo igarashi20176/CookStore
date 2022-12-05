@@ -6,13 +6,14 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 router.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://moviewer-e9b49.web.app/',
     credentials: true,
     optionsSuccessStatus: 200 
 }));
 
+
 // 全てのレシピを取得
-router.get('/', async (req: Request, res: Response) => {    
+router.get('/all', async (req: Request, res: Response) => {    
 	const all_recipes = await prisma.recipe.findMany({
     	include: { 
 			post: { 
@@ -37,7 +38,7 @@ router.get('/', async (req: Request, res: Response) => {
 			},
 			nutrition: {
 				select: {
-					kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+					kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
 				}
 			}
 		} 
@@ -46,8 +47,8 @@ router.get('/', async (req: Request, res: Response) => {
   	return res.json(all_recipes);
 });
 
-router.get('/category/:id', async (req: Request, res: Response) => {
-	const category_id  = req.params.id;
+router.get('/:category_id/category', async (req: Request, res: Response) => {
+	const category_id  = req.params.category_id;
 	
 	const recipes = await prisma.recipe.findMany({
 		where: {
@@ -76,7 +77,7 @@ router.get('/category/:id', async (req: Request, res: Response) => {
 			},
 			nutrition: {
 				select: {
-					kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+					kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
 				}
 			}
 		} 
@@ -85,7 +86,7 @@ router.get('/category/:id', async (req: Request, res: Response) => {
 	return res.json(recipes);
 });
 
-router.get('/mypage/:uid', async (req: Request, res: Response) => {
+router.get('/:uid/my_recipe', async (req: Request, res: Response) => {
 	const uid = req.params.uid;
 
 	const my_recipes = await prisma.recipe.findMany({
@@ -117,7 +118,7 @@ router.get('/mypage/:uid', async (req: Request, res: Response) => {
 			},
 			nutrition: {
 				select: {
-					kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+					kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
 				}
 			}
 		} 
@@ -183,7 +184,7 @@ router.get('/popular', async (req: Request, res: Response) => {
 			},
 			nutrition: {
 				select: {
-					kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+					kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
 				}
 			}
 		} 
@@ -192,7 +193,7 @@ router.get('/popular', async (req: Request, res: Response) => {
 });
 
 // レシピを登録
-router.post('/', async (req: Request, res: Response) => {
+router.post('/post_recipe', async (req: Request, res: Response) => {
 	// const { uid ,title, description, ingredients, remarks, nut_option } = req.body;
 	const { uid, title, category_id, description, ingredients, remarks, img_url, nut_option } = req.body;
 
@@ -203,86 +204,83 @@ router.post('/', async (req: Request, res: Response) => {
   });
   
 	try {
-	  const post = await prisma.post.create({
+		const post = await prisma.post.create({
+				data: {
+				authorId: uid
+				}
+		});
+
+		const recipe = await prisma.recipe.create({
 			data: {
-			  authorId: uid
+				postId: post.id, title: title, categoryId: category_id, description: description, ingredients: ing.join(), remarks: remarks, image: img_url
 			}
-	  });
+		});
 
-	  const recipe = await prisma.recipe.create({
-		  data: {
-			  postId: post.id, title: title, categoryId: category_id, description: description, ingredients: ing.join(), remarks: remarks, image: img_url
-		  }
-	  });
+		const food_nut = await prisma.nutrition.findMany({
+			where: {
+				name: {
+					in: ingredients.map( (i: any) => i.name )
+				}
+			}
+		});
 
-	  const food_nut = await prisma.nutrition.findMany({
-		  where: {
-			  name: {
-				  in: ingredients.map( (i: any) => i.name )
-			  }
-		  }
-	  });
-
-	  if ( nut_option ) {
+		if ( nut_option ) {
 		  
-		  function roundDecimal(value: number, n: number) {
-			  return Math.round(value * Math.pow(10, n) ) / Math.pow(10, n);
+			function roundDecimal(value: number, n: number) {
+				return Math.round(value * Math.pow(10, n) ) / Math.pow(10, n);
 			}
 
-		  const nut_sum_list = {
-			  kcal: 0,
-			  carbo: 0,
-			  protein: 0,
-			  fat: 0,
-			  fiber: 0,
-			  va: 0,
-			  vb1: 0,
-			  vb2: 0,
-			  vb6: 0,
-			  vc: 0, 
-			  vd: 0, 
-			  ve: 0, 
-			  folic: 0, 
-			  nat: 0, 
-			  kal: 0, 
-			  calc: 0, 
-			  iron: 0, 
-			  mag: 0, 
-			  zinc: 0
-		  };
+			const nut_sum_list = {
+				kcal: 0,
+				carbo: 0,
+				protein: 0,
+				fat: 0,
+				fiber: 0,
+				va: 0,
+				vb1: 0,
+				vb2: 0,
+				vb6: 0,
+				vc: 0, 
+				vd: 0, 
+				ve: 0, 
+				folic: 0, 
+				nat: 0, 
+				kal: 0, 
+				calc: 0, 
+				iron: 0, 
+				mag: 0, 
+				zinc: 0
+			};
 
-		  ingredients.forEach( (i: any) => {
-			  const n = food_nut.find( f => f.name === i.name ); 
-			  nut_sum_list.kcal += n!.kcal * (i.grams / 100);
-			  nut_sum_list.carbo += n!.carbo * (i.grams / 100);
-			  nut_sum_list.protein += n!.protein * (i.grams / 100);
-			  nut_sum_list.fat += n!.fat * (i.grams / 100);
-			  nut_sum_list.fiber += n!.fiber * (i.grams / 100);
-			  nut_sum_list.va += n!.va * (i.grams / 100);
-			  nut_sum_list.vb1 += n!.vb1 * (i.grams / 100);
-			  nut_sum_list.vb2 += n!.vb2 * (i.grams / 100);
-			  nut_sum_list.vb6 += n!.vb6 * (i.grams / 100);
-			  nut_sum_list.vc += n!.vc * (i.grams / 100);
-			  nut_sum_list.vd += n!.vd * (i.grams / 100);
-			  nut_sum_list.ve += n!.ve * (i.grams / 100);
-			  nut_sum_list.folic += n!.folic * (i.grams / 100);
-			  nut_sum_list.nat += n!.nat * (i.grams / 100);
-			  nut_sum_list.kal += n!.kal * (i.grams / 100);
-			  nut_sum_list.calc += n!.calc * (i.grams / 100);
-			  nut_sum_list.iron += n!.iron * (i.grams / 100);
-			  nut_sum_list.mag += n!.mag * (i.grams / 100);
-			  nut_sum_list.zinc += n!.zinc * (i.grams / 100);
-		  });
+			ingredients.forEach( (i: any) => {
+				const n = food_nut.find( f => f.name === i.name ); 
+				nut_sum_list.kcal += n!.kcal * (i.grams / 100);
+				nut_sum_list.carbo += n!.carbo * (i.grams / 100);
+				nut_sum_list.protein += n!.protein * (i.grams / 100);
+				nut_sum_list.fat += n!.fat * (i.grams / 100);
+				nut_sum_list.fiber += n!.fiber * (i.grams / 100);
+				nut_sum_list.va += n!.VA * (i.grams / 100);
+				nut_sum_list.vb1 += n!.VB1 * (i.grams / 100);
+				nut_sum_list.vb2 += n!.VB2 * (i.grams / 100);
+				nut_sum_list.vb6 += n!.VB6 * (i.grams / 100);
+				nut_sum_list.vc += n!.VC * (i.grams / 100);
+				nut_sum_list.vd += n!.VD * (i.grams / 100);
+				nut_sum_list.ve += n!.VE * (i.grams / 100);
+				nut_sum_list.folic += n!.folic * (i.grams / 100);
+				nut_sum_list.nat += n!.natrium * (i.grams / 100);
+				nut_sum_list.kal += n!.kalium * (i.grams / 100);
+				nut_sum_list.calc += n!.calcium * (i.grams / 100);
+				nut_sum_list.iron += n!.iron * (i.grams / 100);
+				nut_sum_list.mag += n!.magnesium * (i.grams / 100);
+				nut_sum_list.zinc += n!.zinc * (i.grams / 100);
+			});
 
-		  await prisma.nutrition.create({
-			  data: {
-				  recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), va: roundDecimal(nut_sum_list.va, 0), vb1: roundDecimal(nut_sum_list.vb1, 2), vb2: roundDecimal(nut_sum_list.vb2, 2), vb6: roundDecimal(nut_sum_list.vb6, 2), vc: roundDecimal(nut_sum_list.vc, 0), vd: roundDecimal(nut_sum_list.vd, 1), ve: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), nat: roundDecimal(nut_sum_list.nat, 0), kal: roundDecimal(nut_sum_list.kal, 0), calc: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), mag: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
-			  }
-		  });
-	  }
-	  
-	  res.json(recipe);
-
+			const nut = await prisma.nutrition.create({
+				data: {
+					recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), VA: roundDecimal(nut_sum_list.va, 0), VB1: roundDecimal(nut_sum_list.vb1, 2), VB2: roundDecimal(nut_sum_list.vb2, 2), VB6: roundDecimal(nut_sum_list.vb6, 2), VC: roundDecimal(nut_sum_list.vc, 0), VD: roundDecimal(nut_sum_list.vd, 1), VE: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), natrium: roundDecimal(nut_sum_list.nat, 0), kalium: roundDecimal(nut_sum_list.kal, 0), calcium: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), magnesium: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
+				}
+			});
+		}
    } catch (e) {
 	  if (e instanceof Prisma.PrismaClientKnownRequestError) {
 		  if (e.code === 'P2002') {
@@ -295,11 +293,23 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // レシピを削除 
-router.delete('/', async (req: Request, res: Response) => {
+router.delete('/del_recipe', async (req: Request, res: Response) => {
 	const { post_id } = req.body;
 	
 	try {
-		const delete_recipe = await prisma.recipe.delete({
+		await prisma.recipe.delete({
+			where: {
+				postId: post_id
+			}
+		});
+
+		await prisma.like.deleteMany({
+			where: {
+				postId: post_id
+			}
+		});
+
+		await prisma.comment.deleteMany({
 			where: {
 				postId: post_id
 			}
@@ -309,21 +319,10 @@ router.delete('/', async (req: Request, res: Response) => {
 			where: {
 				id: post_id
 			}
-		});
-		
-		const delete_like = await prisma.like.deleteMany({
-			where: {
-				postId: post_id
-			}
-		});
-
-		const delete_comment = await prisma.comment.deleteMany({
-			where: {
-				postId: post_id
-			}
-		});
+		});	
 
 		return res.json(delete_post);
+		
 	} catch (e) {
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
 			if (e.code === 'P2002') {

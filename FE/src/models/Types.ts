@@ -42,19 +42,19 @@ export type Nutriton = {
 	protein: number,
 	fat: number,
 	fiber: number,
-	va: number,
-	vb1: number,
-	vb2: number,
-	vb6: number,
-	vc: number,
-	vd: number,
-	ve: number,
+	VA: number,
+	VB1: number,
+	VB2: number,
+	VB6: number,
+	VC: number,
+	VD: number,
+	VE: number,
 	folic: number,
-	nat: number,
-	kal: number,
-	calc: number,
+	natrium: number,
+	kalium: number,
+	calcium: number,
 	iron: number, 
-	mag: number,
+	magnesium: number,
 	zinc: number,
 }
 
@@ -68,4 +68,11 @@ export type Mypage = {
 	posts: number,
 	likes: number,
 	comments: number
+}
+
+export type MenuRecipe = {
+	title: string,
+	image: string,
+	post: object,
+	created_at: string
 }

@@ -4,11 +4,6 @@ import { Nutriton } from "../models/Types";
 import { Bar } from 'vue-chartjs'
 import data from "../models/nut_requirement.json"
 
-const data_demo = {
-    prop1: 10,
-    prop2: 20,
-    prop3: 30
-} 
 
 import {
   Chart as ChartJS,
@@ -25,7 +20,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 
 export default defineComponent({
-  name: 'Bar2Chart',
+  name: 'BarChart',
   components: {
     Bar
   },
@@ -71,7 +66,7 @@ export default defineComponent({
         {
           label: '各栄養素の摂取割合 (%)',
           backgroundColor: props.color,
-          data: Object.keys(props.data).map( k => Math.round(props.data[k] / data[k] * 100) )
+          data: (Object.keys(props.data) as (keyof Nutriton)[]).map( (k: keyof Nutriton) => Math.round(props.data[k] / data[k] * 100) )
         }
       ]
     }
@@ -93,22 +88,4 @@ export default defineComponent({
         plugins: props.plugins
       })
   }
-
-    //   labels: [
-    //     'nat',
-    //     'kal',
-    //     'calc',
-    //     'iron',
-    //     'mag',
-    //     'zinc',
-    //   ],
-
-    //   data: [
-    //     Math.round(props.nut.nat / data.nat * 100),
-    //     Math.round(props.nut.kal / data.kal * 100),
-    //     Math.round(props.nut.calc / data.calc * 100),
-    //     Math.round(props.nut.iron / data.iron * 100),
-    //     Math.round(props.nut.mag / data.mag * 100),
-    //     Math.round(props.nut.zinc / data.zinc * 100),
-    //   ]
 })

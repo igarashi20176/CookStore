@@ -42,7 +42,9 @@
 
 <!-- recipe detail -->
 <div v-if="is_show">
-  	<recipe-detail :comments="current_comments" :recipe="current_recipe" :uid="user_store.get_uid"  @post-comment="post_comment" @change-show="is_show_change" />
+  	<recipe-detail :comments="current_comments" :recipe="current_recipe" :uid="user_store.get_uid"  
+		@post-comment="post_comment" @change-show="is_show_change">
+	</recipe-detail>
 </div>
 
 </template>
@@ -69,7 +71,7 @@ const recipe_store = useRecipeStore();
 
 /**
  * レシピ一覧とレシピ詳細の切り替え
- * @param postId // 切り替えしたいレシピのID
+ * @param postId // 表示切り替えしたいレシピのID
  */
 
 const is_show = ref<boolean>(false);
@@ -99,6 +101,7 @@ const toggle_fav = async (postId: number, is_fav: boolean) => {
 const post_comment = ( post_id: number, comment: string ) => {
 	recipe_store.post_comment(user_store.get_uid, user_store.get_user_name, post_id, comment);
 }
+
 
 
 const is_recipe_null = ref<boolean>(true);

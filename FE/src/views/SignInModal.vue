@@ -9,12 +9,12 @@
 <div class="modal" v-if="!props.isLogin">
 
     <div class="modal-box relative">
-        <label :for="`my-modal-${props.modalId}`" class="btn btn-primary btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <label :for="`my-modal-${props.modalId}`" class="absolute right-2 top-2 btn btn-primary btn-sm btn-circle">✕</label>
         <div class="ml-10">
             <a href="#" class="underline text-orange-400 hover:opacity-70" @click.prevent="is_register = !is_register">{{ !is_register ? "新規登録" : "ログイン" }}</a>
             <h2 class="font-bold text-2xl text-center mb-5">{{ is_register ? "新規登録" : "ログイン" }}</h2>
 
-            <h3 class="font-bold text-base text-center mb-2">ログイン情報</h3>
+            <h3 class="mb-2 font-bold text-base text-center">ログイン情報</h3>
             <div v-show="errMsg" class="my-3 text-center text-red-500 font-bold">{{ errMsg }}</div>
             <div class="text-center">
                 <input type="text" v-model="input_user_info.email" placeholder="Eメール" class="mb-3 ml-2 input input-bordered w-full max-w-xs" />
@@ -22,7 +22,7 @@
             </div>
 
             <div v-if="is_register" class="text-center">
-                <h3 class="font-bold text-base text-center mt-5 mb-2">ユーザ情報</h3>
+                <h3 class="mt-5 mb-2 font-bold text-base text-center">ユーザ情報</h3>
 
                 <input v-model="input_user_info.name" type="text" placeholder="ユーザネーム" class="mb-3 input input-bordered w-full max-w-xs" />
 
@@ -37,7 +37,7 @@
                 </select>
             </div>
 
-            <div class="text-center mt-5">
+            <div class="mt-5 text-center">
                 <label @click="register_and_signin" class="btn btn-success">{{ is_register ? "新規登録" : "ログイン" }}</label>
             </div>
         </div>
@@ -62,6 +62,7 @@ import Toast from "../parts/TheToast.vue";
  */
 const user_store = useUserStore();
 
+
 const props = defineProps({
     modalId: { type: Number, default: 0 },
     isRegister: { type: Boolean, required: true },
@@ -82,32 +83,41 @@ const input_user_info = ref<AddUserInfo>({
     gender: null,
 })
 
-const errMsg = ref<string>("");
-
 
 const register_and_signin = () => {
     if ( is_register.value ) {
         createUserWithEmailAndPassword(auth, input_user_info.value.email, input_user_info.value.password)
         .then ( res => {
-            user_store.register_database_user( res.user.uid, input_user_info.value )
+            res.user.getIdTokenResult()
+            .then( credential => {  
+                user_store.register_user_account( res.user.uid, credential.token, input_user_info.value )
+                .then( () => {
+                    signIn();
+                    reset_info();
+                })
+                .catch ( e => {
+                    deleteUser(res.user);
+                    alert("登録に失敗しました。もう一度お試しください");
+                });
+            });
         })
-        .catch ( e => alert("登録に失敗しました。もう一度お試しください"))
-        .then( () => {
-            signIn();
-            reset_info();
-        });
+        .catch ( e => alert("登録に失敗しました。もう一度お試しください"));
+
     } else {
         signIn();
         reset_info();
     }    
 }
 
+
+const errMsg = ref<string>("");
+
 const signIn = () => {
     signInWithEmailAndPassword(auth, input_user_info.value.email, input_user_info.value.password)
     .then( res => {
         res.user.getIdTokenResult()
         .then( credential => {            
-            user_store.get_from_database_user(res.user.uid, credential.token)
+            user_store.get_user_account(res.user.uid, credential.token)
             .then( success => {
                 notice.value = success;
             })

@@ -1,12 +1,13 @@
 import { Post } from "../models/Post";
+import { MenuRecipe } from "../models/Types";
 
 export class Menu extends Post {
-    private staple: object;
-    private main: object;
-    private sub: object;
-    private soup: object;
+    private staple: MenuRecipe;
+    private main: MenuRecipe;
+    private sub: MenuRecipe;
+    private soup: MenuRecipe;
 
-    constructor( articleId: number, postId: number, authorId: string, authorName: string, create_at: string, title: string, description: string , remarks: string, staple: object, main: object, sub: object, soup: object ) {
+    constructor( articleId: number, postId: number, authorId: string, authorName: string, create_at: string, title: string, description: string , remarks: string, staple: MenuRecipe, main: MenuRecipe, sub: MenuRecipe, soup: MenuRecipe ) {
         super(articleId, postId, authorId, authorName, create_at, title, description, remarks)
         this.staple = staple;
         this.main = main;

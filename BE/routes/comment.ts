@@ -6,13 +6,13 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 router.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://moviewer-e9b49.web.app/',
     credentials: true,
     optionsSuccessStatus: 200 
 }));
 
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/my_comment', async (req: Request, res: Response) => {
 	const { uid, postId, body } = req.body;
 	
 	try {

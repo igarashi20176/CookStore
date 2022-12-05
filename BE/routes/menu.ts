@@ -6,17 +6,17 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 router.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://moviewer-e9b49.web.app/',
     credentials: true,
     optionsSuccessStatus: 200 
 }));
 
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/all', async (req: Request, res: Response) => {
 	const menus = await prisma.menu.findMany({
 		include: { 
 			post: {
-				select: { author: { select: { name: true } } }
+				select: { authorId: true, author: { select: { name: true } } }
 			}, 
 			staple: { select: { title: true, created_at: true, image: true ,post: { select: { authorId: true, author: { select: { name: true } } }, } } }, 
 			main: { select: { title: true, created_at: true, image: true, post: { select: { authorId: true, author: { select: { name: true } } } } } }, 

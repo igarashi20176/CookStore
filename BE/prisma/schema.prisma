@@ -105,19 +105,19 @@ model Nutrition {
   protein       Float    @db.Float
   fat           Float    @db.Float
   fiber         Float    @db.Float
-  va            Float    @db.Float
-  vb1           Float    @db.Float
-  vb2           Float    @db.Float
-  vb6           Float    @db.Float
-  vc            Float    @db.Float
-  vd            Float    @db.Float
-  ve            Float    @db.Float
+  VA            Float    @db.Float
+  VB1           Float    @db.Float
+  VB2           Float    @db.Float
+  VB6           Float    @db.Float
+  VC            Float    @db.Float
+  VD            Float    @db.Float
+  VE            Float    @db.Float
   folic         Float    @db.Float
-  nat           Int   
-  kal           Int   
-  calc          Int   
+  natrium       Int   
+  kalium        Int   
+  calcium       Int   
   iron          Float    @db.Float
-  mag           Int
+  magnesium     Int
   zinc          Float    @db.Float
   recipe        Recipe?  @relation(fields: [recipeId], references: [id])
   recipeId      Int?     @unique

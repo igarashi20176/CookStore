@@ -6,13 +6,13 @@ import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
 router.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://moviewer-e9b49.web.app/',
     credentials: true,
     optionsSuccessStatus: 200 
 }));
 
 // ユーザログイン
-router.get('/:uid', async (req: Request, res: Response) => {
+router.get('/:uid/account', async (req: Request, res: Response) => {
 	
 	const uid  = req.params.uid;
 	
@@ -27,17 +27,17 @@ router.get('/:uid', async (req: Request, res: Response) => {
 });
 
 // 新規ユーザーの登録
-router.post('/', async (req: Request, res: Response) => {
+router.post('/account', async (req: Request, res: Response) => {
 	
 	const { uid, name, age, gender } = req.body;
 
 	try {
     	const post_user = await prisma.user.create({
       		data: {
-        		id: uid, name: name,  age: age, gender: gender
+        		id: uid, name: name, age: age, gender: gender
       		}
     	});
-
+		
 		return res.json(post_user);
 	} catch (e) {
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {

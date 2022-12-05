@@ -35,15 +35,17 @@ import { Comment, AppImages } from "../models/Types";
 import RecipeCard from "../templates/RecipeCard.vue";
 import RecipeDetail from "../templates/RecipeCardDetail.vue";
 
+/**
+ * Pinia init
+ */
 import { useUserStore } from "../store/userStore";
 import { useRecipeStore } from "../store/recipeStore";
-
-const app_images: AppImages | undefined = inject("app_images");
-
 
 const user_store = useUserStore();
 const recipe_store = useRecipeStore()
 
+
+const app_images: AppImages | undefined = inject("app_images");
 
 
 const toggle_fav = async (postId: number, is_fav: boolean) => {

@@ -29,10 +29,7 @@
             <div class="flex flex-col w-[400px]">
                 <div class="my-5">
                     <label class="block text-center font-bold mb-3" for="title">★キャッチコピー</label>
-                    <div class="ml-12" v-for="text in get_texts(props.menu.get_soup().description, 15)"> 
-                        <p class="text-xl font-bold text-left">{{ text }}</p>
-                        <div class="border-t border-[#555] w-[300px] mb-3"></div>
-                    </div>
+                    <ruled-line :text="{ content: props.menu.get_description(), line_length: 21, width: '300px' }" />
                 </div>
             </div>
         </div>
@@ -61,10 +58,10 @@
 
 <script lang="ts" setup>
 
-import { computed } from "vue";
 import { Comment } from "../models/Types";
 
 import RecipeImage from "./TheImageWithTitle.vue";
+import RuledLine from "../parts/TheRuledLine.vue";
 
 const props = defineProps({
     menu: { type: Object, required: true }
@@ -89,21 +86,5 @@ const comments: Comment[] = [
         createdAt: "2022-01-10",
     }
 ];
-
-
-const get_texts = computed( () => {
-    return ( text: string, line_length: number ):string[] | string => {
-        const textAry: string[] = [];
-        
-        if ( text ) {
-            for (let i = 0; i < text.length; i+=line_length) {
-                textAry.push(text.substring(i, i+line_length));
-            }    
-            return textAry;
-        } else {
-            return "";
-        }
-    }
-});
     
 </script>

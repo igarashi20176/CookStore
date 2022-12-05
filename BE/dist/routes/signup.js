@@ -14,7 +14,7 @@ router.use((0, cors_1.default)({
     optionsSuccessStatus: 200
 }));
 // ユーザログイン
-router.get('/:uid', async (req, res) => {
+router.get('/:uid/account', async (req, res) => {
     const uid = req.params.uid;
     const user = await prisma.user.findUnique({
         where: {
@@ -25,7 +25,7 @@ router.get('/:uid', async (req, res) => {
     return res.json(user);
 });
 // 新規ユーザーの登録
-router.post('/', async (req, res) => {
+router.post('/account', async (req, res) => {
     const { uid, name, age, gender } = req.body;
     try {
         const post_user = await prisma.user.create({

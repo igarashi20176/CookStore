@@ -15,30 +15,15 @@ import menuRouter from "./routes/menu";
 import favRouter from "./routes/fav";
 import commentRouter from "./routes/comment";
 
-app.use('/api/v1/recipes', recipeRouter);
-app.use('/api/v1/menus', menuRouter);
-app.use('/api/v1/users', signupRouter );
-app.use('/api/v1/fav', favRouter );
-app.use('/api/v1/comment', commentRouter );
-
-
-
-//CROS対応（というか完全無防備：本番環境ではだめ絶対）
-// app.use((req: Request, res: Response, next: NextFunction) => {
-// 	res.header("Access-Control-Allow-Origin", "*");
-// 	res.header("Access-Control-Allow-Methods", "*");
-// 	res.header("Access-Control-Allow-Headers", "*");
-// 	next();
-// });
-
-
-app.get('/', (req: Request, res: Response) => {
-	res.send('Hello from GCE EXPRESS!');
-});
+app.use('/v1/recipes', recipeRouter);
+app.use('/v1/menus', menuRouter);
+app.use('/v1/users', signupRouter);
+app.use('/v1/fav', favRouter );
+app.use('/v1/comment', commentRouter );
 
 
 // Listen to the App Engine-specified port, or 8080 otherwise
-const PORT = process.env.LISTENPORT || 8080;
+const PORT: string | number = process.env.LISTENPORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });

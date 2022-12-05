@@ -1,66 +1,64 @@
 <template>
 
-<div class="navbar bg-base-200">
+<div class="navbar bg-base-200 mb-3">
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
-            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a>TOP</a></li>
-                <li><a>MOVIES</a></li>
-                <li><a>RANKING</a></li>
+            <ul tabindex="0" class="mt-3 p-2 w-52 menu menu-compact dropdown-content shadow bg-base-200 rounded-box">
+                <li><a class="text-base" @click="emits('update:compo', 'top')">HOME ホーム</a></li>
+                <li><a class="text-base" @click="emits('update:compo', 'recipe')">RECIPE レシピ</a></li>
+                <li><a class="text-base" @click="emits('update:compo', 'menu')">MENU メニュー</a></li>
             </ul>
         </div>
     </div>
 
     <div class="navbar-center">
-        <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <a @click="emits('update:compo', 'top')" class="btn btn-ghost normal-case text-2xl"><img class="w-9 mr-1" :src="app_images?.title_log" />クックストア</a>
     </div>
     <div class="navbar-end">
-        <input type="text" placeholder="Search Films" class="input input-bordered w-full max-w-xs" />
-        <button class="btn btn-ghost btn-circle">
+        <input type="text" placeholder="レシピを探そう!" class="input input-bordered w-full max-w-xs" />
+        <button class="btn btn-ghost btn-circle mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </button>
   
-    <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-            <div class="w-10 rounded-full">
-                <img src="https://placeimg.com/80/80/people" />
-            </div>
-        </label>
-        <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
-            <li>
-                <a class="justify-between">
-                Profile
-                <span class="badge">New</span>
-                </a>
-            </li>
-            <li><a href="#my-modal-1" class="">Sigh In</a></li>
-            <li><a href="#my-modal-2" class="">Register</a></li>
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <img v-if="props.isLogin" src="https://placeimg.com/80/80/people" />
+                    <img v-else class="w-[80px]" :src="app_images?.user" />
+                </div>
+            </label>
+            <ul v-if="props.isLogin" tabindex="0" class="mt-3 p-2 w-52 shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
+                <li><a class="justify-between" @click="emits('update:compo', 'mypage')">マイページ</a></li>
+                <li><label @click="emits('logout')" class="">ログアウト</label></li>
             </ul>
-        </div>
-    </div>
-</div>
-  
-<div class="modal" id="my-modal-1">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">Sign In</h3>
-        <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-        <div class="modal-action">
-            <a href="#" class="btn">Yay!</a>
-        </div>
-    </div>
-</div>
-  
-<div class="modal" id="my-modal-2">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">Register</h3>
-        <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-        <div class="modal-action">
-            <a href="#" class="btn">Yay!</a>
+            <ul v-else tabindex="0" class="mt-3 p-2 w-52 shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
+                <li><label class="text-lg" @click="emits('update:register', false)" for="my-modal-1">ログイン</label></li>
+                <li><label class="text-lg" @click="emits('update:register', true)" for="my-modal-1">新規登録</label></li>
+            </ul>
+            
         </div>
     </div>
 </div>
 
 </template>
+
+<script lang="ts" setup>
+
+import { inject, ref } from "vue";
+import { AppImages } from "../models/Types";
+
+const props = defineProps({
+    isLogin: { type: Boolean, default: false }
+});
+const emits = defineEmits([ 'update:compo', 'update:register', 'logout' ])
+
+
+const app_images: AppImages | undefined = inject("app_images");
+
+// ログインとサインインを切り替え
+const is_register = ref<boolean>(false);
+
+</script>
