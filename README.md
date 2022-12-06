@@ -4,6 +4,9 @@ This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~ 202
 作品のURL  
 https://moviewer-e9b49.web.app/
 
+今回の制作に伴う記事まとめ  
+https://qiita.com/Ren_I/items/2a728c04e8af0c2eb924
+
 ## ◆作品の概要
 
 自分の作った料理を記録できます．そのため以前に自分はどんな料理を作ったのかが振り返れます．  
