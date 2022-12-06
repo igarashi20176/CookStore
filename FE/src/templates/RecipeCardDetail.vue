@@ -96,12 +96,12 @@
 		
 		<div class="ml-14 lg:ml-0 mb-5 w-[300px] text-center">
 			<label class="bg-base-200 rounded-md px-2">食物繊維・ビタミン群</label>
-			<BarChart :height="300" :color="'#ff7f50'" :data="{ 'fiber': nut_data.fiber, 'VA': nut_data.VA, 'VB1': nut_data.VB1, 'VB2': nut_data.VB2, 'VB6': nut_data.VB6, 'VC': nut_data.VC, 'VD': nut_data.VD, 'VE': nut_data.VE, 'folic': nut_data.folic }" />
+			<BarChart :height="300" :color="'#ff7f50'" :data="{ 'fiber': nut_data.fiber, 'va': nut_data.va, 'vb1': nut_data.vb1, 'vb2': nut_data.vb2, 'vb6': nut_data.vb6, 'vc': nut_data.vc, 'vd': nut_data.vd, 've': nut_data.ve, 'folic': nut_data.folic }" />
 		</div>
 
 		<div class="mb-5 ml-14 lg:ml-0 w-[300px] text-center">
 			<label class="bg-base-200 rounded-md px-2">ミネラル群</label>
-			<BarChart :height="300" :color="'#00bfff'" :data="{ 'natrium': nut_data.natrium, 'kalium': nut_data.kalium, 'calcium': nut_data.calcium, 'iron': nut_data.iron, 'magnesium': nut_data.magnesium, 'zinc': nut_data.zinc }" />
+			<BarChart :height="300" :color="'#00bfff'" :data="{ 'nat': nut_data.nat, 'kal': nut_data.kal, 'calc': nut_data.calc, 'iron': nut_data.iron, 'mag': nut_data.mag, 'zinc': nut_data.zinc }" />
 		</div>	
 	</div>
 

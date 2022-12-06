@@ -142,11 +142,11 @@
 		</div>
 		
 		<div>
-			<p class="font-bold mb-1 border-t-4 border-[#777] w-2/5 m-auto pt-2">★ 選択した食材/分量</p>
+			<p class="font-bold border-t-4 border-[#777] w-2/5 m-auto mb-2 pt-2">★ 選択した食材/分量</p>
 			<ul v-for="ingredient, i in ingredients">
-				<li class="mb-2" :key="i">
-					{{ ingredient.name }} : {{ ingredient.amount }} (グラム {{ ingredient.grams ? ingredient.grams : "未選択" }}g)
-					<a href="#" class="ml-3 px-2 py-1 text-[#fafafa] bg-[#555] rounded-sm hover:bg-[#666]" @click.prevent="ingredients.splice(i, 1)">X</a>
+				<li class="flex justify-between mb-1 w-[400px] m-auto" :key="i">
+					<p>{{ ingredient.name }} : {{ ingredient.amount }} (グラム {{ ingredient.grams ? ingredient.grams : "未選択" }}g)</p>
+					<a href="#" class="block ml-3 px-2 p-1 text-right text-[#fafafa] bg-red-500 rounded-sm hover:bg-[#666]" @click.prevent="ingredients.splice(i, 1)">X</a>
 				</li>
 			</ul>
 		</div>	 

@@ -1,0 +1,62 @@
+  swagger: '2.0'
+  info:
+    title: Cloud Endpoints + App Engine
+    description: Sample API on Cloud Endpoints with an App Engine backend
+    version: 1.0.0
+  host: authcloudrun-x3e22bo5za-an.a.run.app
+  schemes:
+    - https
+  produces:
+    - application/json
+  x-google-backend:
+    address: https://express-dot-moviewer-e9b49.an.r.appspot.com
+    jwt_audience: 471626273404-n5gcmacivgbotruui4a1p2nfa0ibtlev.apps.googleusercontent.com
+    protocol: h2
+  securityDefinitions:
+    firebase:
+      authorizationUrl: ""
+      flow: "implicit"
+      type: "oauth2"
+      x-google-issuer: https://securetoken.google.com/moviewer-e9b49
+      x-google-jwks_uri: https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com
+      x-google-audiences: moviewer-e9b49
+  paths:
+    /:
+      get:
+        summary: Greet a user
+        operationId: hello
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    /api/v1/recipes:
+      get:
+        summary: get all recipes
+        operationId: allrecipes
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+    /api/v1/menus:
+      get:
+        summary: get all menus
+        operationId: allmenus
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+    /api/v1/users:
+      get:
+        summary: get all users
+        operationId: allusers
+        security:  # 認証が必要
+          - firebase: []
+        responses:
+          "200":
+            description: A successful response
+            schema:
+              type: string

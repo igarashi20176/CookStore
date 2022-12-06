@@ -25,12 +25,38 @@
       get:
         summary: Greet a user
         operationId: hello
-        responses:
+        responses: 
           '200':
             description: A successful response
             schema:
               type: string
-    /api/v1/recipes:
+
+    /v1/users/*/account:
+      get:
+        summary: get user account 
+        operationId: allusers
+        security:
+          - firebase: []
+        responses:
+          "200":
+            description: A successful response
+            schema:
+              type: string
+
+    /v1/users/account:
+      post:
+        summary: post user account
+        operationId: postUsers 
+        security:
+          - firebase: []
+        responses:
+          "201":
+            description: A successful response
+            schema:
+              type: string
+
+
+    /v1/recipes/all:
       get:
         summary: get all recipes
         operationId: allrecipes
@@ -38,9 +64,62 @@
           '200':
             description: A successful response
             schema:
+              type: string   
+
+    /v1/recipes/*/my_recipe:
+      get:
+        summary: get my recipes 
+        operationId: mypage
+        responses:
+          '200':
+            description: A successful response
+            schema:
               type: string
 
-    /api/v1/menus:
+    /v1/recipes/post_recipe:
+      post:
+        summary: post recipes
+        operationId: postRecipe
+        responses:
+          '201':
+            description: A successful response
+            schema:
+              type: string
+
+    /v1/recipes/del_recipe:
+      delete:
+        summary: delete recipe
+        operationId: deleteRecipe
+        security:  
+          - firebase: []
+        responses:
+          "200":
+            description: A successful response
+            schema:
+              type: string
+
+    /v1/recipes/popular:
+      get:
+        summary: get popular recipes
+        operationId: popularRecipes
+        responses:
+          '200':
+            description: A successful Response
+            schema:
+              type: string   
+
+    /v1/recipes/*/category:
+      get:
+        summary: get recipes by category
+        operationId: categoryRecipe
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+
+    /v1/menus/all:
       get:
         summary: get all menus
         operationId: allmenus
@@ -49,14 +128,37 @@
             description: A successful response
             schema:
               type: string
-    /api/v1/users:
-      get:
-        summary: get all users
-        operationId: allusers
-        security:  # 認証が必要
-          - firebase: []
+
+
+    /v1/fav/on_fav:
+      post:
+        summary: post fav
+        operationId: postFav
         responses:
-          "200":
+          '201':
             description: A successful response
             schema:
               type: string
+
+    /v1/fav/off_fav:
+      delete:
+        summary: delete fav
+        operationId: deleteFav
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string    
+
+
+    /v1/comment/my_comment:
+      post:
+        summary: post comment
+        operationId: postComment
+        responses:
+          '200':
+            description: A successful response
+            schema:
+              type: string
+
+

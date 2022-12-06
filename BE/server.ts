@@ -1,7 +1,16 @@
 import "dotenv/config";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
+import cors from "cors";
 const app = express();
 
+
+app.use(cors({
+    origin: [
+        'http://localhost:5173',
+        'https://authcloudrun-x3e22bo5za-an.a.run.app'
+    ],
+    optionsSuccessStatus: 200 
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -14,6 +23,7 @@ import recipeRouter from "./routes/recipe";
 import menuRouter from "./routes/menu";
 import favRouter from "./routes/fav";
 import commentRouter from "./routes/comment";
+
 
 app.use('/v1/recipes', recipeRouter);
 app.use('/v1/menus', menuRouter);

@@ -1,15 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
-import cors from "cors";
 
 import { PrismaClient, Prisma } from '@prisma/client';
 const prisma = new PrismaClient();
 
-router.use(cors({
-	origin: 'https://moviewer-e9b49.web.app/',
-    credentials: true,
-    optionsSuccessStatus: 200 
-}));
 
 // ユーザログイン
 router.get('/:uid/account', async (req: Request, res: Response) => {

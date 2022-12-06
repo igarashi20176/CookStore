@@ -52,6 +52,7 @@
 import { ref } from "vue";
 import { AddUserInfo } from "../models/Types";
 import { useUserStore } from "../store/userStore";
+import { useRecipeStore } from "../store/recipeStore";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
 import { auth } from "../firebase/index";
 
@@ -61,6 +62,7 @@ import Toast from "../parts/TheToast.vue";
  * Pinia Store
  */
 const user_store = useUserStore();
+const recipe_store = useRecipeStore();
 
 
 const props = defineProps({
@@ -68,6 +70,7 @@ const props = defineProps({
     isRegister: { type: Boolean, required: true },
     isLogin: { type: Boolean, default: false }
 });
+const emits = defineEmits([ 'change-view' ]);
 
 
 // ログインの可否を判定し，Toastで告知
@@ -120,6 +123,8 @@ const signIn = () => {
             user_store.get_user_account(res.user.uid, credential.token)
             .then( success => {
                 notice.value = success;
+                recipe_store.get_all_recipes();
+                emits('change-view', 'recipe');
             })
             .catch( error => notice.value = error )
             .then( () => {

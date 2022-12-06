@@ -26,13 +26,14 @@
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                 <div class="w-10 rounded-full">
-                    <img v-if="props.isLogin" src="https://placeimg.com/80/80/people" />
+                    <img v-if="props.userName" src="https://placeimg.com/80/80/people" />
                     <img v-else class="w-[80px]" :src="app_images?.user" />
                 </div>
             </label>
-            <ul v-if="props.isLogin" tabindex="0" class="mt-3 p-2 w-52 shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
+            <ul v-if="props.userName" tabindex="0" class="mt-3 p-2 w-52 shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
+                <li class="text-center font-bold">{{ props.userName }}様</li>
                 <li><a class="justify-between" @click="emits('update:compo', 'mypage')">マイページ</a></li>
-                <li><label @click="emits('logout')" class="">ログアウト</label></li>
+                <li><label @click="logout" class="">ログアウト</label></li>
             </ul>
             <ul v-else tabindex="0" class="mt-3 p-2 w-52 shadow menu menu-compact dropdown-content bg-base-100 rounded-box">
                 <li><label class="text-lg" @click="emits('update:register', false)" for="my-modal-1">ログイン</label></li>
@@ -47,18 +48,22 @@
 
 <script lang="ts" setup>
 
-import { inject, ref } from "vue";
+import { inject } from "vue";
 import { AppImages } from "../models/Types";
 
 const props = defineProps({
-    isLogin: { type: Boolean, default: false }
+    userName: { type: String, default: "" }
 });
 const emits = defineEmits([ 'update:compo', 'update:register', 'logout' ])
 
 
 const app_images: AppImages | undefined = inject("app_images");
 
-// ログインとサインインを切り替え
-const is_register = ref<boolean>(false);
+
+const logout = () => {
+    emits('update:compo', 'top');
+    emits('logout');
+}
+
 
 </script>

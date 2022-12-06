@@ -33,7 +33,7 @@ router.get('/all', async (req, res) => {
             },
             nutrition: {
                 select: {
-                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
                 }
             }
         }
@@ -69,7 +69,7 @@ router.get('/:category_id/category', async (req, res) => {
             },
             nutrition: {
                 select: {
-                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
                 }
             }
         }
@@ -107,7 +107,7 @@ router.get('/:uid/my_recipe', async (req, res) => {
             },
             nutrition: {
                 select: {
-                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
                 }
             }
         }
@@ -168,7 +168,7 @@ router.get('/popular', async (req, res) => {
             },
             nutrition: {
                 select: {
-                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, va: true, vb1: true, vb2: true, vb6: true, vc: true, vd: true, ve: true, folic: true, nat: true, kal: true, calc: true, iron: true, mag: true, zinc: true
+                    kcal: true, carbo: true, protein: true, fat: true, fiber: true, VA: true, VB1: true, VB2: true, VB6: true, VC: true, VD: true, VE: true, folic: true, natrium: true, kalium: true, calcium: true, iron: true, magnesium: true, zinc: true
                 }
             }
         }
@@ -234,28 +234,27 @@ router.post('/post_recipe', async (req, res) => {
                 nut_sum_list.protein += n.protein * (i.grams / 100);
                 nut_sum_list.fat += n.fat * (i.grams / 100);
                 nut_sum_list.fiber += n.fiber * (i.grams / 100);
-                nut_sum_list.va += n.va * (i.grams / 100);
-                nut_sum_list.vb1 += n.vb1 * (i.grams / 100);
-                nut_sum_list.vb2 += n.vb2 * (i.grams / 100);
-                nut_sum_list.vb6 += n.vb6 * (i.grams / 100);
-                nut_sum_list.vc += n.vc * (i.grams / 100);
-                nut_sum_list.vd += n.vd * (i.grams / 100);
-                nut_sum_list.ve += n.ve * (i.grams / 100);
+                nut_sum_list.va += n.VA * (i.grams / 100);
+                nut_sum_list.vb1 += n.VB1 * (i.grams / 100);
+                nut_sum_list.vb2 += n.VB2 * (i.grams / 100);
+                nut_sum_list.vb6 += n.VB6 * (i.grams / 100);
+                nut_sum_list.vc += n.VC * (i.grams / 100);
+                nut_sum_list.vd += n.VD * (i.grams / 100);
+                nut_sum_list.ve += n.VE * (i.grams / 100);
                 nut_sum_list.folic += n.folic * (i.grams / 100);
-                nut_sum_list.nat += n.nat * (i.grams / 100);
-                nut_sum_list.kal += n.kal * (i.grams / 100);
-                nut_sum_list.calc += n.calc * (i.grams / 100);
+                nut_sum_list.nat += n.natrium * (i.grams / 100);
+                nut_sum_list.kal += n.kalium * (i.grams / 100);
+                nut_sum_list.calc += n.calcium * (i.grams / 100);
                 nut_sum_list.iron += n.iron * (i.grams / 100);
-                nut_sum_list.mag += n.mag * (i.grams / 100);
+                nut_sum_list.mag += n.magnesium * (i.grams / 100);
                 nut_sum_list.zinc += n.zinc * (i.grams / 100);
             });
             const nut = await prisma.nutrition.create({
                 data: {
-                    recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), va: roundDecimal(nut_sum_list.va, 0), vb1: roundDecimal(nut_sum_list.vb1, 2), vb2: roundDecimal(nut_sum_list.vb2, 2), vb6: roundDecimal(nut_sum_list.vb6, 2), vc: roundDecimal(nut_sum_list.vc, 0), vd: roundDecimal(nut_sum_list.vd, 1), ve: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), nat: roundDecimal(nut_sum_list.nat, 0), kal: roundDecimal(nut_sum_list.kal, 0), calc: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), mag: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
+                    recipeId: recipe.id, kcal: roundDecimal(nut_sum_list.kcal, 0), carbo: roundDecimal(nut_sum_list.carbo, 1), protein: roundDecimal(nut_sum_list.protein, 1), fat: roundDecimal(nut_sum_list.fat, 1), fiber: roundDecimal(nut_sum_list.fiber, 1), VA: roundDecimal(nut_sum_list.va, 0), VB1: roundDecimal(nut_sum_list.vb1, 2), VB2: roundDecimal(nut_sum_list.vb2, 2), VB6: roundDecimal(nut_sum_list.vb6, 2), VC: roundDecimal(nut_sum_list.vc, 0), VD: roundDecimal(nut_sum_list.vd, 1), VE: roundDecimal(nut_sum_list.ve, 1), folic: roundDecimal(nut_sum_list.folic, 0), natrium: roundDecimal(nut_sum_list.nat, 0), kalium: roundDecimal(nut_sum_list.kal, 0), calcium: roundDecimal(nut_sum_list.calc, 0), iron: roundDecimal(nut_sum_list.iron, 1), magnesium: roundDecimal(nut_sum_list.mag, 0), zinc: roundDecimal(nut_sum_list.zinc, 1)
                 }
             });
         }
-        return res.json(recipe);
     }
     catch (e) {
         if (e instanceof client_1.Prisma.PrismaClientKnownRequestError) {

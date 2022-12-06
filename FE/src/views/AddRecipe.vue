@@ -99,14 +99,13 @@ import { useRecipeStore } from "../store/recipeStore";
 import { useUserStore } from "../store/userStore";
 
 
-const emits = defineEmits([ 'change-view' ])
-
 /**
  * Pinia init
  */
 const recipe_store = useRecipeStore();
 const user_store = useUserStore();
 
+const emits = defineEmits([ 'change-view' ])
 const app_images: AppImages | undefined = inject("app_images");
 
 
@@ -114,11 +113,11 @@ const notice = ref<Boolean | null>(null);
 
 // 入力情報の保存
 const add_recipe_info = ref<AddRecipeInfo>({
-	title: "a",
-	category_id: 2,
-	description: "a",
+	title: "",
+	category_id: 1,
+	description: "",
 	ingredients: [],
-	remarks: "a",
+	remarks: "",
 	nut_option: false,
 	file: {}
 });
@@ -129,7 +128,6 @@ const add_recipe_info = ref<AddRecipeInfo>({
  */
 const on_img = ref<boolean>(false);
 const img_data = ref<any>();
-
 
 // inputされたFileの保存
 const getImageFile = (props: any): void => {	
@@ -142,7 +140,7 @@ const getImageFile = (props: any): void => {
 
 
 /**
- *  追加レシピの情報をpiniaに送信
+ *  追加するレシピの情報をpiniaに送信
  */
 const post_recipe = async (): Promise<void> => {
 	add_recipe_info.value.category_id = Number(add_recipe_info.value.category_id);
@@ -157,6 +155,5 @@ const post_recipe = async (): Promise<void> => {
 		}, 2000);
 	});
 }
-
 
 </script>

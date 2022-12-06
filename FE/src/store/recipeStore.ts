@@ -183,9 +183,10 @@ export const useRecipeStore = defineStore( "recipe", {
             });
         },
 
-        post_my_recipe( uid: string ,recipe: AddRecipeInfo ) {
+        post_my_recipe( uid: string, recipe: AddRecipeInfo ) {
             return new Promise<boolean>((resolve, reject) => {
                 const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
+
                 let storageRef = fsRef(storage, img_url);
 
                 // firebase storageに画像を格納
@@ -199,11 +200,11 @@ export const useRecipeStore = defineStore( "recipe", {
                     };
 
                     axios(post_opt)
-                    .then((res: AxiosResponse<object[]>) => {
+                    .then((res: AxiosResponse<object[]>) => {                        
                         resolve(true);
                     })
                     .catch( e => {
-                        console.log(e);
+                        console.log(e);                        
                         deleteObject(storageRef);
                         reject(false);
                     });

@@ -1,7 +1,7 @@
 <template>
 
 <the-header v-model:compo="current_component" v-model:register="is_register"
-    :is-login="user_store.is_user_login" @logout="user_store.logout_user()">
+    :user-name="user_store.get_user_name" @logout="user_store.logout_user()">
 </the-header>
 
 <sign-in-modal :is-login="user_store.is_user_login" :is-register="is_register" :modal-id="1" />
@@ -50,7 +50,7 @@ import Mypage from "./views/Mypage.vue";
 const user_store = useUserStore()
 
 // 動的コンポーネントの切り替え
-const current_component = ref<string>("recipe")
+const current_component = ref<string>("top")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,

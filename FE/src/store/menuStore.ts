@@ -49,9 +49,7 @@ export const useMenuStore = defineStore( "menu", {
                 axios(get_menus_option)
                 .then((res: AxiosResponse<object[]>) => {
                     const { data, status } = res;
-                                 
-                    console.log(data);
-                    
+                                                     
                     data.forEach( (d: any) => {          
                         console.log(d);
                                   
