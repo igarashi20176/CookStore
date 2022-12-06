@@ -20,6 +20,9 @@ This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~ 202
 　- App Engine  
 　- ESPv2 JWT認証  
 　- Cloud SQL  
+ 
+ ## システム構成図
+![system_architect_resize](https://user-images.githubusercontent.com/106209681/205793781-79b6699e-69e9-4568-9d69-04778305cd41.png)
 
 ## ◆制作動機
 
