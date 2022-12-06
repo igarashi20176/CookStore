@@ -2,7 +2,7 @@
 This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~ 2022/12/1
   
 作品のURL  
-
+https://moviewer-e9b49.web.app/
 
 ## ◆作品の概要
 
@@ -21,8 +21,12 @@ This is My second Vue.js creation with Typescript and MySQL  /  2022/11/12 ~ 202
 　- ESPv2 JWT認証  
 　- Cloud SQL  
  
- ## システム構成図
-![system_architect_resize](https://user-images.githubusercontent.com/106209681/205793781-79b6699e-69e9-4568-9d69-04778305cd41.png)
+ ## ◆システム構成図
+<img width="524" alt="system_architect" src="https://user-images.githubusercontent.com/106209681/205901364-62dc77f8-eee7-4655-a52f-19d82a154e25.png">
+
+#### ・ER図
+<img width="598" alt="CookStore_ER" src="https://user-images.githubusercontent.com/106209681/205903382-d3164476-d98a-458a-8f9e-d9477160e01a.png">
+
 
 ## ◆制作動機
 
@@ -45,8 +49,11 @@ Promiseを活用し，例えばログインしたのに関わらず，ログイ�
 3. UI/UXなどに気を配ることができなかった  
 処理に対して，成功の可否をリアルタイムに表示することで，ユーザの使い勝手が向上した．
 
+4. セキュリティの設定を怠っていた  
+今回は，バックエンドとFirebase storageにcorsの設定を行い．一定のセキュリティレベルを保障した．またESPv2でJWT認証を追加したことにより，tokenを保有しないユーザ(正式にログインしていない)がユーザ情報のアクセスやレシピの削除を行えないように設定した．
+
 ## ◆制作後の反省点
-・Jestなどのテストフレームワークの知識が不足しているため学習が必要  
+・Jestなどのテストフレームワークの知識が不足しているため学習が必要<br /><br />
 ・ESPv2周りのエンドポイントの指定方法の認識が曖昧であり，エンドポイントURIが分かりにくいものになってしまった.  
 具体的には, HTTPメソッドのURLが同じでもメソッドが異なれば，異なるリクエストだと判別できるはずだが，ESPv2だとそういった同一URLの指定が許可されなかった．
  
@@ -64,7 +71,7 @@ Promiseを活用し，例えばログインしたのに関わらず，ログイ�
 　　 - レシピの材料  
 　◦栄養情報記録  
 　　 - グラフでの栄養摂取状況を記録できます．<br /><br /> 
-．マイページ機能  
+・マイページ機能  
 　 - 削除機能と自分の投稿した料理に対する総コメント数，いいね数を確認できます．
 
 
