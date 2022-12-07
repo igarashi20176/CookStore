@@ -9,45 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Users = void 0;
 const typeorm_1 = require("typeorm");
 const Review_1 = require("./Review");
-let User = class User {
+let Users = class Users {
 };
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Review_1.Review, (review) => review.user_id),
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.OneToMany)(() => Review_1.Reviews, (review) => review.user_id),
+    (0, typeorm_1.PrimaryColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Users.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         length: 15,
         name: "name"
     }),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], Users.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "age",
         type: "int"
     }),
     __metadata("design:type", Number)
-], User.prototype, "age", void 0);
+], Users.prototype, "age", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "gender",
         type: "int"
     }),
     __metadata("design:type", Number)
-], User.prototype, "gender", void 0);
+], Users.prototype, "gender", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         name: "image",
         nullable: true,
     }),
     __metadata("design:type", String)
-], User.prototype, "image", void 0);
-User = __decorate([
+], Users.prototype, "image", void 0);
+Users = __decorate([
     (0, typeorm_1.Entity)()
-], User);
-exports.User = User;
+], Users);
+exports.Users = Users;

@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id            String    @id 
+  name          String
+  age           Int
+  gender        Int 
+  created_at    DateTime  @default(now()) 
+  updated_at    DateTime  @default(now()) @updatedAt
+  post          Post[]    
+  like          Like[]    
+  comment       Comment[] 
+} 
+
+model Post {
+  id            Int       @id @default(autoincrement())   
+  author        User      @relation(fields: [authorId], references: [id])
+  authorId      String
+  recipe        Recipe[]
+  menu          Menu[]
+  like          Like[]
+  comment       Comment[]
+}
+
+model Recipe {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(30)
+  description   String?   @db.VarChar(60)    
+  ingredients   String    @db.Text
+  remarks       String?   @db.Text
+  image         String    @db.VarChar(35)
+  post          Post      @relation(fields: [postId], references: [id])
+  postId        Int       @unique
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    Int   
+  nutrition     Nutrition?       
+  stapleRecipe  Menu[]    @relation("StapleRecipe")
+  mainRecipe    Menu[]    @relation("MainRecipe")
+  subRecipe     Menu[]    @relation("SubRecipe")
+  soupRecipe    Menu[]    @relation("SoupRecipe")
+  created_at    DateTime  @default(now()) 
+  updated_at    DateTime  @default(now()) @updatedAt
+}
+
+model Menu {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(30)
+  description   String?   @db.VarChar(60)
+  remarks       String?   @db.Text
+  post          Post      @relation(fields: [postId], references: [id])
+  postId        Int       @unique
+  staple        Recipe    @relation("StapleRecipe", fields: [stapleId], references: [id])
+  stapleId      Int
+  main          Recipe    @relation("MainRecipe", fields: [mainId], references: [id])
+  mainId        Int
+  sub           Recipe    @relation("SubRecipe", fields: [subId], references: [id])
+  subId         Int
+  soup          Recipe    @relation("SoupRecipe", fields: [soupId], references: [id])
+  soupId        Int
+  created_at    DateTime  @default(now()) 
+  updated_at    DateTime  @default(now()) @updatedAt
+} 
+
+model Category {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.Char(15)
+  recipe        Recipe[] 
+}
+
+model Like {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  post          Post      @relation(fields: [postId], references: [id])
+  postId        Int   
+  @@unique([ userId, postId ])
+} 
+
+model Comment {
+  id            Int       @id @default(autoincrement())
+  body          String    @db.VarChar(100)
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+  post          Post      @relation(fields: [postId], references: [id])
+  postId        Int   
+  created_at    DateTime  @default(now()) 
+} 
+
+model Nutrition {
+  id            Int      @id @default(autoincrement())
+  name          String?
+  kcal          Int    
+  carbo         Float    @db.Float
+  protein       Float    @db.Float
+  fat           Float    @db.Float
+  fiber         Float    @db.Float
+  va            Float    @db.Float
+  vb1           Float    @db.Float
+  vb2           Float    @db.Float
+  vb6           Float    @db.Float
+  vc            Float    @db.Float
+  vd            Float    @db.Float
+  ve            Float    @db.Float
+  folic         Float    @db.Float
+  nat       Int   
+  kal        Int   
+  calc       Int   
+  iron          Float    @db.Float
+  mag     Int
+  zinc          Float    @db.Float
+  recipe        Recipe?  @relation(fields: [recipeId], references: [id])
+  recipeId      Int?     @unique
+}

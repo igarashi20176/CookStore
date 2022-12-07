@@ -1,75 +1,103 @@
-<script lang="ts" setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-import axios from 'axios'
-import { ref } from "vue";
-
-
-const axiosURL = "https://express-dot-moviewer-e9b49.an.r.appspot.com"
-
-const msg = ref("")
-
-// res.data.resultsの中に格納
-const getDB = () => {
-  axios.get(axiosURL + '/db')
-    .then(res => msg.value = res.data)
-}
-// const getDB = () => {
-//   axios.get(axios + '/db')
-//     .then(res => msg.value = res.data)
-// }
-</script>
-
 <template>
 
-  <div>
+<the-header v-model:compo="current_component" v-model:register="is_register"
+    :user-name="user_store.get_user_name" @logout="user_store.logout_user()">
+</the-header>
 
-    <div class="navbar bg-base-100">
-      <div class="flex-none">
-        <button class="btn btn-square btn-ghost">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-      </div>
-      <div class="flex-1">
-        <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
-      </div>
-      <div class="flex-none">
-        <button class="btn btn-square btn-ghost">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-        </button>
-      </div>
-  </div>
-    <h1 class="text-2xl">Hello World</h1>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+<sign-in-modal :is-login="user_store.is_user_login" :is-register="is_register" :modal-id="1" />
 
-  <button @click="getDB">
-    DB取得
-  </button>
-  <div>
-    結果
-    <p>{{ msg }}</p>
+<div class="mr-10 text-right" v-if="user_store.is_user_login">
+    <button class="mr-2 btn btn-primary bg-base-200">
+        <img class="w-6 inline" :src="app_images.writing" alt="">献立投稿
+    </button>
+    <button class="btn btn-primary bg-base-200" @click="current_component = 'add'">
+        <img class="w-6 inline" :src="app_images.chef_hat" alt="">レシピ投稿  
+    </button>
+</div>
 
-  </div>
+<div v-else class="mr-5 text-right hover:opacity-80">
+    <label class="btn btn-secondary" @click="is_register = false" for="my-modal-1">レシピを登録するにはログインしてください</label>
+</div>
+
+
+<component :is="componentList[current_component]" @change-view="( compo: string ) => current_component = compo" />
+
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script lang="ts" setup>
+
+import { provide, ref, shallowReactive, readonly, onBeforeMount } from "vue";
+import { useUserStore } from "./store/userStore";
+import { AppImages } from "./models/Types";
+
+import { getDownloadURL , ref as fsRef } from "firebase/storage";
+import { storage } from "./firebase";
+
+/**
+ * Components
+ */
+import TheHeader from "./templates/TheHeader.vue";
+import Top from "./views/Top.vue";
+import Recipe from "./views/Recipe.vue";
+import Menu from "./views/Menu.vue";
+import AddRecipe from "./views/AddRecipe.vue";
+import SignInModal from "./views/SignInModal.vue";
+import Mypage from "./views/Mypage.vue";
+
+/**
+ *  Pinia init 
+ */
+const user_store = useUserStore()
+
+// 動的コンポーネントの切り替え
+const current_component = ref<string>("top")
+const componentList = shallowReactive<any>({
+    top: Top,
+    recipe: Recipe,
+    add: AddRecipe,
+    menu: Menu,
+    mypage: Mypage
+});
+
+
+// ログインとサインインを切り替え
+const is_register = ref<boolean>(false);
+
+// アプリ内のアイコン画像を取得
+const app_images = ref<AppImages>({
+    title_log: "app_images/recipe_book.png",
+    bookmark: "app_images/bookmark.png",
+    bookmark_color: "app_images/bookmark_color.png",
+    heart: "app_images/heart.png",
+    heart_color: "app_images/heart_color.png",
+    chef_hat: "app_images/chef_hat.png",
+    user: "app_images/user.png",
+    writing: "app_images/writing.png",
+    ranking: "app_images/ranking.png",
+    question: "app_images/question.png",
+    photo_camera: "app_images/photo_camera.png"
+});
+
+provide( "app_images", readonly(app_images.value) );
+
+
+
+onBeforeMount( () => {
+    (Object.keys(app_images.value) as (keyof AppImages)[]).forEach( i => {
+        getDownloadURL(fsRef(storage, app_images.value[i]))
+        .then((url: string) => {const xhr = new XMLHttpRequest()
+            xhr.responseType = 'blob'
+            xhr.onload = (event) => {
+            // const blob = xhr.response
+            }
+            xhr.open('GET', url)
+            xhr.send();
+
+            app_images.value[i] = url;
+        }).catch((error: any) => {
+            console.log('画像の取得に失敗しました')
+        })
+    });
+})
+
+</script>
