@@ -14,6 +14,7 @@ https://qiita.com/Ren_I/items/2a728c04e8af0c2eb924
 
 ## ◆使用技術
 ・Vue.js setup記法  
+・daisy UI
 ・TypeScript  
 ・Express.js  
 ・Prisma ORM  
