@@ -1,5 +1,5 @@
 # CookStore アプリ
-This is My second Vue.js creation with Typescript and MySQL
+This is My second Vue.js creation
   
 作品のURL  
 https://moviewer-e9b49.web.app/
