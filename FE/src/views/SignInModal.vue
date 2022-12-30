@@ -14,6 +14,7 @@
             <a href="#" class="underline text-orange-400 hover:opacity-70" @click.prevent="is_register = !is_register">{{ !is_register ? "新規登録" : "ログイン" }}</a>
             <h2 class="font-bold text-2xl text-center mb-5">{{ is_register ? "新規登録" : "ログイン" }}</h2>
 
+            <!-- ログインに必要な入力情報 -->
             <h3 class="mb-2 font-bold text-base text-center">ログイン情報</h3>
             <div v-show="errMsg" class="my-3 text-center text-red-500 font-bold">{{ errMsg }}</div>
             <div class="text-center">
@@ -21,6 +22,7 @@
                 <input type="text" v-model="input_user_info.password" placeholder="パスワード" class="mb-3 ml-2 input input-bordered w-full max-w-xs" />
             </div>
 
+            <!-- 新規登録に必要な追加情報 -->
             <div v-if="is_register" class="text-center">
                 <h3 class="mt-5 mb-2 font-bold text-base text-center">ユーザ情報</h3>
 

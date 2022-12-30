@@ -13,7 +13,7 @@
 
 	<div class="flex gap-x-16">	
 		<div class="flex-col gap-y-16 text-center">
-			<!-- 画像の選択 -->
+			<!-- 画像の入力 -->
 			<figure>
 				<input @change="getImageFile" id="file" type="file" class="hidden" /> 
 				<label v-if="!on_img" for="file" class="block bg-base-200 w-[500px] h-[400px] p-8 cursor-pointer rounded-xl hover:bg-base-300">
@@ -33,6 +33,7 @@
 				</div>
 			</figure>
 
+			<!-- 補足情報 -->
 			<div class="w-[400px]">
 				<label class="mt-10 block font-bold" for="remarks">★作ろうと思った背景・こだわり<span class="text-sm">等</span></label>
 				<textarea v-model="add_recipe_info.remarks" class="textarea textarea-bordered mt-5" id="remarks" placeholder="例) おばあちゃんから教えてもらった秘伝の料理です．   例) 砂糖の代わりにはちみつを使うことでより健康的になってます！" rows="5" cols="45"></textarea>
@@ -40,9 +41,11 @@
 		</div>
 
 		<div>
+			<!-- キャッチコピー -->
 			<label class="mb-3 block font-bold" for="description">★キャッチコピー<span class="text-sm"> (最大60文字)</span></label>
 			<textarea id="description" v-model="add_recipe_info.description" class="textarea textarea-bordered mb-10" placeholder="例) 美味しいのに超時短!忙しい日にぜひ作ってほしいレシピです" maxlength="60" cols="30"></textarea>
 
+			<!-- レシピカテゴリー -->
 			<label class="mb-3 block font-bold " for="category">★レシピのカテゴリ<span class="text-sm"> (最大60文字)</span></label>
 			<select v-model="add_recipe_info.category_id" id="category" class="mb-7 text-xl select select-bordered w-full max-w-xs">
 				<option disabled selected>どんな料理？</option>
@@ -59,6 +62,7 @@
 				</label>
 			</div>
 
+			<!-- 分量の入力 -->
 			<div v-if="(add_recipe_info.ingredients.length === 0)" class="w-full h-36 p-2 mb-10 text-center bg-orange-200 rounded-xl ">
 				<label class="mb-3 block font-bold" for="title">食材・分量を入力</label>
 				<add-recipe-item  v-model:value="add_recipe_info.ingredients" :is-active="add_recipe_info.nut_option" />
@@ -108,7 +112,7 @@ const user_store = useUserStore();
 const emits = defineEmits([ 'change-view' ])
 const app_images: AppImages | undefined = inject("app_images");
 
-
+// 投稿の成功をトーストで表示
 const notice = ref<Boolean | null>(null);
 
 // 入力情報の保存
