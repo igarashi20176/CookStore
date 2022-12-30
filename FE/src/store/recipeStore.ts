@@ -42,9 +42,6 @@ export const useRecipeStore = defineStore( "recipe", {
     },
 
     actions: {
-        /**
-         * get
-         */
         get_all_recipes() {
             return new Promise<boolean>((resolve, reject) => {
                 this.recipes = [];
@@ -186,42 +183,6 @@ export const useRecipeStore = defineStore( "recipe", {
             });
         },
 
-        get_diet_record( author_id: string ) {
-            return new Promise<Mypage>((resolve, reject) => {
-                this.recipes = [];
-                this.comments = [];
-                
-                const get_recipes_opt: AxiosRequestConfig = {
-                    url: `${BASE_URL}/v1/recipes/${author_id}/my_recipe`,
-                    method: "GET",
-                };
-
-                axios(get_recipes_opt)
-                .then((res: AxiosResponse) => {
-                    const { data, status } = res;
-                    
-                    data.my_recipes.forEach( (d: any) => {
-                        this.recipes.push(new Recipe(d.id, d.postId, d.post.authorId, d.post.author.name, d.categoryId, d.created_at.substring(0, 10), d.title, d.description, d.ingredients, d.remarks, d.image, d.post._count.like, d.nutrition ? d.nutrition : null));
-                        this.comments.push({
-                            postId: d.postId,
-                            comments: d.post.comment.map( (c: { user: { name: string }, body: string, created_at: string }) => {
-                                    return { name: c.user.name, body: c.body, createdAt: c.created_at }  
-                            })
-                        });
-                    });
-                    
-                    this.get_recipes_images();
-                    
-                    resolve({ posts: data.posts, likes: data.likes, comments: data.comments});
-                })
-                .catch((e: AxiosError<{ error: string }>) => {
-                // エラー処理
-                    console.log(e.message);
-                    reject({ posts: 0, likes: 0, comments: 0});
-                });
-            });
-        },
-
         post_my_recipe( uid: string, recipe: AddRecipeInfo ) {
             return new Promise<boolean>((resolve, reject) => {
                 const img_url = `${FOLDER_NAME}/${String(uuidv4()).substring(0,8)}.${recipe.file.type.substring(6)}`
@@ -285,7 +246,6 @@ export const useRecipeStore = defineStore( "recipe", {
                 .catch(err => console.log(err)) 
             });
         },
-
 
         toggle_fav(uid: string, post_id: number, is_fav: boolean) {  
             return new Promise<void>(( resolve, reject ) => {

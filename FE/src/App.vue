@@ -58,7 +58,6 @@ const componentList = shallowReactive<any>({
     add: AddRecipe,
     menu: Menu,
     mypage: Mypage,
-    record: Record
 });
 
 

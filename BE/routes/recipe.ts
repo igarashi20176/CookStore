@@ -198,9 +198,9 @@ router.post('/post_recipe', async (req: Request, res: Response) => {
   
 	try {
 		const post = await prisma.post.create({
-				data: {
+			data: {
 				authorId: uid
-				}
+			}
 		});
 
 		const recipe = await prisma.recipe.create({

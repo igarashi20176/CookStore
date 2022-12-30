@@ -85,11 +85,10 @@ async function main() {
     data: [
       { userId: 'sda234', postId: 2, body: "すごくおいしい!" }, 
       { userId: 'sda234', postId: 3, body: "すごく簡単です．" }, 
-      { userId: 'jui221', postId: 3, body: "すごく簡単です．" }, 
+      { userId: 'jui221', postId: 3, body: "盛り付けがいいです!" }, 
       { userId: 'ghu562', postId: 3, body: "1コメ!" }, 
       { userId: 'bhu123', postId: 3, body: "すごく美味しい!"}, 
       { userId: 'aaji21', postId: 2, body: "すこし味が薄かったのでこちらは塩を足しました．" }, 
-      { userId: 'aaji21', postId: 3, body: "バリエーション豊かなのに時間が掛からなくてイイ!" }, 
       { userId: 'cghi11', postId: 3, body: "毎日食べてみたいかも!" }, 
       { userId: 'zzxx21', postId: 3, body: "これを毎日食べたら受験に合格しました!" }, 
       { userId: 'cghi11', postId: 1, body: "美味しすぎる！" }, 
@@ -98,6 +97,19 @@ async function main() {
       { userId: '3ArXqijaxBT6Fd7RqQX7eQSBt8Q2', postId: 3, body: "僕はこのレシピ好きじゃないかなぁ" }, 
     ]
   });
+
+  const records = await prisma.record.createMany({
+    data: [
+      { postId: 1, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 2, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 3, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 4, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 5, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 6, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() },
+      { postId: 7, userId: "3ArXqijaxBT6Fd7RqQX7eQSBt8Q2", created_at: new Date() }
+    ]
+  });
+  
 
   const nutritions = await prisma.nutrition.createMany({
     data: [

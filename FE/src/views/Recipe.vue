@@ -31,7 +31,7 @@
 	<!-- recipe card -->
 	<ul class="mt-10 mb-10 flex-row lg:flex lg:flex-wrap lg:gap-10 justify-center items-stretch">
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
-			<!-- loginの可否でいいね&ブックマークボタンを非活性 -->
+			<!-- :uid ユーザがログインしているか / ログイン済なら"いいね"&"ブックマーク"を許可 -->
 			<recipe-card :uid="user_store.get_uid" :recipe="recipe" :is-fav="user_store.is_fav_recipe(recipe.get_postId())"
 				@change-show="is_show_change" @toggle-fav="toggle_fav">
 			</recipe-card>
@@ -69,16 +69,14 @@ const user_store = useUserStore();
 const recipe_store = useRecipeStore();
 
 
-/**
- * レシピ一覧とレシピ詳細の切り替え
- * @param postId // 表示切り替えしたいレシピのID
- */
-
 const is_show = ref<boolean>(false);
 const current_recipe = ref<object>({});
 const current_comments = ref<Array<Comment>>([]);
 
-	
+/**
+ * レシピカード / レシピ詳細の切り替え
+ * @param post_id
+ */
 const is_show_change = (post_id: number) => {
 	is_show.value = !is_show.value;
 	
@@ -120,6 +118,8 @@ const get_recipes_by_category = async ( category_id: number ) => {
 
 /**
  * レシピの初期化
+ * @return res false
+ * @return err true
  */
 onMounted( async () => {
 	await recipe_store.get_all_recipes()

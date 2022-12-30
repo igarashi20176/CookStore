@@ -10,6 +10,7 @@
     <!-- recipe card -->
 	<ul class="mt-10 mb-10 flex-row lg:flex lg:flex-wrap lg:gap-10 justify-center items-stretch">
 		<li class="mt-5 lg:m-0" v-for="recipe in recipe_store.recipes">
+			<!-- :uid ユーザがログインしているか / ログイン済なら"いいね"&"ブックマーク"を許可 -->
 			<recipe-card :recipe="recipe" :uid="user_store.get_uid"
 				@change-show="is_show_change" >
 			</recipe-card>
@@ -102,6 +103,8 @@ const delete_recipe = async ( post_id: number, img: string ) => {
 
 /**
  * レシピの初期化
+ * @return res false
+ * @return err true
  */
 onMounted( async () => {
     await recipe_store.get_my_recipes(user_store.get_uid)

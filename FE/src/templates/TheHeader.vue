@@ -8,7 +8,7 @@
             </label>
             <ul tabindex="0" class="mt-3 p-2 w-52 menu menu-compact dropdown-content shadow bg-[#f5deb3] rounded-box">
                 <li><a class="text-base" @click="emits('update:compo', 'top')">HOME ホーム</a></li>
-                <li><a class="text-base" @click="emits('update:compo', 'record')">RECORD 食事記録</a></li>
+                <!-- <li><a class="text-base" @click="emits('update:compo', 'record')">RECORD 食事記録</a></li> -->
                 <li><a class="text-base" @click="emits('update:compo', 'recipe')">RECIPE レシピ</a></li>
                 <li><a class="text-base" @click="emits('update:compo', 'menu')">MENU メニュー</a></li>
             </ul>

@@ -18,6 +18,7 @@ model User {
   gender        Int 
   created_at    DateTime  @default(now()) 
   updated_at    DateTime  @default(now()) @updatedAt
+  Record        Record[]
   post          Post[]    
   like          Like[]    
   comment       Comment[] 
@@ -28,6 +29,7 @@ model Post {
   author        User      @relation(fields: [authorId], references: [id])
   authorId      String
   recipe        Recipe[]
+  Record        Record[]
   menu          Menu[]
   like          Like[]
   comment       Comment[]
@@ -79,8 +81,8 @@ model Category {
 }
 
 model Like {
-  id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [userId], references: [id])
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [userId], references: [id])
   userId        String
   post          Post      @relation(fields: [postId], references: [id])
   postId        Int   
@@ -113,12 +115,21 @@ model Nutrition {
   vd            Float    @db.Float
   ve            Float    @db.Float
   folic         Float    @db.Float
-  nat       Int   
-  kal        Int   
-  calc       Int   
+  nat           Int   
+  kal           Int   
+  calc          Int   
   iron          Float    @db.Float
-  mag     Int
+  mag           Int
   zinc          Float    @db.Float
   recipe        Recipe?  @relation(fields: [recipeId], references: [id])
   recipeId      Int?     @unique
+}
+
+model Record {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  post          Post     @relation(fields: [postId], references: [id])
+  postId        Int 
+  created_at    DateTime @default(now()) 
 }

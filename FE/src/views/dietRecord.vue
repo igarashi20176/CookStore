@@ -4,7 +4,7 @@
 	<h2 class="inline text-2xl font-bold text-center w-1/3 lg:w-1/4 ml-3 p-2 py-1 rounded-xl">食事記録</h2>
 </div>
 
-<div v-if="!recipe_store.get_length_recipes" class="mt-10 text-center text-2xl">
+<div v-if="is_recipe_null" class="mt-10 text-center text-2xl">
 		<p>データの取得に失敗しました</p>
 		<p>もう一度お試しください</p>
 </div>
@@ -58,9 +58,9 @@ const recipe_store = useRecipeStore();
 
 const is_show = ref<boolean>(false);
 const current_recipe = ref<object>({});
-const current_comments = ref<Array<Comment>>([]);
 
 
+    
 const nut_calc = computed(() => {
     return ( label: keyof Nutriton, nut: any ) => {
         return `${Math.floor( nut[label] - data[label] * Math.pow( 10, 2 ) ) / Math.pow( 10, 2 )}`
