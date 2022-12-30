@@ -51,7 +51,7 @@ import Record from "./views/dietRecord.vue";
 const user_store = useUserStore()
 
 // 動的コンポーネントの切り替え
-const current_component = ref<string>("record")
+const current_component = ref<string>("recipe")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,

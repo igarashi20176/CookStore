@@ -20,13 +20,13 @@
                 <h3 class="mb-3 text-lg font-black">栄養摂取情報</h3>
                 <div class="flex gap-x-5">
                     <div>
-                        <p class="my-1" v-for="label in Object.keys(recipe.get_nut()).slice(0, 5)">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
+                        <p class="my-1" v-for="label in (Object.keys(recipe.get_nut() as Nutriton).slice(0, 5) as (keyof Nutriton)[])">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
                     </div>
                     <div>
-                        <p v-for="label in Object.keys(recipe.get_nut()).slice(5, 13)">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
+                        <p v-for="label in (Object.keys(recipe.get_nut() as Nutriton).slice(5, 13) as (keyof Nutriton)[])">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
                     </div>
                     <div>
-                        <p v-for="label in Object.keys(recipe.get_nut()).slice(13)">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
+                        <p v-for="label in (Object.keys(recipe.get_nut() as Nutriton).slice(13) as (keyof Nutriton)[])">{{ label }}: {{ nut_calc(label, recipe.get_nut()) }}</p>
                     </div>
                 </div>
             </div>
@@ -41,6 +41,7 @@
 import { onMounted, ref, computed } from "vue";
 import { useRecipeStore } from "../store/recipeStore";
 import { useUserStore } from "../store/userStore";
+import { Nutriton } from "../models/Types";
 import data from "../models/nut_requirement.json";
 
 /**
@@ -61,7 +62,7 @@ const current_comments = ref<Array<Comment>>([]);
 
 
 const nut_calc = computed(() => {
-    return ( label: string, nut: object ) => {
+    return ( label: keyof Nutriton, nut: any ) => {
         return `${Math.floor( nut[label] - data[label] * Math.pow( 10, 2 ) ) / Math.pow( 10, 2 )}`
     }
 })
