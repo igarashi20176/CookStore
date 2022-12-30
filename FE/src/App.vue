@@ -16,7 +16,7 @@
 </div>
 
 <div v-else class="mr-5 text-right hover:opacity-80">
-    <label class="btn btn-secondary" @click="is_register = false" for="my-modal-1">レシピを登録するにはログインしてください</label>
+    <label class="btn btn-primary" @click="is_register = false" for="my-modal-1">レシピを登録するにはログインしてください</label>
 </div>
 
 
@@ -43,6 +43,7 @@ import Menu from "./views/Menu.vue";
 import AddRecipe from "./views/AddRecipe.vue";
 import SignInModal from "./views/SignInModal.vue";
 import Mypage from "./views/Mypage.vue";
+import Record from "./views/dietRecord.vue";
 
 /**
  *  Pinia init 
@@ -50,13 +51,14 @@ import Mypage from "./views/Mypage.vue";
 const user_store = useUserStore()
 
 // 動的コンポーネントの切り替え
-const current_component = ref<string>("top")
+const current_component = ref<string>("record")
 const componentList = shallowReactive<any>({
     top: Top,
     recipe: Recipe,
     add: AddRecipe,
     menu: Menu,
-    mypage: Mypage
+    mypage: Mypage,
+    record: Record
 });
 
 
@@ -79,7 +81,6 @@ const app_images = ref<AppImages>({
 });
 
 provide( "app_images", readonly(app_images.value) );
-
 
 
 onBeforeMount( () => {

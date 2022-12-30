@@ -2,7 +2,7 @@
     {
         "origin": [
             "http://localhost:5173",
-            "https://moviewer-e9b49.web.app/"
+            "https://moviewer-e9b49.web.app"
         ],
         "method": ["GET"],
         "maxAgeSeconds": 3600

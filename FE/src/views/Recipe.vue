@@ -3,7 +3,7 @@
 <div class="relative" v-show="!is_show">
 
 	<div class="w-full text-left mt-7 lg:text-center">
-		<h2 class="inline text-2xl font-bold text-center bg-base-300 w-1/3 lg:w-1/4 ml-3 p-2 py-1 rounded-xl">みんなのレシピ</h2>
+		<h2 class="inline text-2xl font-bold text-center w-1/3 lg:w-1/4 ml-3 p-2 py-1 rounded-xl">みんなのレシピ</h2>
 	</div>
 	
 	<!-- レシピカテゴリー -->

@@ -39,7 +39,7 @@
                 </div>
             </label>
 
-            <div v-if="!props.uid" class="flex tooltip tooltip-info" data-tip="いいね'するにはログインしてください">
+            <div v-if="!props.uid" class="flex tooltip tooltip-info" data-tip="'いいね'するにはログインしてください">
                 <img class="w-8" src="../assets/images/heart.png" alt="fav_on">
                 <p class="m-1">{{ favs }}</p>
             </div>

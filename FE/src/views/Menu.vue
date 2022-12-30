@@ -3,7 +3,7 @@
 <!-- カード -->
 <div class="relative m-auto p-5 rounded-2xl" v-if="!is_show">
 	<!-- title -->
-	<h2 class="mt-5 text-2xl font-bold text-center bg-base-300 py-1 w-1/3 lg:w-1/4 m-auto rounded-xl">みんなの献立</h2>
+	<h2 class="mt-5 text-2xl font-bold text-center py-1 w-1/3 lg:w-1/4 m-auto rounded-xl">みんなの献立</h2>
 
 	<div v-if="is_null_menus" class="mt-10 text-center text-2xl">
 		<p>データの取得に失敗しました</p>
