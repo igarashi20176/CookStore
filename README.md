@@ -80,6 +80,18 @@ Promiseを活用し，例えばログインしたのに関わらず，ログイ�
 ・マイページ機能  
 　 - 削除機能と自分の投稿した料理に対する総コメント数，いいね数を確認できます．
 
+## ◆画面スクリーンショット
+・レシピ
+![CookStore - Google Chrome 2023_02_03 1_11_08](https://user-images.githubusercontent.com/106209681/216486960-92d11909-cf34-458a-99a6-f61f01ca4638.png)
+
+・カテゴリー
+![CookStore - Google Chrome 2023_02_03 1_11_02](https://user-images.githubusercontent.com/106209681/216487192-beb5ed88-40e7-4dbf-bc25-47612301a65d.png)
+
+・メニュー
+![CookStore - Google Chrome 2023_02_03 1_12_53](https://user-images.githubusercontent.com/106209681/216487020-62cf14b5-186a-47ce-8e5f-63295fd70fbb.png)
+
+・マイページ
+![CookStore - Google Chrome 2023_02_03 1_13_35](https://user-images.githubusercontent.com/106209681/216487103-cdd35863-5d2a-4179-8b5c-c5d156f8f254.png)
 
 
 
