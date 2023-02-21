@@ -1,5 +1,6 @@
 # CookStore アプリ
 **※ホスティングを停止してしまったため概要は，ページ下部のスクリーンショットに載せてあります．**  
+
 This is My second Vue.js creation
   
 作品のURL  
